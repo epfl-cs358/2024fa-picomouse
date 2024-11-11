@@ -7,11 +7,13 @@ const int IN4 = 10;  //  moteur 2
 
 const int wheelToMotorRatio = 212; //212 motor revolution for 1 wheel revoluion
 const float wheelDiameter = 37.0;
+const int wheelDistance = 85;
+const double mouseRadius =  wheelDistance / 2.0; 
 const float wheelCircumference = wheelDiameter * M_PI;
 
 
-const int encoderPin1 = 2;  //Pin Rev counter motor 1
-const int encoderPin2 = 3;  ///Pin Rev counter motor 2
+const int encoderPin1 = 3;  //Pin Rev counter motor 1
+const int encoderPin2 = 2;  ///Pin Rev counter motor 2
 
 
 volatile long int count1 = 0;  // counter motor 1
@@ -42,8 +44,9 @@ void setup() {
 }
 
 void loop() {
-  moveSquare(100, 80); 
-  delay(10000);        
+  delay(1000);
+  moveSquare(100, 50); 
+  delay(5000);        
 
   //if (!motor1Running) {
   //   rotateWheel1(1, 100, true);
@@ -99,16 +102,24 @@ void rotateWheel2(int speed, bool direction) {
 
 
 void stopMotor1() {
-  motor1Running = false;
+  analogWrite(IN2, 80);  
+  digitalWrite(IN1, LOW);  
+  delay(25);
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
+  motor1Running = false;
+  count1 = 0; 
 }
 
 
 void stopMotor2() {
-  motor2Running = false; 
+  analogWrite(IN4, 80);  
+  digitalWrite(IN3, LOW);  
+  delay(25);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, LOW);
+  motor2Running = false;
+  count2 = 0;
 }
 
 
@@ -131,27 +142,26 @@ int calculateTurnsForDistance(float distanceCm) {
 
 
 void moveSquare(int speed, int size) {
-  int turnsForSide = calculateTurnsForDistance(size); //nbr turn for one side of square
-
+  int turnsForSide = calculateTurnsForDistance(size); //nbr turn for one side of squa
+  Serial.println(turnsForSide);
   for (int i = 0; i < 4; i++) {
     rotateWheel1(speed, true);  // Moteur 1
     rotateWheel2(speed, true);  // Moteur 2
 
-    while (motor1Running && motor2Running) {
+    while (motor1Running || motor2Running) {
       if (count1 >= turnsForSide) { stopMotor1(); }
       if (count2 >= turnsForSide) { stopMotor2(); }
     }
-
-    delay(500);  
-
+  
     // Rotation de 90
-    rotateWheel1(speed, false);  
     rotateWheel2(speed, true);
+    const double perim =  wheelDistance * M_PI / 2 ;
+    const int rotate90 = perim / wheelCircumference * wheelToMotorRatio;
+    Serial.println(rotate90);
     
-    while (motor1Running && motor2Running) {
-      if (count1 >= wheelToMotorRatio / 4) {  stopMotor1(); }
-      if (count2 >= wheelToMotorRatio / 4) {  stopMotor2(); } 
+    while (motor2Running) {
+      //if (count1 >= rotate90) {  stopMotor1(); }
+      if (count2 >= rotate90) {  stopMotor2(); } 
     }
-    delay(500); 
   }
 }
