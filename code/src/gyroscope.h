@@ -1,3 +1,5 @@
+#pragma once
+
 double angle;
 
 void reset_angle();

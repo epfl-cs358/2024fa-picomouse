@@ -1,9 +1,25 @@
+#pragma once
+
+#include utils.h
+
+// Array of all distances detected by sensors 
 double distances[5];
 
-void update();
+/* @brief Enables sensors
+ * @param None
+ * @return A RESULT value
+ */
+RESULT enable();
 
-void enable();
+/* @brief Disables sensors
+ * @param None
+ * @return A RESULT value
+ */
+RESULT disable();
 
-void disable();
-
-void get_distances(); // or double get_front_distance() or double[] get_distances()
+/* @brief Updates value of 'distances[5]'
+ * @details Calculate an average of 15 values per sensor
+ * @param None
+ * @return A RESULT value
+ */
+RESULT get_distances();

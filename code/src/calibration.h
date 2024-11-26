@@ -1,7 +1,9 @@
-void adjust_distances(); // or void adjust_front_distance() & void adjust_sides_distance()
+#pragma once
 
-void alignement();
+#include utils.h
 
-void init_pos();
-
-void adjust_angle();
+/* @brief Calibrates the mouse so it's able to search/run the maze
+ * @parm None
+ * @return A RESULT value
+ */
+RESULT init_pos();

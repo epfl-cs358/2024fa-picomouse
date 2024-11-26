@@ -1,3 +1,5 @@
+#pragma once
+
 #define MAZE_SIZE 8
 #define DEBBUG 1
 #define DEBBUG_PRINT(SENTENCE) \
