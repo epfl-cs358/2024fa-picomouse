@@ -1,16 +1,18 @@
 #pragma once
 
-#include utils.h
+#include "utils.h"
 
-// Counters for steps of the two motors
-int l_motor_steps;
-int r_motor_steps;
+/* @brief Initialize the motor and the encoders. Set the count to 0 and set the last last toogle time to millis()
+* @param None
+* @return a RESULT value 
+*/
+RESULT motors_init();
 
-/* @brief Retrieves steps counts
+/* @brief Retrieves steps counts and the time of the last toogle
  * @param None
- * @return An array constituted of l_motor_steps and r_motor_steps
+ * @return a struct containing the steps count and the time of the last toogle
  */
-int* get_steps_count();
+MOTOR_STEP get_steps_count();
 
 /* @brief Calculate speed of motors
  * @param None
@@ -24,14 +26,21 @@ double get_speed();
  */
 RESULT reset_counter();
 
-/* @brief Sets left motor's speed
+/* @brief Sets left motor's speed, value between [-1;1]
  * @param The desired speed
  * @return A RESULT value
  */
-RESULT run_left_motor(int speed);
+RESULT run_left_motor(float speed);
 
-/* @brief Sets right motor's speed
+/* @brief Sets right motor's speed, value between [-1;1]
  * @param The desired speed
  * @return A RESULT value
  */
-RESULT run_right_motor(int speed);
+RESULT run_right_motor(float speed);
+
+/**
+ * @brief Stops the two motors
+ * @param None
+ * @return A RESULT value
+ */
+RESULT stop_motor();

@@ -1,10 +1,11 @@
 #pragma once
 
-#include utils.h
+#include "utils.h"
+#include "motors.h"
 
 // Defined speeds for both run and search mode
-#define SPEED_SEARCH 1
-#define SPEED_RUN 10000000000
+#define SPEED_SEARCH 0.3
+#define SPEED_RUN 1
 
 // Enum for different modes of turns
 typedef enum MODE{INPLACE, SMOOTH};

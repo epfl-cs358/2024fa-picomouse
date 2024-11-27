@@ -1,6 +1,7 @@
 #pragma once 
 // size_t
 #include <cstdlib>
+
 typedef enum {
     NO_ERROR,
     MOUSE_END,
@@ -12,6 +13,11 @@ typedef struct {
     int y;
 }COORDINATES;
 
+typedef struct {
+    unsigned long left_count;
+    unsigned long right_count;
+    unsigned long last_toogle;
+} MOTOR_STEPS;
 
 #define EQUAL_COORD(coord_1, coord_2) (coord_1.x == coord_2.x && coord_1.y == coord_2.y)
 #define ADD_COORD(coord, dX, dY) coord.x += dX; coord.y += dY;
