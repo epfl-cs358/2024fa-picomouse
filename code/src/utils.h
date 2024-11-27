@@ -1,5 +1,6 @@
-<<<<<<< HEAD
-
+#pragma once 
+// size_t
+#include <cstdlib>
 typedef enum {
     NO_ERROR,
     MOUSE_END,
@@ -16,12 +17,24 @@ typedef struct {
 #define ADD_COORD(coord, dX, dY) coord.x += dX; coord.y += dY;
 #define MAX_UNSIGNED_BYTE 255
 
+// helper macro to throw an given error if the condition is satisfied 
+#define CHECK_AND_THROW(condition, error) \
+    do{\
+        if(condition){return error};\
+    }while(0)
+
+
+/// Helper macro to propagate an error returned by a called function
+#define PROPAGATE_ERROR(error)\
+    do{\
+        if(error){return error};\
+    }while(0)
+
 #define DEBBUG_PRINT(SENTENCE) \
     do{\
         if(DEBBUG){\
             SENTENCE;\
         }\
     }while(0)\
-=======
-void weighted_BFS(int x, int y, unsigned char currentDistance);
->>>>>>> refs/remotes/origin/main
+
+

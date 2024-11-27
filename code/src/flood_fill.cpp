@@ -1,47 +1,18 @@
 #include <cstring>
-#include <iostream>
-#include <iomanip>
-using namespace std;
+#include "utils.h"
+#include "flood_fill.h"
+#include "maze.h"
 
 
-#define MAZE_SIZE 8
+#define WEIGHT_AT(weight_matrix, coord) weight_matrix[coord.x][coord.y]
+#define WALLS_AT(wall_matrix, coord) wall_matrix[coord.x][coord.y]
 
-
-#define LeftWall 1
-#define UpWall 2
-#define RightWall 4
-#define DownWall 8
-
-#define IN_BOUNDARIES(X,Y) (0 <= X && X < MAZE_SIZE && 0 <= Y && Y < MAZE_SIZE)
-
-char matrix[MAZE_SIZE][MAZE_SIZE];
-typedef struct {
-    int x;
-    int y;
-}COORDINATES;
-
-typedef enum WALLS_DIR{LEFT, UP, RIGHT, DOWN};
-
-typedef struct{
-    unsigned char matrix[MAZE_SIZE][MAZE_SIZE];
-    unsigned char walls[MAZE_SIZE][MAZE_SIZE];
-    COORDINATES mouse_pos;
-    COORDINATES exit;
-    COORDINATES start;
-}Maze;
-
-Maze maze;
-int dx[] = {0, -1, 0, 1};
-int dy[] = {-1, 0, 1, 0};
-int WALLS[] = {LeftWall, UpWall, RightWall, DownWall};
-
-
-void innit_maze(COORDINATES start, COORDINATES exit){
-    maze.start = start;
-    maze.exit = exit;
-    maze.mouse_pos = start;
-    std::memset(maze.walls, 0, MAZE_SIZE*MAZE_SIZE);
-    std::memset(maze.matrix, 255, MAZE_SIZE*MAZE_SIZE);
+void init_maze(Maze* maze, COORDINATES start, COORDINATES exit){
+    maze->start = start;
+    maze->exit = exit;
+    maze->mouse_pos = start;
+    std::memset(maze->walls, 0, MAZE_SIZE*MAZE_SIZE);
+    std::memset(maze->matrix, 255, MAZE_SIZE*MAZE_SIZE);
 }
 
 void weighted_BFS(Maze* maze, COORDINATES current_cell, unsigned char current_distance) {
@@ -69,6 +40,7 @@ void weighted_BFS(Maze* maze, COORDINATES current_cell, unsigned char current_di
 
 
 void pop_n(size_t n, PATH_STACK* stack){
+    
     stack->end -= n;
 }
 
