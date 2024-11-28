@@ -6,7 +6,7 @@
 // Correction factor for the speed
 #define KP 0.1
 
-#define ROTATION_SPEED 0.5
+#define ROTATION_SPEED 0.7
 
 
 

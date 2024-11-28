@@ -20,7 +20,6 @@
 #define MAX_PWM 255;
 #define MIN_PWM 80;
 
-// Direction of the motors
 bool motorR_running;
 bool motorL_running;
 
@@ -59,15 +58,6 @@ RESULT motors_init()
 	return NO_ERROR;
 }
 
-RESULT stop_motor()
-{
-	motorR_running = false;
-	motorL_running = false;
-	run_left_motor(0);
-	run_right_motor(0);
-	return NO_ERROR;
-}
-
 MOTOR_STEPS get_steps_count()
 {
 	// Counters for steps of the two motors
@@ -88,15 +78,15 @@ RESULT reset_counter()
 
 RESULT run_left_motor(float speed)
 {
+	motorL_running= true;
 	if (speed == 0)
 	{
 		motorL_running = false;
 	}
-	//define the direction of the motor
+	// define the direction of the motor
 	bool forward = (speed >= 0);
 	speed = fabs(speed);
 
-	mororL_running = true;
 	int PWM = speed_to_pwm(speed);
 	run_motor(PWM, false, forward);
 	return NO_ERROR;
@@ -104,15 +94,15 @@ RESULT run_left_motor(float speed)
 
 RESULT run_right_motor(float speed)
 {
+	motorR_running = true;
 	if (speed == 0)
 	{
 		motorR_running = false;
 	}
-	//define the direction of the motor
+	// define the direction of the motor
 	bool forward = (speed >= 0);
 	speed = fabs(speed);
 
-	mororR_running = true;
 	int PWM = speed_to_pwm(speed);
 	run_motor(PWM, true, forward);
 	return NO_ERROR;
@@ -156,11 +146,10 @@ void run_motor(int PWM, bool right_motor, bool forward)
 }
 
 /**
- * @brief take the desired speed and limits the speed (PWM) to the maximum values allowed ([-255;255])
+ * @brief take the desired speed and convert it to a PWM value
  *
  * @param float speed The speed about to be scaled
- * @return A capped speed
- * @retval int in range [-255, 255]
+ * @return the PWM value
  */
 int speed_to_pwm(float speed)
 {

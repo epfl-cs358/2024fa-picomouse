@@ -18,8 +18,10 @@ MOTOR_STEPS new_steps_count = {0, 0};
 
 RESULT stop()
 {
-    stop_motor();
-    return NO_ERROR;
+    run_left_motor(0);
+	run_right_motor(0);
+	reset_counter();
+	return NO_ERROR;
 }
 
 RESULT forward(float speed)
@@ -28,6 +30,8 @@ RESULT forward(float speed)
     // If the speed is different from the current speed, set the new speed
     if (speed_goal != speed)
     {
+        reset_counter();
+        old_steps_count = get_steps_count(); // should be very close to 0
         set_new_speed_forward(speed);
         last_time = millis();
         current_time = millis();
@@ -38,7 +42,7 @@ RESULT forward(float speed)
         current_time = millis();
         unsigned long delta_time = current_time - last_time;
 
-        // If the time has passed, compute the new speed
+        // If the delta time has passed, compute the new speed
         if (delta_time >= DELTA_TIME)
         {
             last_time = current_time;
@@ -63,9 +67,25 @@ RESULT turn_right(MODE mode)
         motors_init();
     }
     last_time = millis();
-    //TODO peut etre inverser
-    run_right_motor(- ROTATION_SPEED);
-    run_left_motor(ROTATION_SPEED);
+
+    switch (mode)
+    {
+    case INPLACE:
+    {
+        // TODO peut etre inverser
+        run_right_motor(ROTATION_SPEED);
+        run_left_motor(-ROTATION_SPEED);
+        break;
+    }
+    case SMOOTH:
+    {
+        // TODO
+        break;
+    }
+
+    default:
+        break;
+    }
 }
 
 RESULT turn_left(MODE mode)
@@ -75,6 +95,25 @@ RESULT turn_left(MODE mode)
         motors_init();
     }
     last_time = millis();
+
+    switch (mode)
+    {
+    case INPLACE:
+    {
+        // TODO peut etre inverser
+        run_right_motor(-ROTATION_SPEED);
+        run_left_motor(ROTATION_SPEED);
+        break;
+    }
+    case SMOOTH:
+    {
+        // TODO
+        break;
+    }
+
+    default:
+        break;
+    }
 }
 
 // ========== Private functions ===========

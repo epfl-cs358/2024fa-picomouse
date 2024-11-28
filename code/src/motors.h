@@ -37,10 +37,3 @@ RESULT run_left_motor(float speed);
  * @return A RESULT value
  */
 RESULT run_right_motor(float speed);
-
-/**
- * @brief Stops the two motors
- * @param None
- * @return A RESULT value
- */
-RESULT stop_motor();
