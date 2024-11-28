@@ -12,7 +12,7 @@ RESULT motors_init();
  * @param None
  * @return a struct containing the steps count and the time of the last toogle
  */
-MOTOR_STEP get_steps_count();
+MOTOR_STEPS get_steps_count();
 
 /* @brief Calculate speed of motors
  * @param None
