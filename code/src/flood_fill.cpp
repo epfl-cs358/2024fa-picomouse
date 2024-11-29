@@ -39,9 +39,10 @@ void weighted_BFS(Maze* maze, COORDINATES current_cell, unsigned char current_di
 }
 
 
-void pop_n(size_t n, PATH_STACK* stack){
+RESULT pop_n(size_t n, PATH_STACK* stack){
     
     stack->end -= n;
+    return NO_ERROR;
 }
 
 RESULT push(COORDINATES new_coord, PATH_STACK* stack){
@@ -74,7 +75,6 @@ void add_wall(Maze* maze, WALLS_DIR wall){
         WALLS_AT(maze->walls, adjacent_cell) |= WALLS[(wall_index+2)&3];
     }
 }
-
 
 
 RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack){
