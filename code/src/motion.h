@@ -1,12 +1,15 @@
 #pragma once
 
+#ifndef MOTION_H
+#define MOTION_H
+
 #include "utils.h"
 #include "motors.h"
 
 // Correction factor for the speed
-#define KP 0.1
+#define KP 0.05
 
-#define ROTATION_SPEED 0.7
+#define ROTATION_SPEED 0.1
 
 
 
@@ -18,13 +21,14 @@
 
 // Enum for different modes of turns
 //TODO implement smooth turn
-typedef enum MODE{INPLACE, SMOOTH};
+typedef enum {INPLACE, SMOOTH}MODE;
 
 /* @brief Stops the two motors
  * @param None
  * @return A RESULT value
  */
 RESULT stop();
+void set_new_speed_forward(float speed);
 
 /* @brief Runs the two motors at a certain speed [-1;1]
  * CALL IT EVEN IF THE SPEED IS THE SAME --> it addapt if one wheel is too slow
@@ -37,11 +41,12 @@ RESULT forward(float speed);
  * @param A mode of turning
  * @return A RESULT value
  */
-RESULT turn_right(MODE mode);
+void turn_right(MODE mode);
 
 /* @brief Makes the mouse turn turn left. NEVER STOP ROTATING --> give a next instruction to stop
  * @param A mode of turning
  * @return A RESULT value
  */
-RESULT turn_left(MODE mode);
+void turn_left(MODE mode);
 
+#endif

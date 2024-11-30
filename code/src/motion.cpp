@@ -1,5 +1,6 @@
 #include "motion.h"
 #include <math.h>
+#include <Arduino.h>
 
 float speed_goal = 0; // [-1;1]
 
@@ -16,111 +17,21 @@ unsigned long current_time = 0;
 MOTOR_STEPS old_steps_count = {0, 0};
 MOTOR_STEPS new_steps_count = {0, 0};
 
-RESULT stop()
-{
-    run_left_motor(0);
-	run_right_motor(0);
-	reset_counter();
-	return NO_ERROR;
-}
-
-RESULT forward(float speed)
-{
-    speed = cap_speed(speed);
-    // If the speed is different from the current speed, set the new speed
-    if (speed_goal != speed)
-    {
-        reset_counter();
-        old_steps_count = get_steps_count(); // should be very close to 0
-        set_new_speed_forward(speed);
-        last_time = millis();
-        current_time = millis();
-    }
-    // If the speed is the same, check if the time has passed
-    else
-    {
-        current_time = millis();
-        unsigned long delta_time = current_time - last_time;
-
-        // If the delta time has passed, compute the new speed
-        if (delta_time >= DELTA_TIME)
-        {
-            last_time = current_time;
-            new_steps_count = get_steps_count();
-
-            left_rps = (new_steps_count.left_count - old_steps_count.left_count) / delta_time;
-            right_rps = (new_steps_count.right_count - old_steps_count.right_count) / delta_time;
-
-            // Syncronize the two speeds
-            update_speed();
-
-            old_steps_count = new_steps_count;
-            return NO_ERROR;
-        }
-    }
-}
-
-RESULT turn_right(MODE mode)
-{
-    if (last_time == 0)
-    {
-        motors_init();
-    }
-    last_time = millis();
-
-    switch (mode)
-    {
-    case INPLACE:
-    {
-        // TODO peut etre inverser
-        run_right_motor(ROTATION_SPEED);
-        run_left_motor(-ROTATION_SPEED);
-        break;
-    }
-    case SMOOTH:
-    {
-        // TODO
-        break;
-    }
-
-    default:
-        break;
-    }
-}
-
-RESULT turn_left(MODE mode)
-{
-    if (last_time == 0)
-    {
-        motors_init();
-    }
-    last_time = millis();
-
-    switch (mode)
-    {
-    case INPLACE:
-    {
-        // TODO peut etre inverser
-        run_right_motor(-ROTATION_SPEED);
-        run_left_motor(ROTATION_SPEED);
-        break;
-    }
-    case SMOOTH:
-    {
-        // TODO
-        break;
-    }
-
-    default:
-        break;
-    }
-}
-
 // ========== Private functions ===========
+float cap_speed(float speed)
+{
+    speed = speed > 1 ? 1 : speed;
+    speed = speed < -1 ? -1 : speed;
+    return speed;
+}
+
 void update_speed()
 {
     float error = left_rps - right_rps;
-    float correction = KP * error;
+    Serial.print(error);
+    float correction = fabs(KP * error);
+    Serial.print("   corr: ");
+    Serial.println(correction);
 
     if (error > 0) // Left is faster
     {
@@ -139,7 +50,13 @@ void update_speed()
     {
         if (fabs(left_speed) < 1)
         { // We can increase left speed
+            Serial.print("left speed1");
+            Serial.println(left_speed);
+
             left_speed = left_speed > 0 ? cap_speed(left_speed + correction) : cap_speed(left_speed - correction);
+            Serial.print("left speed2");
+            Serial.println(left_speed);
+
             run_left_motor(left_speed);
         }
         else
@@ -174,9 +91,108 @@ void set_new_speed_forward(float speed)
     run_right_motor(speed);
 }
 
-float cap_speed(float speed)
+// ========== Public functions ===========
+RESULT stop()
 {
-    speed = speed > 1 ? 1 : speed;
-    speed = speed < -1 ? -1 : speed;
-    return speed;
+  speed_goal = 0; 
+  run_left_motor(0);
+	run_right_motor(0);
+	reset_counter();
+	return NO_ERROR;
+}
+
+RESULT forward(float speed)
+{
+    speed = cap_speed(speed);
+    // If the speed is different from the current speed, set the new speed
+    if (speed_goal != speed)
+    {
+
+        set_new_speed_forward(speed);
+        last_time = millis();
+        current_time = millis();
+    }
+    // If the speed is the same, check if the time has passed
+    else
+    {
+        current_time = millis();
+        unsigned long delta_time = current_time - last_time;
+
+        // If the delta time has passed, compute the new speed
+        if (delta_time >= DELTA_TIME)
+        {
+            last_time = current_time;
+            new_steps_count = get_steps_count();
+
+            left_rps = (float) (abs(new_steps_count.left_count) - abs(old_steps_count.left_count)) / delta_time;
+            right_rps = (float) (abs(new_steps_count.right_count) - abs(old_steps_count.right_count)) / delta_time;
+            Serial.print("left");
+            Serial.print(left_rps);
+            Serial.print("    right");
+            Serial.println(right_rps);
+
+            // Syncronize the two speeds
+            update_speed();
+
+            old_steps_count = new_steps_count;
+            return NO_ERROR;
+        }
+    }
+    return NO_ERROR; 
+}
+
+void turn_right(MODE mode)
+{
+    if (last_time == 0)
+    {
+        motors_init();
+    }
+    last_time = millis();
+
+    switch (mode)
+    {
+    case INPLACE:
+    {
+        // TODO peut etre inverser
+        run_right_motor(-ROTATION_SPEED);
+        run_left_motor(ROTATION_SPEED);
+        break;
+    }
+    case SMOOTH:
+    {
+        // TODO
+        break;
+    }
+
+    default:
+        break;
+    }
+}
+
+void turn_left(MODE mode)
+{
+    if (last_time == 0)
+    {
+        motors_init();
+    }
+    last_time = millis();
+
+    switch (mode)
+    {
+    case INPLACE:
+    {
+        // TODO peut etre inverser
+        run_right_motor(ROTATION_SPEED);
+        run_left_motor(-ROTATION_SPEED);
+        
+    }
+    case SMOOTH:
+    {
+        // TODO
+        break;
+    }
+
+    default:
+        break;
+    }
 }

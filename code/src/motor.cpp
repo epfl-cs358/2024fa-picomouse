@@ -1,24 +1,25 @@
 #include "motors.h"
 #include "math.h"
-#include "ESP32Encoder.h"
+#include <ESP32Encoder.h>
+#include <Arduino.h>
 
 // TODO mettre les bons pins
 
 // Motor pins
-#define MOTOR_PIN_R1 5;
-#define MOTOR_PIN_R2 18;
-#define MOTOR_PIN_L1 19;
-#define MOTOR_PIN_L2 21;
+#define MOTOR_PIN_R1 18
+#define MOTOR_PIN_R2 19
+#define MOTOR_PIN_L1 5
+#define MOTOR_PIN_L2 17
 
 // Encoder pins
-#define ENCODER_L1 34;
-#define ENCODER_L2 35;
-#define ENCODER_R1 32;
-#define ENCODER_R2 33;
+#define ENCODER_R1 2
+#define ENCODER_R2 15
+#define ENCODER_L1 23
+#define ENCODER_L2 22
 
 // Max and min PWM values
-#define MAX_PWM 255;
-#define MIN_PWM 80;
+#define MAX_PWM 255
+#define MIN_PWM 80
 
 bool motorR_running;
 bool motorL_running;
@@ -26,87 +27,6 @@ bool motorL_running;
 // Encoder object for the two motors
 ESP32Encoder encoderL;
 ESP32Encoder encoderR;
-
-// =========== Public functions ===========
-
-RESULT motors_init()
-{
-	// ---- Setup motor -----
-
-	motorR_running = false;
-	motorL_running = false;
-
-	// Set the pins as output
-	pinMode(MOTOR_PIN_R1, OUTPUT);
-	pinMode(MOTOR_PIN_R2, OUTPUT);
-	pinMode(MOTOR_PIN_L1, OUTPUT);
-	pinMode(MOTOR_PIN_L2, OUTPUT);
-
-	// ----- Setup encoder ----
-	// Enable the weak pull up resistors
-	ESP32Encoder::useInternalWeakPullResistors = puType::up;
-
-	// Attach the encoders to the pins
-	// 4 count per rotation
-	encoderL.attachHalfQuad(ENCODER_L1, ENCODER_L2);
-	encoderR.attachHalfQuad(ENCODER_R1, ENCODER_R2);
-
-	// Set the initial count to 0
-	encoderL.clearCount();
-	encoderR.clearCount();
-
-	return NO_ERROR;
-}
-
-MOTOR_STEPS get_steps_count()
-{
-	// Counters for steps of the two motors
-	MOTOR_STEPS motor_steps;
-
-	motor_steps.left = encoderL.getCount();
-	motor_steps.right = encoderR.getCount();
-
-	return motor_steps;
-}
-
-RESULT reset_counter()
-{
-	encoderL.clearCount();
-	encoderR.clearCount();
-	return NO_ERROR;
-}
-
-RESULT run_left_motor(float speed)
-{
-	motorL_running= true;
-	if (speed == 0)
-	{
-		motorL_running = false;
-	}
-	// define the direction of the motor
-	bool forward = (speed >= 0);
-	speed = fabs(speed);
-
-	int PWM = speed_to_pwm(speed);
-	run_motor(PWM, false, forward);
-	return NO_ERROR;
-}
-
-RESULT run_right_motor(float speed)
-{
-	motorR_running = true;
-	if (speed == 0)
-	{
-		motorR_running = false;
-	}
-	// define the direction of the motor
-	bool forward = (speed >= 0);
-	speed = fabs(speed);
-
-	int PWM = speed_to_pwm(speed);
-	run_motor(PWM, true, forward);
-	return NO_ERROR;
-}
 
 // =========== Private functions ===========
 /**
@@ -161,4 +81,90 @@ int speed_to_pwm(float speed)
 	// Calculate the PWM
 	int PWM = (int)(MIN_PWM + fabs(speed) * (MAX_PWM - MIN_PWM));
 	return PWM;
+}
+
+// =========== Public functions ===========
+
+RESULT motors_init()
+{
+	// ---- Setup motor -----
+
+	motorR_running = false;
+	motorL_running = false;
+
+	// Set the pins as output
+	pinMode(MOTOR_PIN_R1, OUTPUT);
+	pinMode(MOTOR_PIN_R2, OUTPUT);
+	pinMode(MOTOR_PIN_L1, OUTPUT);
+	pinMode(MOTOR_PIN_L2, OUTPUT);
+
+	// ----- Setup encoder ----
+	// Enable the weak pull up resistors
+	ESP32Encoder::useInternalWeakPullResistors = puType::up;
+
+	// Attach the encoders to the pins
+	// 4 count per rotation
+	encoderL.attachHalfQuad(ENCODER_L1, ENCODER_L2);
+	encoderR.attachHalfQuad(ENCODER_R1, ENCODER_R2);
+
+	// Set the initial count to 0
+	encoderL.clearCount();
+	encoderR.clearCount();
+
+	return NO_ERROR;
+}
+
+MOTOR_STEPS get_steps_count()
+{
+	// Counters for steps of the two motors
+	MOTOR_STEPS motor_steps;
+
+	motor_steps.left_count = encoderL.getCount();
+	motor_steps.right_count = encoderR.getCount();
+
+	return motor_steps;
+}
+
+RESULT reset_counter()
+{
+  Serial.print("count:");
+  Serial.print(encoderL.getCount());
+  Serial.print("    ");
+  Serial.println(encoderR.getCount());
+
+	encoderL.clearCount();
+	encoderR.clearCount();
+	return NO_ERROR;
+}
+
+RESULT run_left_motor(float speed)
+{
+	motorL_running= true;
+	if (speed == 0)
+	{
+		motorL_running = false;
+	}
+	// define the direction of the motor
+	bool forward = (speed >= 0);
+	speed = fabs(speed);
+
+	int PWM = speed_to_pwm(speed);
+	run_motor(PWM, false, forward);
+	return NO_ERROR;
+}
+
+RESULT run_right_motor(float speed)
+{
+	motorR_running = true;
+	if (speed == 0)
+	{
+		motorR_running = false;
+	}
+	// define the direction of the motor
+	bool forward = (speed >= 0);
+	speed = fabs(speed);
+
+	int PWM = speed_to_pwm(speed);
+	run_motor(PWM, true, forward);
+	return NO_ERROR;
 }

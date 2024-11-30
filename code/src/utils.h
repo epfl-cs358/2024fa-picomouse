@@ -1,4 +1,7 @@
 #pragma once 
+#ifndef UTILS_H
+#define UTILS_H
+
 // size_t
 #include <cstdlib>
 
@@ -14,8 +17,8 @@ typedef struct {
 }COORDINATES;
 
 typedef struct {
-    unsigned long left_count;
-    unsigned long right_count;
+    long left_count;
+    long right_count;
 } MOTOR_STEPS;
 
 #define EQUAL_COORD(coord_1, coord_2) (coord_1.x == coord_2.x && coord_1.y == coord_2.y)
@@ -42,4 +45,6 @@ typedef struct {
         }\
     }while(0)\
 
+
+#endif
 
