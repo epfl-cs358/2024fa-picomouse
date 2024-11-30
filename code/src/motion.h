@@ -6,12 +6,30 @@
 #include "utils.h"
 #include "motors.h"
 
+/** This library control the two motors of the mouse
+ * It uses a special encoder library wich uses the Serial with 115200 bauds
+ * Exemple of a simple use of forward
+ * 
+ * void setup(){ Serial.begin(115200); }
+ * 
+ * int 1 = 0; 
+ * void loop(){
+ * forward(0.2);
+ * i++; 
+ * delay(50);
+ * if(i == 100){
+ *   i = 0; 
+ *   stop();
+ *   delay(1000);
+ * }
+ * }
+ */
+
 // Correction factor for the speed
 #define KP 0.05
 
+// Speed of the motors when a turning function is called (INPLACE mode)
 #define ROTATION_SPEED 0.1
-
-
 
 // Defined speeds for both run and search mode
 #define SPEED_SEARCH 0.2
@@ -28,16 +46,16 @@ typedef enum {INPLACE, SMOOTH}MODE;
  * @return A RESULT value
  */
 RESULT stop();
-void set_new_speed_forward(float speed);
 
 /* @brief Runs the two motors at a certain speed [-1;1]
- * CALL IT EVEN IF THE SPEED IS THE SAME --> it addapt if one wheel is too slow
+ * CALL IT EVEN IF THE SPEED DOESN'T CHANGE --> it addapt if one wheel is too slow each DELTA_TIME
+ * Never stop running --> give a next instruction to stop
  * @param The desired speed
  * @return A RESULT value
  */
 RESULT forward(float speed);
 
-/* @brief Makes the mouse turn right. NEVER STOP ROTATING --> --> give a next instruction to stop
+/* @brief Makes the mouse turn right. NEVER STOP ROTATING --> give a next instruction to stop
  * @param A mode of turning
  * @return A RESULT value
  */
