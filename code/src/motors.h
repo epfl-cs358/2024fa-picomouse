@@ -1,4 +1,6 @@
 #pragma once
+#ifndef MOTORS_H
+#define MOTORS_H
 
 #include "utils.h"
 
@@ -7,6 +9,7 @@
 * @return a RESULT value 
 */
 RESULT motors_init();
+
 
 /* @brief Retrieves steps counts and the time of the last toogle
  * @param None
@@ -18,7 +21,7 @@ MOTOR_STEPS get_steps_count();
  * @param None
  * @return A double value corresponding to the speed
  */
-double get_speed();
+double get_speed(); //TODO je pense pas l'implementer
 
 /* @brief Resets the two counters
  * @param None
@@ -37,3 +40,18 @@ RESULT run_left_motor(float speed);
  * @return A RESULT value
  */
 RESULT run_right_motor(float speed);
+
+
+/* @brief Active breaking on the left motor
+ * @param The breaking power [0;1]
+ * @return A RESULT value
+ */
+RESULT break_left(float breaking_power);
+
+/* @brief Active breaking on the right motor
+ * @param The breaking power [0;1]
+ * @return A RESULT value
+ */
+RESULT break_right(float breaking_power);
+
+#endif
