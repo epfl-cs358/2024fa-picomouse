@@ -26,7 +26,7 @@
  */
 
 // Correction factor for the speed
-#define KP 0.05
+#define KP 0.1
 
 // Speed of the motors when a turning function is called (INPLACE mode)
 #define ROTATION_SPEED 0.1
@@ -38,7 +38,7 @@
 #define DELTA_TIME 50 // ms, the time between two measures of the counter
 
 // Breaking power [0;1]
-#define BREAKING_POWER 0.5 
+#define BREAKING_POWER 1
 
 // Enum for different modes of turns
 // TODO implement smooth turn

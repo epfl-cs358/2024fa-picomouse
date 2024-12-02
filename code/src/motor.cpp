@@ -6,10 +6,10 @@
 // TODO mettre les bons pins
 
 // Motor pins
-#define MOTOR_PIN_R1 34
-#define MOTOR_PIN_R2 35
-#define MOTOR_PIN_L1 32
-#define MOTOR_PIN_L2 23
+#define MOTOR_PIN_R1 27
+#define MOTOR_PIN_R2 26
+#define MOTOR_PIN_L1 14
+#define MOTOR_PIN_L2 12
 
 // Encoder pins
 #define ENCODER_R1 23
