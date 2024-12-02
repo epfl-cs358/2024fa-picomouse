@@ -1,4 +1,5 @@
 #include "DFRobot_BMI160.h"
+#include <math.h>
 
 double angle = 0.0;
 DFRobot_BMI160 bmi160; 
@@ -11,7 +12,7 @@ double get_angle(int16_t angular_speed, double delta_time){
    return angle;
 }
 
-RESULT update_gyro(, double threshold){
+RESULT update_gyro(double threshold){
     double mean_val = 0;
     int N = 10;
     int t = 10;
@@ -42,6 +43,12 @@ RESULT update_gyro(, double threshold){
       if(((mean_val * elapsed_time_ns)/NS_TO_S > threshold) || ((mean_val * elapsed_time_ns)/NS_TO_S < -threshold)){
         angle += (mean_val * elapsed_time_ns)/NS_TO_S;
       }
+
+    angle = fmod(angle + 1, 2); // Shift by 1, then take modulo 2
+    if (angle < 0) {
+        angle += 2; // Ensure positive result
+    }
+    angle -= 1; // Shift back to [-1, 1]
 }
 
 RESULT setup_gyro(){
