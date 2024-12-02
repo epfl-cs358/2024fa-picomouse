@@ -127,10 +127,10 @@ MOTOR_STEPS get_steps_count()
 
 RESULT reset_counter()
 {
-  Serial.print("count:");
-  Serial.print(encoderL.getCount());
-  Serial.print("    ");
-  Serial.println(encoderR.getCount());
+	Serial.print("count:");
+	Serial.print(encoderL.getCount());
+	Serial.print("    ");
+	Serial.println(encoderR.getCount());
 
 	encoderL.clearCount();
 	encoderR.clearCount();
@@ -139,7 +139,7 @@ RESULT reset_counter()
 
 RESULT run_left_motor(float speed)
 {
-	motorL_running= true;
+	motorL_running = true;
 	if (speed == 0)
 	{
 		motorL_running = false;
@@ -166,5 +166,23 @@ RESULT run_right_motor(float speed)
 
 	int PWM = speed_to_pwm(speed);
 	run_motor(PWM, true, forward);
+	return NO_ERROR;
+}
+
+RESUTL break_left(float breaking_power)
+{
+	breaking_power = fabs(breaking_power) > 1 ? 1 : fabs(breaking_power);
+	int brakePWM = breaking_power * MAX_PWM;
+	analogWrite(MOTOR_PIN_L1, brakePWM);
+	analogWrite(MOTOR_PIN_L2, brakePWM);
+	return NO_ERROR;
+}
+
+RESUTL break_right(float breaking_power)
+{
+	breaking_power = fabs(breaking_power) > 1 ? 1 : fabs(breaking_power);
+	int brakePWM = breaking_power * MAX_PWM;
+	analogWrite(MOTOR_PIN_R1, brakePWM);
+	analogWrite(MOTOR_PIN_R2, brakePWM);
 	return NO_ERROR;
 }

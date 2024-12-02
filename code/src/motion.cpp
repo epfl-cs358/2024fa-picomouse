@@ -2,7 +2,8 @@
 #include <math.h>
 #include <Arduino.h>
 
-float speed_goal = 0; // [-1;1]
+float left_speed_goal = 0;  // [-1;1]
+float right_speed_goal = 0; // [-1;1]
 
 float left_speed = 0;  // [-1;1]
 float right_speed = 0; // [-1;1]
@@ -71,7 +72,8 @@ void update_speed()
  */
 void set_new_speed_forward(float speed)
 {
-    speed_goal = speed;
+    left_speed_goal = speed;
+    right_speed_goal = speed;
     left_speed = speed;
     right_speed = speed;
 
@@ -92,22 +94,34 @@ void set_new_speed_forward(float speed)
 }
 
 // ========== Public functions ===========
+RESULT break()
+{
+    break_left(BREAKING_POWER);
+    break_right(BREAKING_POWER);
+
+    left_speed_goal = 0;
+    right_speed_goal = 0;
+    reset_counter();
+    return NO_ERROR;
+}
+
 RESULT stop()
 {
-  speed_goal = 0; 
-  run_left_motor(0);
-	run_right_motor(0);
-	reset_counter();
-	return NO_ERROR;
+    run_left_motor(0);
+    run_right_motor(0);
+    // freiner bref
+    left_speed_goal = 0;
+    right_speed_goal = 0;
+    reset_counter();
+    return NO_ERROR;
 }
 
 RESULT forward(float speed)
 {
     speed = cap_speed(speed);
     // If the speed is different from the current speed, set the new speed
-    if (speed_goal != speed)
+    if (left_speed_goal != speed || right_speed_goal != speed)
     {
-
         set_new_speed_forward(speed);
         last_time = millis();
         current_time = millis();
@@ -124,8 +138,8 @@ RESULT forward(float speed)
             last_time = current_time;
             new_steps_count = get_steps_count();
 
-            left_rps = (float) (abs(new_steps_count.left_count) - abs(old_steps_count.left_count)) / delta_time;
-            right_rps = (float) (abs(new_steps_count.right_count) - abs(old_steps_count.right_count)) / delta_time;
+            left_rps = (float)(abs(new_steps_count.left_count) - abs(old_steps_count.left_count)) / delta_time;
+            right_rps = (float)(abs(new_steps_count.right_count) - abs(old_steps_count.right_count)) / delta_time;
             Serial.print("left");
             Serial.print(left_rps);
             Serial.print("    right");
@@ -138,7 +152,7 @@ RESULT forward(float speed)
             return NO_ERROR;
         }
     }
-    return NO_ERROR; 
+    return NO_ERROR;
 }
 
 void turn_right(MODE mode)
@@ -154,8 +168,11 @@ void turn_right(MODE mode)
     case INPLACE:
     {
         // TODO peut etre inverser
-        run_right_motor(-ROTATION_SPEED);
-        run_left_motor(ROTATION_SPEED);
+        right_speed_goal = -ROTATION_SPEED;
+        left_speed_goal = ROTATION_SPEED;
+
+        run_right_motor(right_speed_goal);
+        run_left_motor(left_speed_goal);
         break;
     }
     case SMOOTH:
@@ -182,10 +199,14 @@ void turn_left(MODE mode)
     case INPLACE:
     {
         // TODO peut etre inverser
-        run_right_motor(ROTATION_SPEED);
-        run_left_motor(-ROTATION_SPEED);
-        
+        right_speed_goal = ROTATION_SPEED;
+        left_speed_goal = -ROTATION_SPEED;
+
+        run_right_motor(right_speed_goal);
+        run_left_motor(left_speed_goal);
+        break;
     }
+
     case SMOOTH:
     {
         // TODO

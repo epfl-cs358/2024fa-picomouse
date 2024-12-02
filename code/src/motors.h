@@ -41,4 +41,17 @@ RESULT run_left_motor(float speed);
  */
 RESULT run_right_motor(float speed);
 
+
+/* @brief Active breaking on the left motor
+ * @param The breaking power [0;1]
+ * @return A RESULT value
+ */
+RESULT break_left(float breaking_power);
+
+/* @brief Active breaking on the right motor
+ * @param The breaking power [0;1]
+ * @return A RESULT value
+ */
+RESULT break_right(float breaking_power);
+
 #endif
