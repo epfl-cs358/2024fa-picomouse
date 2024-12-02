@@ -35,6 +35,7 @@ wall1011 = pygame.image.load('ui/images/wall1011.png').convert()
 wall1100 = pygame.image.load('ui/images/wall1100.png').convert()
 wall1101 = pygame.image.load('ui/images/wall1101.png').convert()
 wall1110 = pygame.image.load('ui/images/wall1110.png').convert()
+wall1111 = pygame.image.load('ui/images/wall1111.png').convert()
 
 # Mouse
 mouse_surface = pygame.image.load('ui/images/mouse.png').convert_alpha() # in a UP state
@@ -45,7 +46,17 @@ mouse_surface_down = pygame.transform.rotate(mouse_surface, 180)
 mouse_rect = mouse_surface.get_rect(topleft = (0,0))
 mouse_orientation = UP
 
+# Maze
+maze = [[0b0000, 0b0101, 0b0110, 0b1000, 0b0000, 0b0000, 0b0000, 0b0000],
+        [0b1010, 0b1111, 0b1011, 0b1000, 0b0000, 0b0001, 0b0000, 0b0000],
+        [0b1001, 0b0110, 0b1101, 0b0000, 0b0011, 0b1110, 0b1001, 0b0000],
+        [0b0110, 0b1001, 0b0110, 0b1011, 0b1110, 0b1010, 0b1111, 0b1000],
+        [0b0000, 0b0110, 0b1001, 0b0101, 0b0001, 0b0010, 0b1101, 0b0000],
+        [0b0000, 0b00+00, 0b0100, 0b0100, 0b0110, 0b1001, 0b0110, 0b0000],
+        [0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0100, 0b0000, 0b0000],
+        [0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000]]
 
+# Setting orientation of the mouse
 def set_orientation(direction, current_center):
     if direction == UP:
         mouse_surface = mouse_surface_up
@@ -64,6 +75,60 @@ def set_orientation(direction, current_center):
         mouse_rect = mouse_surface.get_rect(center = current_center)
         mouse_orientation = DOWN    
     return mouse_surface, mouse_rect, mouse_orientation
+
+# Printing a cell
+def print_cell(cell, x, y):
+    if cell == 0b0000:
+        screen.blit(wall0000, (x, y))
+    elif cell == 0b0001:
+        screen.blit(wall0001, (x, y))
+    elif cell == 0b0010:
+        screen.blit(wall0010, (x, y))
+    elif cell == 0b0011:
+        screen.blit(wall0011, (x, y))
+    elif cell == 0b0100:
+        screen.blit(wall0100, (x, y))
+    elif cell == 0b0101:
+        screen.blit(wall0101, (x, y))
+    elif cell == 0b0110:
+        screen.blit(wall0110, (x, y))
+    elif cell == 0b0111:
+        screen.blit(wall0111, (x, y))
+    elif cell == 0b1000:
+        screen.blit(wall1000, (x, y))
+    elif cell == 0b1001:
+        screen.blit(wall1001, (x, y))
+    elif cell == 0b1010:
+        screen.blit(wall1010, (x, y))
+    elif cell == 0b1011:
+        screen.blit(wall1011, (x, y))
+    elif cell == 0b1100:
+        screen.blit(wall1100, (x, y))
+    elif cell == 0b1101:
+        screen.blit(wall1101, (x, y))
+    elif cell == 0b1110:
+        screen.blit(wall1110, (x, y))
+    elif cell == 0b1111:
+        screen.blit(wall1111, (x, y))
+    else:
+        screen.blit(undisc_cell, (x, y))
+
+# Adding wall and editing surrounding walls
+def add_wall(maze, cell, x, y):
+    maze[y][x] = cell
+    if (cell | 0b1000) and (x > 0):
+        if not (maze[y][x - 1] | 0b0010):
+            maze[y][x - 1] + 0b0010
+    if (cell | 0b0100) and (y > 0):
+        if not (maze[y - 1][x] | 0b0001):
+            maze[y - 1][x] + 0b0001
+    if (cell | 0b0010) and (x < 7):
+        if not (maze[y][x + 1] | 0b1000):
+            maze[y][x + 1] + 0b1000
+    if (cell | 0b0001) and (y < 7):
+        if not (maze[y + 1][x] | 0b0100):
+            maze[y + 1][x] + 0b0100
+
 
 while True:
     for event in pygame.event.get():
@@ -88,10 +153,11 @@ while True:
                     mouse_rect.y += 125
                 mouse_surface, mouse_rect, mouse_orientation = set_orientation(DOWN, mouse_rect.center)
             
-
+    # Walls
     for i in range (0, 8):
         for j in range (0, 8):
-            screen.blit(undisc_cell, (i*CELL_SIZE, j*CELL_SIZE))
+            print_cell(maze[i][j], j*CELL_SIZE, i*CELL_SIZE)
+            # screen.blit(undisc_cell, (i*CELL_SIZE, j*CELL_SIZE))
             if (i == 0 and j == 0):
                 screen.blit(wall0000, (0,0))
             elif (i == 6):
