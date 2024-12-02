@@ -13,14 +13,16 @@ A brief description of what this project does and its purpose.
 - Feature 3: 
 - Feature 4:
 
-### Key Sections:
-1. **Project Name**: Title of your repository.
-2. **Description**: What the project does.
-3. **Features**: Highlight key features or functionality.
-4. **Getting Started**: Installation and setup steps.
-5. **Usage**: How to run and use the project.
-7. **License**: License under which the project is released.
-8. **Acknowledgements**: Credit to other people, tools, etc.
+## Table of Contents
+1. [Description](#description)
+2. [Features](#features)
+3. [Getting Started](#getting-started)
+4. [Usage](#usage)
+5. [Software Installation](#software-installation)
+6. [Contributing](#contributing)
+7. [License](#license)
+8. [Acknowledgements](#acknowledgements)
+
 
 
 ## Getting Started
@@ -37,17 +39,18 @@ A brief description of what this project does and its purpose.
 - DFRobot Gravity I2C BMI160 Gyroscope
   
 
-### Software Prerequisites
-
-What is needed to install and run the project? You can list any dependencies and tools here.
-
-- Arduino IDE
-- Python 3.10
-- Python libraries: (bleak, pygame)
 
 
 
-### Software Installation
+
+## Software Installation
+  ### Software Prerequisites:
+  
+  - Arduino IDE
+  - Python 3.10
+  - Python libraries: (bleak, pygame)
+
+### Installation:
 
 1. Clone the repository to your local machine:
    ```bash
