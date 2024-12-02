@@ -58,7 +58,7 @@ RESULT stop();
  * @param The breaking power [0;1]
  * @return A RESULT value
  */
-RESULT break();
+RESULT break_wheels();
 
 /* @brief Runs the two motors at a certain speed [-1;1]
  * CALL IT EVEN IF THE SPEED DOESN'T CHANGE --> it addapt if one wheel is too slow each DELTA_TIME

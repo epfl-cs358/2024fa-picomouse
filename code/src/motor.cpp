@@ -6,16 +6,16 @@
 // TODO mettre les bons pins
 
 // Motor pins
-#define MOTOR_PIN_R1 18
-#define MOTOR_PIN_R2 19
-#define MOTOR_PIN_L1 5
-#define MOTOR_PIN_L2 17
+#define MOTOR_PIN_R1 34
+#define MOTOR_PIN_R2 35
+#define MOTOR_PIN_L1 32
+#define MOTOR_PIN_L2 23
 
 // Encoder pins
-#define ENCODER_R1 2
-#define ENCODER_R2 15
-#define ENCODER_L1 23
-#define ENCODER_L2 22
+#define ENCODER_R1 23
+#define ENCODER_R2 19
+#define ENCODER_L1 4
+#define ENCODER_L2 2
 
 // Max and min PWM values
 #define MAX_PWM 255
@@ -169,7 +169,7 @@ RESULT run_right_motor(float speed)
 	return NO_ERROR;
 }
 
-RESUTL break_left(float breaking_power)
+RESULT break_left(float breaking_power)
 {
 	breaking_power = fabs(breaking_power) > 1 ? 1 : fabs(breaking_power);
 	int brakePWM = breaking_power * MAX_PWM;
@@ -178,7 +178,7 @@ RESUTL break_left(float breaking_power)
 	return NO_ERROR;
 }
 
-RESUTL break_right(float breaking_power)
+RESULT break_right(float breaking_power)
 {
 	breaking_power = fabs(breaking_power) > 1 ? 1 : fabs(breaking_power);
 	int brakePWM = breaking_power * MAX_PWM;

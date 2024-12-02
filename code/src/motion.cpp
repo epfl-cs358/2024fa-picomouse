@@ -67,6 +67,15 @@ void update_speed()
         }
     }
 }
+
+void reset_speeds()
+{
+    left_speed_goal = 0;
+    right_speed_goal = 0;
+    left_speed = 0;
+    right_speed = 0;
+}
+
 /**
  * @brief set the new speed of the two motors --> used to go forward
  */
@@ -94,13 +103,12 @@ void set_new_speed_forward(float speed)
 }
 
 // ========== Public functions ===========
-RESULT break()
+RESULT break_wheels()
 {
     break_left(BREAKING_POWER);
     break_right(BREAKING_POWER);
 
-    left_speed_goal = 0;
-    right_speed_goal = 0;
+    reset_speeds();
     reset_counter();
     return NO_ERROR;
 }
@@ -110,8 +118,7 @@ RESULT stop()
     run_left_motor(0);
     run_right_motor(0);
     // freiner bref
-    left_speed_goal = 0;
-    right_speed_goal = 0;
+    reset_speeds();
     reset_counter();
     return NO_ERROR;
 }
@@ -170,6 +177,8 @@ void turn_right(MODE mode)
         // TODO peut etre inverser
         right_speed_goal = -ROTATION_SPEED;
         left_speed_goal = ROTATION_SPEED;
+        left_speed = left_speed_goal;
+        right_speed = right_speed_goal;
 
         run_right_motor(right_speed_goal);
         run_left_motor(left_speed_goal);
@@ -201,6 +210,8 @@ void turn_left(MODE mode)
         // TODO peut etre inverser
         right_speed_goal = ROTATION_SPEED;
         left_speed_goal = -ROTATION_SPEED;
+        left_speed = left_speed_goal;
+        right_speed = right_speed_goal;
 
         run_right_motor(right_speed_goal);
         run_left_motor(left_speed_goal);
