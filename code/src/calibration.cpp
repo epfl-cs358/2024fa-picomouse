@@ -5,7 +5,6 @@
 
 
 RESULT init_pos(DFRobot_BMI160* bmi160, double* offset){
-    int sumZ = 0;
     int N = 10;
     int t = 10;
     int8_t rslt;
