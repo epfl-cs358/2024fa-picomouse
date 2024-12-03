@@ -2,24 +2,18 @@
 
 #include "utils.h"
 
-// Array of all distances detected by sensors 
-double distances[5];
+// Array of distances detected by sensors 
+// in order LEFT MID_LEFT MID_RIGHT RIGHT
+uint_8 side_distances[4];
+size_t side_update_time[4];
 
-/* @brief Enables sensors
- * @param None
- * @return A RESULT value
- */
-RESULT enable();
+double mid_distance = 0;
+size_t mid_update_time = 0;
 
-/* @brief Disables sensors
- * @param None
- * @return A RESULT value
- */
-RESULT disable();
 
-/* @brief Updates value of 'distances[5]'
- * @details Calculate an average of 15 values per sensor
- * @param None
- * @return A RESULT value
- */
-RESULT get_distances();
+RESULT innit_TOF();
+
+RESULT update_left();
+RESULT update_right();
+RESULT update_mid();
+RESULT update_all();

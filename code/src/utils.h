@@ -1,4 +1,5 @@
 #pragma once 
+
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -9,7 +10,9 @@ typedef enum {
     NO_ERROR,
     MOUSE_END,
     STACK_OVERFLOW,
-    }RESULT;
+    TOF_INNIT_FAIL,
+    TOF_READ_FAIL
+}RESULT;
 
 typedef struct {
     int x;

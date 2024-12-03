@@ -1,3 +1,5 @@
+
+#pragma once 
 /*!
  * @file DFRobot_BMI160.h
  * @brief Define the basic structure of class DFRobot_BMI160 
