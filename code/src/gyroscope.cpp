@@ -3,6 +3,8 @@
 #include <math.h>
 
 #define NS_TO_S 1000000
+#define OVER_THRESHOLD(angle, threshold) (angle < -threshold || angle > threshold)
+
 
 double angle = 0.0;
 DFRobot_BMI160 bmi160;
@@ -12,7 +14,7 @@ void reset_angle() {
   angle = 0.0;
 }
 
-double get_angle(int16_t angular_speed, double delta_time) {
+double get_angle() {
   return angle;
 }
 
@@ -45,7 +47,7 @@ RESULT update_gyro(double threshold) {
   mean_val /= N;
   mean_val *= 3.14 / 180.0;
 
-  if (((mean_val * elapsed_time_ns) / NS_TO_S > threshold) || ((mean_val * elapsed_time_ns) / NS_TO_S < -threshold)) {
+  if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), threshold)) {
     angle += (mean_val * elapsed_time_ns) / NS_TO_S;
   }
 
