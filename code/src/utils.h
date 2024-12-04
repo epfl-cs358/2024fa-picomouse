@@ -48,6 +48,13 @@ typedef struct {
         }\
     }while(0)\
 
+#define MODULO_PI(angle) \
+    do{\
+    int sign = angle < 0 ? 1 : -1;\
+    while(angle > 1 || angle < -1){\
+        angle += sign;\
+    }\
+    }while(0)
 
 #endif
 

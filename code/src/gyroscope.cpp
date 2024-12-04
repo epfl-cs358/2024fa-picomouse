@@ -1,5 +1,6 @@
 #include "DFRobot_BMI160.h"
 #include "gyroscope.h"
+#include "utils.h"
 #include <math.h>
 
 #define NS_TO_S 1000000
@@ -51,11 +52,8 @@ RESULT update_gyro(double threshold) {
     angle += (mean_val * elapsed_time_ns) / NS_TO_S;
   }
 
-  angle = fmod(angle + 1, 2);  // Shift by 1, then take modulo 2
-  if (angle < 0) {
-    angle += 2;  // Ensure positive result
-  }
-  angle -= 1;  // Shift back to [-1, 1]
+  MODULO_PI(angle);
+  
   return NO_ERROR;
 }
 

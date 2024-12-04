@@ -1,6 +1,8 @@
 #include "navigation.h"
 #include "gyroscope.h"
 #include "motion.h"
+#include "utils.h"
+#include <Arduino.h>
 
 #define ERROR 1.0/16.0
 
@@ -18,18 +20,27 @@ RESULT alignement(){
 
 RESULT turn(double angle, MODE mode){
     update_gyro(0.00150);
-    double current_angle = get_angle();
-    double target_angle = current_angle + angle;
-    if (get_angle() > angle + ERROR) {
-        turn_right(mode);
-    }
-    else if (get_angle() < angle - ERROR) {
-        turn_left(mode);
-    }else {
-        if (mode == INPLACE) {
-            break_wheels();
+    double curr_angle = get_angle() + angle;
+    Serial.println(curr_angle);
+    MODULO_PI(curr_angle);
+    bool is_close = false;
+    while (!is_close) {
+        if (get_angle() > curr_angle + ERROR) {
+            turn_right(mode);
+            Serial.println("too big");
+        }
+        else if (get_angle() < curr_angle - ERROR) {
+            turn_left(mode);
+            Serial.println("too small");
+        }else {
+            if (mode == INPLACE) {
+                break_wheels();
+                Serial.println("finished");
+                is_close = true;
+            }
         }
     }
+
     return NO_ERROR;
 }
 
