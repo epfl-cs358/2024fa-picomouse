@@ -24,4 +24,4 @@ RESULT alignement();
 
 RESULT turn(double angle, MODE mode);
 
-RESULT init_sensors();
+RESULT init_all_sensors();
