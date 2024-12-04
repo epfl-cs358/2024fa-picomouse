@@ -1,6 +1,8 @@
 #pragma once
 
 #include "utils.h"
+#include "motion.h"
+#include "gyroscope.h"
 
 /* @brief Adjusts the distance of the mouse with the front wall
  * @param None
@@ -20,8 +22,6 @@ RESULT adjust_sides_distance();
  */
 RESULT alignement();
 
-/* @brief Adjusts the total angle of the mouse by using the gyroscope
- * @param None
- * @return A RESULT value
- */
-RESULT adjust_angle();
+RESULT turn(double angle, MODE mode);
+
+RESULT init_all_sensors();

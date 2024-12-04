@@ -3,8 +3,12 @@
 #include <ESP32Encoder.h>
 #include <Arduino.h>
 
-// TODO mettre les bons pins
+// ========== DEBUG MODE ===========================
+// UNCOMMENT THIS LINE TO DISSABLE DEBUG MODE
+//#define DEBUG_MODE
+//====================================================
 
+// TODO mettre les bons pins
 // Motor pins
 #define MOTOR_PIN_R1 27
 #define MOTOR_PIN_R2 26
@@ -14,12 +18,12 @@
 // Encoder pins
 #define ENCODER_R1 23
 #define ENCODER_R2 19
-#define ENCODER_L1 4
+#define ENCODER_L1 15
 #define ENCODER_L2 2
 
 // Max and min PWM values
 #define MAX_PWM 255
-#define MIN_PWM 80
+#define MIN_PWM 42
 
 bool motorR_running;
 bool motorL_running;
@@ -127,10 +131,12 @@ MOTOR_STEPS get_steps_count()
 
 RESULT reset_counter()
 {
+#ifdef DEBUG_MODE
 	Serial.print("count:");
 	Serial.print(encoderL.getCount());
 	Serial.print("    ");
 	Serial.println(encoderR.getCount());
+#endif
 
 	encoderL.clearCount();
 	encoderR.clearCount();
