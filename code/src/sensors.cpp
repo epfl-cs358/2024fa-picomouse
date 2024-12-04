@@ -1,4 +1,5 @@
 #include "sensors.h"
+#include "DFRobot_VL53L0X.h"
 #include "DFRobot_VL6180X.h"
 
 #define DELAY 10
@@ -10,11 +11,13 @@
 
 #define NEW_ADDRESS_LEFT 0x40
 #define NEW_ADDRESS_MID_LEFT 0x42
-#define NEW_ADDRESS_MID_RIGHT 0x44
-#define NEW_ADDRESS_RIGHT 0x46
+#define NEW_ADDRESS_MID 0x44
+#define NEW_ADDRESS_MID_RIGHT 0x46
+#define NEW_ADDRESS_RIGHT 0x48
 
 DFRobot_VL6180X left;
 DFRobot_VL6180X mid_left;
+DFRobot_VL53L0X mid;
 DFRobot_VL6180X mid_right;
 DFRobot_VL6180X right;
 
@@ -38,6 +41,11 @@ RESULT innit_TOF(){
     digitalWrite(MID_RIGHT_PIN, LOW);
     digitalWrite(RIGHT_PIN, LOW);
     delay(50);
+
+    mid.begin(NEW_ADDRESS_MID);
+    mid.setMode(sensor.eContinuous,sensor.eHigh);
+    mid.start();
+
 
     INNIT_ONE_TOF(left, LEFT_PIN, NEW_ADDRESS_LEFT);
     INNIT_ONE_TOF(mid_left, MID_LEFT_PIN, NEW_ADDRESS_MID_LEFT);
@@ -82,7 +90,8 @@ RESULT update_right(){
 }   
 
 RESULT update_mid(){
-
+    mid_distance= static_cast<double>(mid.getDistance());
+    return NO_ERROR;
 }
 
 RESULT update_all(){
@@ -92,3 +101,27 @@ RESULT update_all(){
     return NO_ERROR;
 }
 
+
+
+
+void setup() {
+  //initialize serial communication at 9600 bits per second:
+  Serial.begin(115200);
+  //join i2c bus (address optional for master)
+  Wire.begin();
+  //Set I2C sub-device address
+  sensor.begin(0x50);
+  //Set to Back-to-back mode and high precision mode
+  sensor.setMode(sensor.eContinuous,sensor.eHigh);
+  //Laser rangefinder begins to work
+  sensor.start();
+}
+
+void loop() 
+{
+  //Get the distance
+  Serial.print("Distance: ");Serial.println(sensor.getDistance());
+  //The delay is added to demonstrate the effect, and if you do not add the delay,
+  //it will not affect the measurement accuracy
+  delay(500);
+}
