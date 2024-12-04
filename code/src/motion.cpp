@@ -60,7 +60,7 @@ float cap_speed(float speed)
     return speed;
 }
 
-void update_speed_go_right(float correction)
+void update_speed_go_left(float correction)
 {
     if (fabs(right_speed) < 1)
     { // We can increase right speed
@@ -74,7 +74,7 @@ void update_speed_go_right(float correction)
     }
 }
 
-void update_speed_go_left(float correction)
+void update_speed_go_right(float correction)
 {
     if (fabs(left_speed) < 1)
     { // We can increase left speed
@@ -106,11 +106,11 @@ void update_speed()
 
     if (error > 0) // Left is faster --> mouse going to the right
     {
-        update_speed_go_right(correction);
+        update_speed_go_left(correction);
     }
     else if (error < 0) // Right is faster --> mouse going to the left
     {
-        update_speed_go_left(correction);
+        update_speed_go_right(correction);
     }
 
 #ifdef DEBUG_MODE
