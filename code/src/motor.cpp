@@ -14,12 +14,12 @@
 // Encoder pins
 #define ENCODER_R1 23
 #define ENCODER_R2 19
-#define ENCODER_L1 4
+#define ENCODER_L1 15
 #define ENCODER_L2 2
 
 // Max and min PWM values
 #define MAX_PWM 255
-#define MIN_PWM 80
+#define MIN_PWM 42
 
 bool motorR_running;
 bool motorL_running;

@@ -29,7 +29,7 @@
 #define KP 0.1
 
 // Speed of the motors when a turning function is called (INPLACE mode)
-#define ROTATION_SPEED 0.1
+#define ROTATION_SPEED 0.001
 
 // Defined speeds for both run and search mode
 #define SPEED_SEARCH 0.2
@@ -42,6 +42,10 @@
 
 // Enum for different modes of turns
 // TODO implement smooth turn
+
+// Correction angle for the smooth turn
+#define CORRECTION_ANGLE 1.0/16.0
+
 typedef enum
 {
     INPLACE,
@@ -54,7 +58,8 @@ typedef enum
  */
 RESULT stop();
 
-/* @brief Active breaking.
+/* @brief Acti
+#define CORRECTION_ANGLE 1.0/16.0ve breaking.
  * @param The breaking power [0;1]
  * @return A RESULT value
  */
@@ -64,9 +69,12 @@ RESULT break_wheels();
  * CALL IT EVEN IF THE SPEED DOESN'T CHANGE --> it addapt if one wheel is too slow each DELTA_TIME
  * Never stop running --> give a next instruction to stop
  * @param The desired speed
+ * @param The correction factor if need to turn a bit in a direction (if not alligned between the two walls)
  * @return A RESULT value
  */
-RESULT forward(float speed);
+
+//TODO IMPLEMENT THE CORRECTION FACTOR -->
+RESULT forward(float speed, float gyro_correction = 0);
 
 /* @brief Makes the mouse turn right. NEVER STOP ROTATING --> give a next instruction to stop
  * @param A mode of turning

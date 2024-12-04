@@ -26,7 +26,47 @@ float cap_speed(float speed)
     return speed;
 }
 
-void update_speed()
+void update_speed(foat gyro_correction = 0)
+{
+    float error = left_rps - right_rps;
+    Serial.print(error);
+    float correction = fabs(KP * error);
+    Serial.print("   corr: ");
+    Serial.println(correction);
+
+    if (error > 0) // Left is faster
+    {
+        if (fabs(right_speed) < 1)
+        { // We can increase right speed
+            right_speed = right_speed > 0 ? cap_speed(right_speed + correction) : cap_speed(right_speed - correction);
+            run_right_motor(right_speed);
+        }
+        else
+        { // We decrease left speed
+            left_speed = left_speed > 0 ? cap_speed(left_speed - correction) : cap_speed(left_speed + correction);
+            run_left_motor(left_speed);
+        }
+    }
+    else if (error < 0) // Right is faster
+    {
+        if (fabs(left_speed) < 1)
+        { // We can increase left speed
+            Serial.print("left speed1");
+            Serial.println(left_speed);
+
+            left_speed = left_speed > 0 ? cap_speed(left_speed + correction) : cap_speed(left_speed - correction);
+            Serial.print("left speed2");
+            Serial.println(left_speed);
+
+            run_left_motor(left_speed);
+        }
+        else
+        { // We decrease right speed
+            right_speed = right_speed > 0 ? cap_speed(right_speed - correction) : cap_speed(right_speed + correction);
+            run_right_motor(right_speed);
+        }
+    }
+}
 {
     float error = left_rps - right_rps;
     Serial.print(error);
@@ -123,7 +163,7 @@ RESULT stop()
     return NO_ERROR;
 }
 
-RESULT forward(float speed)
+RESULT forward(float speed, float gyro_correction = 0)
 {
     speed = cap_speed(speed);
     // If the speed is different from the current speed, set the new speed
