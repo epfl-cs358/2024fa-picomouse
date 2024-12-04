@@ -3,8 +3,12 @@
 #include <ESP32Encoder.h>
 #include <Arduino.h>
 
-// TODO mettre les bons pins
+// ========== DEBUG MODE ===========================
+// UNCOMMENT THIS LINE TO DISSABLE DEBUG MODE
+//#define DEBUG_MODE
+//====================================================
 
+// TODO mettre les bons pins
 // Motor pins
 #define MOTOR_PIN_R1 27
 #define MOTOR_PIN_R2 26
@@ -127,10 +131,12 @@ MOTOR_STEPS get_steps_count()
 
 RESULT reset_counter()
 {
+#ifdef DEBUG_MODE
 	Serial.print("count:");
 	Serial.print(encoderL.getCount());
 	Serial.print("    ");
 	Serial.println(encoderR.getCount());
+#endif
 
 	encoderL.clearCount();
 	encoderR.clearCount();
