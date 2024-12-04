@@ -6,7 +6,7 @@
 #define OVER_THRESHOLD(angle, threshold) (angle < -threshold || angle > threshold)
 
 
-double angle = 0.0;
+double angle = 0.0; //unit : radian
 DFRobot_BMI160 bmi160;
 const int8_t i2c_addr = 0x68;
 
