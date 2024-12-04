@@ -29,7 +29,8 @@
 #define CORRECTION_ANGLE 1.0 / 16.0
 
 // Correction factor if there is a CORR_RIGHT or CORR_LEFT
-#define EXT_CORR_FACTOR 0.1
+#define EXT_CORR_FACTOR 0.01
+#define DELTA_CORR 5.0
 
 float left_speed_goal = 0;  // [-1;1]
 float right_speed_goal = 0; // [-1;1]
@@ -40,6 +41,8 @@ float right_speed = 0; // [-1;1]
 // radian per second
 float left_rps = 0;
 float right_rps = 0;
+
+unsigned int correction_count = 1;
 
 unsigned long last_time = 0;
 unsigned long current_time = 0;
@@ -120,13 +123,14 @@ void update_speed()
 
 void uptade_speed_external_correction(EXT_CORRECTION ext_corr)
 {
+    correction_count += DELTA_CORR;
     if (ext_corr == CORR_RIGHT)
     {
-        update_speed_go_right(EXT_CORR_FACTOR);
+        update_speed_go_right(EXT_CORR_FACTOR / (float) correction_count);
     }
     else if (ext_corr == CORR_LEFT)
     {
-        update_speed_go_left(EXT_CORR_FACTOR);
+        update_speed_go_left(EXT_CORR_FACTOR / (float) correction_count);
     }
 }
 
@@ -185,14 +189,14 @@ RESULT stop()
     return NO_ERROR;
 }
 
-RESULT forward(float speed, EXT_CORRECTION ext_corr = NO_CORR)
+RESULT forward(float speed, EXT_CORRECTION ext_corr)
 {
     speed = cap_speed(speed);
     // If the speed is different from the current speed, set the new speed
     // If the correction is different from the previous one, set the new speed
-    if (left_speed_goal != speed || right_speed_goal != speed || ext_corr != previous_correction)
+    if (left_speed_goal != speed || right_speed_goal != speed || previous_correction != ext_corr)
     {
-        previous_correction = ext_corr;
+        correction_count = 1; // reset the correction count
         set_new_speed_forward(speed);
         last_time = millis();
         current_time = millis();
@@ -228,9 +232,9 @@ RESULT forward(float speed, EXT_CORRECTION ext_corr = NO_CORR)
             }
 
             old_steps_count = new_steps_count;
-            return NO_ERROR;
         }
     }
+    previous_correction = ext_corr;
     return NO_ERROR;
 }
 
