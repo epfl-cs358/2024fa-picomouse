@@ -28,6 +28,12 @@ DFRobot_VL6180X right;
         CHECK_AND_THROW(sensor.begin(), TOF_INNIT_FAIL);\
         delay(DELAY);\
         sensor.setIICAddr(new_address);\
+DFRobot_VL6180X left;
+DFRobot_VL6180X mid_left;
+DFRobot_VL53L0X mid;
+DFRobot_VL6180X mid_right;
+DFRobot_VL6180X right;
+
     }while(0)
 
 RESULT innit_TOF(){
@@ -56,11 +62,11 @@ RESULT innit_TOF(){
 }
 
 RESULT update_left(){
-    uint8_t temp_left = left.rangePollMeasurement()
-    uint8_t left_status = left.getRangeResult()
+    uint8_t temp_left = left.rangePollMeasurement();
+    uint8_t left_status = left.getRangeResult();
 
-    uint8_t temp_mid_left = mid_left.rangePollMeasurement()
-    uint8_t mid_left_status = mid_left.getRangeResult()
+    uint8_t temp_mid_left = mid_left.rangePollMeasurement();
+    uint8_t mid_left_status = mid_left.getRangeResult();
 
     CHECK_AND_THROW(left_status || mid_left_status, TOF_READ_FAIL);
     
@@ -73,13 +79,13 @@ RESULT update_left(){
 }
 
 RESULT update_right(){
-    uint8_t temp_right = right.rangePollMeasurement()
-    uint8_t right_status = right.getRangeResult()
+    uint8_t temp_right = right.rangePollMeasurement();
+    uint8_t right_status = right.getRangeResult();
 
-    uint8_t temp_mid_right = mid_right.rangePollMeasurement()
-    uint8_t mid_right_status = mid_right.getRangeResult()
+    uint8_t temp_mid_right = mid_right.rangePollMeasurement();
+    uint8_t mid_right_status = mid_right.getRangeResult();
 
-    CHECK_AND_THROW(right_status || mid_status, TOF_READ_FAIL);
+    CHECK_AND_THROW(right_status || mid_right_status, TOF_READ_FAIL);
     
     distances[2] = temp_mid_right;
     distances[3] =  temp_right;
@@ -102,26 +108,3 @@ RESULT update_all(){
 }
 
 
-
-
-void setup() {
-  //initialize serial communication at 9600 bits per second:
-  Serial.begin(115200);
-  //join i2c bus (address optional for master)
-  Wire.begin();
-  //Set I2C sub-device address
-  sensor.begin(0x50);
-  //Set to Back-to-back mode and high precision mode
-  sensor.setMode(sensor.eContinuous,sensor.eHigh);
-  //Laser rangefinder begins to work
-  sensor.start();
-}
-
-void loop() 
-{
-  //Get the distance
-  Serial.print("Distance: ");Serial.println(sensor.getDistance());
-  //The delay is added to demonstrate the effect, and if you do not add the delay,
-  //it will not affect the measurement accuracy
-  delay(500);
-}

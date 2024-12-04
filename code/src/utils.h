@@ -31,14 +31,14 @@ typedef struct {
 // helper macro to throw an given error if the condition is satisfied 
 #define CHECK_AND_THROW(condition, error) \
     do{\
-        if(condition){return error};\
+        if(condition){return error;}\
     }while(0)
 
 
 /// Helper macro to propagate an error returned by a called function
 #define PROPAGATE_ERROR(error)\
     do{\
-        if(error){return error};\
+        if(error){return error;}\
     }while(0)
 
 #define DEBBUG_PRINT(SENTENCE) \

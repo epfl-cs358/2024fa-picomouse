@@ -4,7 +4,7 @@
 
 // Array of distances detected by sensors 
 // in order LEFT MID_LEFT MID_RIGHT RIGHT
-uint_8 side_distances[4];
+uint8_t side_distances[4];
 size_t side_update_time[4];
 
 double mid_distance = 0;
