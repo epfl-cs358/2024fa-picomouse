@@ -6,32 +6,21 @@
 
 A brief description of what this project does and its purpose. 
 
-## Features
 
-- Feature 1:
-- Feature 2: 
-- Feature 3: 
-- Feature 4:
 
 ## Table of Contents
 1. [Description](#description)
-2. [Features](#features) 4 files changed, 0 insertions(+), 0 deletions(-)
- create mode 100644 images/left_captor_calibration.png
- create mode 100644 images/mid_left_captor_calibration.png
- create mode 100644 images/mid_right_captor_calibration.png
- create mode 100644 images/right_captor_calibration.png
-
-3. [Getting Started](#getting-started)
-4. [Usage](#usage)
-5. [Software Installation](#software-installation)
-6. [Sensors calibration](#sensors_calibration)
-7. [Contributing](#contributing)
-8. [License](#license)
-9. [Acknowledgements](#acknowledgements)
+2. [Mouse Components](#mouse-components)
+4. [Mouse Build](#mouse-build)
+5. 
+7. [Software Installation](#software-installation)
+8. [Sensors calibration](#sensors-calibration)
+9. [Contributing](#contributing)
+10. [License](#license)
+11. [Acknowledgements](#acknowledgements)
 
 
 
-## Getting Started
 
 
 
@@ -43,11 +32,21 @@ A brief description of what this project does and its purpose.
 - 4 x DFROBOT SEN0427 TOF
 - DFROBOT SEN0245 TOF
 - DFRobot Gravity I2C BMI160 Gyroscope
+- Small Bead size=??????
   
 
-
-
-
+### Mouse Build:
+ ### 3d Printing the components:
+  The 3d files are in the CAD folder.
+  1.Print the base plate:
+  ![Base Plate](images/to/logo.png)
+  2.Print the motors holders:
+  ![Motor holder](images/to/logo.png) 
+  3.Print the bead holder (cap):
+  ![Bead cap](images/to/logo.png) 
+  4.Print the weels:
+  ![Wheels](images/to/logo.png) 
+  
 
 ## Software Installation
   ### Software Prerequisites:
@@ -93,18 +92,26 @@ A brief description of what this project does and its purpose.
   We get 5 slopes: \
   Left_y = 0.951x - 6.273 \
   Mid_Left_y = 0.998x - 0.189 \
+  Mid_y = ???? \
   Mid_Right_y = 0.995x - 4.407 \
-  Right_y = 0.958x - 1.176 \
+  Right_y = 0.958x - 1.176 
 
-  The vallues you will get need to be changed in sensors.h. \
+  The values you will get need to be changed in sensors.h, the SLOPE and OFFSET of each captors. 
 
-  ### Gy
+  ### Gyroscope calibration:
+   The bmi60 chip is knowned for it's natural drift. To counter that the mouse, at initialization, \
+   read's GYRO_CALIBRATION_NB_ITERATIONS times the gyroscope and average the values to get an offset to counter the drift.\
+   The offset itself is not sufficient, we also need an activation treshold to negate small angular speed variation. \
+   This parameter needs to be adapted to your gyroscope in gyroscope.h. \
+   The gyroscope is also measured ???? times and average it out to mitigate the noise.
+   This parameter can also be changed in gyroscope.h.
 
+  
 
 ## Improvements:
   1. Reduce the use of floating point calculations in the code using "scaled" fixed point values to improve calculation speed.
   2. Reduce the BLE (bluetooth) library so it can be compiled on the esp and used for the python script.
   3. Use a PCB as the mouse base plate to reduce the weight of the plastic plate and the cable.
   4. Make smooth turns when running the maze (after the exploration phase).
-    
+  5. Use a simpler/cheaper gyroscope since we use only the angular speed of the x to y axis.
     
