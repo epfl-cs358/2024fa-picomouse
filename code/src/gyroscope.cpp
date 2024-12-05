@@ -3,6 +3,8 @@
 #include "utils.h"
 #include <math.h>
 
+#define GYRO_NB_ITERATIONS 3
+
 #define NS_TO_S 1000000
 #define OVER_THRESHOLD(angle, threshold) (angle < -threshold || angle > threshold)
 
@@ -28,7 +30,7 @@ RESULT update_gyro(double threshold) {
   uint32_t start_time = 0;
   uint32_t end_time = 0;
 
-  for (int i = 0; i < GYRO_CALIBRATION_NB_ITERATIONS; i++) {
+  for (int i = 0; i < GYRO_NB_ITERATIONS; i++) {
 
     rslt = bmi160.getAccelGyroData(angularSpeeds, time_stamp);
 
@@ -45,13 +47,13 @@ RESULT update_gyro(double threshold) {
   end_time = time_stamp[0];
   double elapsed_time_ns = (end_time - start_time);
   mean_val /= GYRO_CALIBRATION_NB_ITERATIONS;
-  mean_val *= 3.14 / 180.0;
+  mean_val *= 3.1415 / 180.0;
 
   if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), threshold)) {
     angle += (mean_val * elapsed_time_ns) / NS_TO_S;
   }
 
-  MODULO_PI(angle);
+  angle = MODULO_PI(angle);
   
   return NO_ERROR;
 }
