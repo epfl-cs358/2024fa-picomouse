@@ -14,9 +14,8 @@ A brief description of what this project does and its purpose.
 4. [Mouse Build](#mouse-build)
 7. [Software Installation](#software-installation)
 8. [Sensors calibration](#sensors-calibration)
-9. [Contributing](#contributing)
-10. [License](#license)
-11. [Acknowledgements](#acknowledgements)
+9. [License](#license)
+    
 
 
 
@@ -47,7 +46,7 @@ A brief description of what this project does and its purpose.
   ![Wheels](images/to/logo.png) 
 
 ### Assembling the Mouse:
-  The whole mouse can be build with bolts and screws but threaded insert can also be used. \
+  The whole mouse can be build with bolts and screws but threaded insert can be used to disassemble the mouse easily. 
   
   1.Place the motors and fix them with the motors holder:
   ![Motor holder](images/to/logo.png) 
@@ -64,7 +63,8 @@ A brief description of what this project does and its purpose.
   5.Place and screw the buck convertor: 
   ![Buck convertor](images/to/logo.png) 
 
-  
+  6.Place and screw the ESP-32 to the back of the motor holder:
+  ![ESP-32](images/to/logo.png) 
 
   
   
@@ -135,4 +135,16 @@ A brief description of what this project does and its purpose.
   3. Use a PCB as the mouse base plate to reduce the weight of the plastic plate and the cable.
   4. Make smooth turns when running the maze (after the exploration phase).
   5. Use a simpler/cheaper gyroscope since we use only the angular speed of the x to y axis.
+
+## License
+
+Copyright (C) 2024 <copyright holders>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of <copyright holders> shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from <copyright holders>.
     
