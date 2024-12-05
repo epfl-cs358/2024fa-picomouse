@@ -12,7 +12,6 @@ A brief description of what this project does and its purpose.
 1. [Description](#description)
 2. [Mouse Components](#mouse-components)
 4. [Mouse Build](#mouse-build)
-5. 
 7. [Software Installation](#software-installation)
 8. [Sensors calibration](#sensors-calibration)
 9. [Contributing](#contributing)
@@ -33,7 +32,7 @@ A brief description of what this project does and its purpose.
 - DFROBOT SEN0245 TOF
 - DFRobot Gravity I2C BMI160 Gyroscope
 - Small Bead size=??????
-  
+- M2 screws and bolts 
 
 ### Mouse Build:
  ### 3d Printing the components:
@@ -46,6 +45,28 @@ A brief description of what this project does and its purpose.
   ![Bead cap](images/to/logo.png) 
   4.Print the weels:
   ![Wheels](images/to/logo.png) 
+
+### Assembling the Mouse:
+  The whole mouse can be build with bolts and screws but threaded insert can also be used. \
+  
+  1.Place the motors and fix them with the motors holder:
+  ![Motor holder](images/to/logo.png) 
+
+  2.Place and screw the TOF's sensors to theire dedicated slot:
+  ![TOF](images/to/logo.png) 
+
+  3.Place and screw the bead cap:
+  ![Bead Cap](images/to/logo.png) 
+
+  4.Place and screw the gyroscope:
+  ![Motor holder](images/to/logo.png) 
+  
+  5.Place and screw the buck convertor: 
+  ![Buck convertor](images/to/logo.png) 
+
+  
+
+  
   
 
 ## Software Installation
@@ -100,7 +121,7 @@ A brief description of what this project does and its purpose.
 
   ### Gyroscope calibration:
    The bmi60 chip is knowned for it's natural drift. To counter that the mouse, at initialization, \
-   read's GYRO_CALIBRATION_NB_ITERATIONS times the gyroscope and average the values to get an offset to counter the drift.\
+   read's GYRO_CALIBRATION_NB_ITERATIONS times the gyroscope and average the values to obtain the offset.\
    The offset itself is not sufficient, we also need an activation treshold to negate small angular speed variation. \
    This parameter needs to be adapted to your gyroscope in gyroscope.h. \
    The gyroscope is also measured ???? times and average it out to mitigate the noise.
