@@ -1,6 +1,7 @@
 #pragma once
 #include "utils.h"
 
+#define GYRO_CALIBRATION_NB_ITERATIONS 3
 
 void reset_angle();
 

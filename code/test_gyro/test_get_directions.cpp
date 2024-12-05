@@ -38,7 +38,7 @@ void loop(){
       }
     }
     Serial.println();
-  }else{autoCalibrateAccelerometerOffset
+  }else{
     Serial.println("err");
   }
 }

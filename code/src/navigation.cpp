@@ -4,7 +4,9 @@
 #include "utils.h"
 #include <Arduino.h>
 
-#define ERROR 1.0/16.0
+#define INTERVAL_STOP_SPEED 1.0/64.0
+
+#define DEBBUG 1
 
 RESULT adjust_front_distance(){
     return NO_ERROR;
@@ -21,24 +23,25 @@ RESULT alignement(){
 RESULT turn(double angle, MODE mode){
     update_gyro(0.00150);
     double curr_angle = get_angle() + angle;
-    Serial.println(curr_angle);
+    float rotation_speed = 0.01;
+    Serial.print("goal:  ");
+    Serial.println(curr_angle, 5);
     MODULO_PI(curr_angle);
-    bool is_close = false;
-    while (!is_close) {
-        if (get_angle() > curr_angle + ERROR) {
-            turn_right(mode);
-            Serial.println("too big");
+    bool is_close_enough = false;
+
+    while (!is_close_enough) {
+        update_gyro(0.00150);
+        double new_angle = get_angle();
+        if (new_angle > curr_angle + INTERVAL_STOP_SPEED) {
+          turn_right(mode, rotation_speed);
         }
-        else if (get_angle() < curr_angle - ERROR) {
-            turn_left(mode);
-            Serial.println("too small");
-        }else {
-            if (mode == INPLACE) {
-                break_wheels();
-                Serial.println("finished");
-                is_close = true;
-            }
+        else if (new_angle < curr_angle - INTERVAL_STOP_SPEED) {
+          turn_left(mode, rotation_speed);
+        }else{
+          break_wheels();
+          is_close_enough = true;
         }
+                
     }
 
     return NO_ERROR;

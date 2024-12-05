@@ -44,7 +44,7 @@ typedef enum
  * @param None
  * @return A RESULT value
  */
-RESULT stop();
+RESULT turn_off_motors();
 
 /* @brief Acti
 #define CORRECTION_ANGLE 1.0/16.0ve breaking.
@@ -68,12 +68,12 @@ RESULT forward(float speed, EXT_CORRECTION ext_corr = NO_CORR);
  * @param A mode of turning
  * @return A RESULT value
  */
-void turn_right(MODE mode);
+void turn_right(MODE mode, float rotation_speed);
 
 /* @brief Makes the mouse turn turn left. NEVER STOP ROTATING --> give a next instruction to stop
  * @param A mode of turning
  * @return A RESULT value
  */
-void turn_left(MODE mode);
+void turn_left(MODE mode, float rotation_speed);
 
 #endif

@@ -11,7 +11,7 @@
 #define KP 0.1
 
 // Speed of the motors when a turning function is called (INPLACE mode)
-#define ROTATION_SPEED 0.001
+#define ROTATION_SPEED 0.03
 
 // Defined speeds for both run and search mode
 #define SPEED_SEARCH 0.2
@@ -179,7 +179,7 @@ RESULT break_wheels()
     return NO_ERROR;
 }
 
-RESULT stop()
+RESULT turn_off_motors()
 {
     run_left_motor(0);
     run_right_motor(0);
@@ -238,7 +238,7 @@ RESULT forward(float speed, EXT_CORRECTION ext_corr)
     return NO_ERROR;
 }
 
-void turn_right(MODE mode)
+void turn_right(MODE mode, float rotation_speed)
 {
     if (last_time == 0)
     {
@@ -251,8 +251,8 @@ void turn_right(MODE mode)
     case INPLACE:
     {
         // TODO peut etre inverser
-        right_speed_goal = -ROTATION_SPEED;
-        left_speed_goal = ROTATION_SPEED;
+        right_speed_goal = -rotation_speed;
+        left_speed_goal = rotation_speed;
         left_speed = left_speed_goal;
         right_speed = right_speed_goal;
 
@@ -271,7 +271,7 @@ void turn_right(MODE mode)
     }
 }
 
-void turn_left(MODE mode)
+void turn_left(MODE mode, float rotation_speed)
 {
     if (last_time == 0)
     {
@@ -284,8 +284,8 @@ void turn_left(MODE mode)
     case INPLACE:
     {
         // TODO peut etre inverser
-        right_speed_goal = ROTATION_SPEED;
-        left_speed_goal = -ROTATION_SPEED;
+        right_speed_goal = rotation_speed;
+        left_speed_goal = -rotation_speed;
         left_speed = left_speed_goal;
         right_speed = right_speed_goal;
 

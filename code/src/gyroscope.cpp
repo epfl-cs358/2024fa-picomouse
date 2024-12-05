@@ -21,7 +21,6 @@ double get_angle() {
 
 RESULT update_gyro(double threshold) {
   double mean_val = 0;
-  int N = 10;
   int t = 10;
   int8_t rslt;
   int16_t angularSpeeds[6] = { 0 };
@@ -29,7 +28,7 @@ RESULT update_gyro(double threshold) {
   uint32_t start_time = 0;
   uint32_t end_time = 0;
 
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i < GYRO_CALIBRATION_NB_ITERATIONS; i++) {
 
     rslt = bmi160.getAccelGyroData(angularSpeeds, time_stamp);
 
@@ -45,7 +44,7 @@ RESULT update_gyro(double threshold) {
   }
   end_time = time_stamp[0];
   double elapsed_time_ns = (end_time - start_time);
-  mean_val /= N;
+  mean_val /= GYRO_CALIBRATION_NB_ITERATIONS;
   mean_val *= 3.14 / 180.0;
 
   if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), threshold)) {
