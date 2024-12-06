@@ -8,7 +8,7 @@
 
 #define DEBBUG 1
 
-double threshold = 0.0;
+double threshold = 0.0015;
 
 RESULT adjust_front_distance() { return NO_ERROR; }
 
@@ -52,7 +52,7 @@ RESULT turn(double angle, MODE mode) {
 
 RESULT init_all_sensors() {
   setup_gyro();
-  threshold = compute_offset();
+  //threshold = compute_offset();
   // init ToF sensors here
   return NO_ERROR;
 }
