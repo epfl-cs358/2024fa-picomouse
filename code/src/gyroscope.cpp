@@ -46,7 +46,7 @@ RESULT update_gyro(double threshold) {
   }
   end_time = time_stamp[0];
   double elapsed_time_ns = (end_time - start_time);
-  mean_val /= GYRO_CALIBRATION_NB_ITERATIONS;
+  mean_val /= GYRO_NB_ITERATIONS;
   mean_val *= 3.1415 / 180.0;
 
   if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), threshold)) {

@@ -23,7 +23,7 @@
 
 // Max and min PWM values
 #define MAX_PWM 255
-#define MIN_PWM 42
+#define MIN_PWM 46
 
 bool motorR_running;
 bool motorL_running;
@@ -77,7 +77,7 @@ void run_motor(int PWM, bool right_motor, bool forward)
  */
 int speed_to_pwm(float speed)
 {
-	if (fabs(speed) < 0.001)
+	if (fabs(speed) < 0.0000000000000001)
 	{
 		return 0;
 	}

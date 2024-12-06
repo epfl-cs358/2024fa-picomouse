@@ -66,14 +66,16 @@ RESULT forward(float speed, EXT_CORRECTION ext_corr = NO_CORR);
 
 /* @brief Makes the mouse turn right. NEVER STOP ROTATING --> give a next instruction to stop
  * @param A mode of turning
+ * @param The speed of the rotation [0,1]
  * @return A RESULT value
  */
-void turn_right(MODE mode);
+void turn_right(MODE mode, float rotation_speed);
 
 /* @brief Makes the mouse turn turn left. NEVER STOP ROTATING --> give a next instruction to stop
  * @param A mode of turning
+ * @param The speed of the rotation [0,1]
  * @return A RESULT value
  */
-void turn_left(MODE mode);
+void turn_left(MODE mode, float rotation_speed);
 
 #endif

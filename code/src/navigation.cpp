@@ -23,17 +23,26 @@ RESULT turn(double angle, MODE mode) {
   curr_angle = MODULO_PI(curr_angle);
   bool is_close_enough = false;
 
+  int burst_speed_count = 0;
+
+  const int nbr_burst_speed = 2;
+  float speed = 0;
+
   while (!is_close_enough) {
+    speed = burst_speed_count < nbr_burst_speed ? 0.1 : 0.015;
     update_gyro(0.00150);
     double new_angle = get_angle();
+    Serial.println(new_angle);
+
     if (new_angle > curr_angle + INTERVAL_STOP_SPEED) {
-      turn_right(mode);
+      turn_right(mode, speed);
     } else if (new_angle < curr_angle - INTERVAL_STOP_SPEED) {
-      turn_left(mode);
+      turn_left(mode, speed);
     } else {
       break_wheels();
       is_close_enough = true;
     }
+    burst_speed_count++;
   }
 
   return NO_ERROR;
