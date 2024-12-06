@@ -11,7 +11,10 @@ A brief description of what this project does and its purpose.
 ## Table of Contents
 1. [Description](#description)
 2. [Mouse Components](#mouse-components)
-4. [Mouse Build](#mouse-build)
+3. [Mouse Preparation](#mouse-preparation)
+4. [Mouse Assembly](#assembling-the-mouse)
+5. [Maze](#maze)
+6. [Software Overview](#software-overview)
 7. [Software Installation](#software-installation)
 8. [Sensors calibration](#sensors-calibration)
 9. [License](#license)
@@ -22,7 +25,7 @@ A brief description of what this project does and its purpose.
 
 
 
-### Mouse Components:
+## Mouse Components:
 - 2 x N20 600rpm dc brushed motors
 - MX1508 motor driver
 - 9 volt battery
@@ -33,19 +36,23 @@ A brief description of what this project does and its purpose.
 - Small Bead size=??????
 - M2 screws and bolts 
 
-### Mouse Build:
+## Mouse Preparation:
  ### 3d Printing the components:
   The 3d files are in the CAD folder.
-  1.Print the base plate:
+  1.Print the base plate: \
   ![Base Plate](images/to/logo.png)
-  2.Print the motors holders:
+  2.Print the motors holders: \
   ![Motor holder](images/to/logo.png) 
-  3.Print the bead holder (cap):
+  3.Print the bead holder (cap): \
   ![Bead cap](images/to/logo.png) 
-  4.Print the weels:
+  4.Print the weels: \
   ![Wheels](images/to/logo.png) 
 
-### Assembling the Mouse:
+  The weels are composed of 2 parts:
+  - The inner wheel support printed in hard plastic (PETG/PLA).
+  - The rubber is printed with ninjaflex TPU.
+
+## Assembling the Mouse:
   The whole mouse can be build with bolts and screws but threaded insert can be used to disassemble the mouse easily. 
 
   #### 1.Place and screw the buck convertor: 
@@ -81,8 +88,9 @@ A brief description of what this project does and its purpose.
   
   ![ESP-32](images/to/logo.png) // TODO
 
-  
-  
+  ### Wiring:
+    // TODO 
+  ![TOF](images/assembly/) 
 
 ## Software Installation
   ### Software Prerequisites:
@@ -97,9 +105,12 @@ A brief description of what this project does and its purpose.
    ```bash
    git clone https://github.com/epfl-cs358/2024fa-picomouse.git
    cd 2024fa-picomouse
+   ```
 2. Install python dependecies:
    ```bash
    pip install -r requirements.txt
+   ```
+
 
 ## Sensors calibration:
   ### TOF calibration:
