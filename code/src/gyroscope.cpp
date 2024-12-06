@@ -4,6 +4,7 @@
 #include <math.h>
 
 #define GYRO_NB_ITERATIONS 3
+#define CALIBRATION_OFFSET_NB_ITERATIONS 20
 
 #define NS_TO_S 1000000
 #define OVER_THRESHOLD(angle, threshold) (angle < -threshold || angle > threshold)
@@ -23,7 +24,6 @@ double get_angle() {
 
 RESULT update_gyro(double threshold) {
   double mean_val = 0;
-  int t = 10;
   int8_t rslt;
   int16_t angularSpeeds[6] = { 0 };
   uint32_t time_stamp[2] = { 0 };
@@ -73,4 +73,35 @@ RESULT setup_gyro() {
       ;
   }
   return NO_ERROR;
+}
+
+double compute_offset(){
+  double mean_val = 0;
+  int8_t rslt;
+  int16_t angularSpeeds[6] = { 0 };
+  uint32_t time_stamp[2] = { 0 };
+  uint32_t start_time = 0;
+  uint32_t end_time = 0;
+
+  for (int i = 0; i < CALIBRATION_OFFSET_NB_ITERATIONS; i++) {
+
+    rslt = bmi160.getAccelGyroData(angularSpeeds, time_stamp);
+
+    if (rslt != 0) {
+      Serial.println("I fucking died mate");
+      while (1)
+        ;
+    }
+    if (i == 0) {
+      start_time = time_stamp[0];
+    }
+    mean_val += static_cast<double>(angularSpeeds[2]);
+  }
+  end_time = time_stamp[0];
+  double elapsed_time_ns = (end_time - start_time);
+  mean_val /= CALIBRATION_OFFSET_NB_ITERATIONS;
+  mean_val *= 3.1415 / 180.0;
+  mean_val = mean_val*elapsed_time_ns/NS_TO_S;
+
+  return mean_val;
 }

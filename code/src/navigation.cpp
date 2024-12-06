@@ -8,6 +8,8 @@
 
 #define DEBBUG 1
 
+double threshold = 0.0;
+
 RESULT adjust_front_distance() { return NO_ERROR; }
 
 RESULT adjust_sides_distance() { return NO_ERROR; }
@@ -15,7 +17,7 @@ RESULT adjust_sides_distance() { return NO_ERROR; }
 RESULT alignement() { return NO_ERROR; }
 
 RESULT turn(double angle, MODE mode) {
-  update_gyro(0.00150);
+  update_gyro(threshold);
   double curr_angle = get_angle() + angle;
   float rotation_speed = 0.01;
   Serial.print("goal:  ");
@@ -50,6 +52,7 @@ RESULT turn(double angle, MODE mode) {
 
 RESULT init_all_sensors() {
   setup_gyro();
+  threshold = compute_offset();
   // init ToF sensors here
   return NO_ERROR;
 }
