@@ -5,14 +5,17 @@
 
 #define GYRO_NB_ITERATIONS 3
 #define CALIBRATION_OFFSET_NB_ITERATIONS 20
+#define THRESHOLD 0.0000015
 
 #define NS_TO_S 1000000
 #define OVER_THRESHOLD(angle, threshold) (angle < -threshold || angle > threshold)
 
 
+
 double angle = 0.0; //unit : radian
 DFRobot_BMI160 bmi160;
 const int8_t i2c_addr = 0x68;
+double offset = 0.0;
 
 void reset_angle() {
   angle = 0.0;
@@ -22,7 +25,7 @@ double get_angle() {
   return angle;
 }
 
-RESULT update_gyro(double threshold) {
+RESULT update_gyro() {
   double mean_val = 0;
   int8_t rslt;
   int16_t angularSpeeds[6] = { 0 };
@@ -49,9 +52,10 @@ RESULT update_gyro(double threshold) {
   mean_val /= GYRO_NB_ITERATIONS;
   mean_val *= 3.1415 / 180.0;
 
-  if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), threshold)) {
+  if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), THRESHOLD)) {
     angle += (mean_val * elapsed_time_ns) / NS_TO_S;
   }
+  angle-=offset;
 
   angle = MODULO_PI(angle);
   
@@ -72,10 +76,13 @@ RESULT setup_gyro() {
     while (1)
       ;
   }
+
+  compute_offset();
+
   return NO_ERROR;
 }
 
-double compute_offset(){
+RESULT compute_offset(){
   double mean_val = 0;
   int8_t rslt;
   int16_t angularSpeeds[6] = { 0 };
@@ -103,5 +110,7 @@ double compute_offset(){
   mean_val *= 3.1415 / 180.0;
   mean_val = mean_val*elapsed_time_ns/NS_TO_S;
 
-  return mean_val;
+  offset = mean_val;
+
+  return NO_ERROR;
 }
