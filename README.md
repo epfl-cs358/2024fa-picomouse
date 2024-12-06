@@ -47,24 +47,39 @@ A brief description of what this project does and its purpose.
 
 ### Assembling the Mouse:
   The whole mouse can be build with bolts and screws but threaded insert can be used to disassemble the mouse easily. 
+
+  #### 1.Place and screw the buck convertor: 
+    
+  ![Buck convertor](images/assembly/buck_convertor.jpg) 
+
+
   
-  1.Place the motors and fix them with the motors holder:
-  ![Motor holder](images/to/logo.png) 
+ #### 3.Place the motors and fix them with the motors holder: 
+   
+  ![Motor holder](images/assembly/motor_holder.jpg) 
 
-  2.Place and screw the TOF's sensors to theire dedicated slot:
-  ![TOF](images/to/logo.png) 
+ ####4. Assemble the weels and fix them to the motor axis:
+ 
+   ![Motor holder](images/assembly/) // TODO
 
-  3.Place and screw the bead cap:
-  ![Bead Cap](images/to/logo.png) 
+ #### 4.Place the battery: 
+ 
+  ![Batery](images/assembly/batery.jpg) 
 
-  4.Place and screw the gyroscope:
-  ![Motor holder](images/to/logo.png) 
+ #### 5.Place and screw the TOF's sensors to theire dedicated slot: 
+   
+  ![TOF](images/assembly/TOF.jpg) 
+
+
+
+
+  #### 6.Place and screw the gyroscope: 
   
-  5.Place and screw the buck convertor: 
-  ![Buck convertor](images/to/logo.png) 
-
-  6.Place and screw the ESP-32 to the back of the motor holder:
-  ![ESP-32](images/to/logo.png) 
+  ![Motor holder](images/assembly/gyroscope.jpg) 
+  
+  #### 7.Place and screw the ESP-32 to the back of the motor holder: 
+  
+  ![ESP-32](images/to/logo.png) // TODO
 
   
   
