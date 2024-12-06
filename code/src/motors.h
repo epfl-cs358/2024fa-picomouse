@@ -27,7 +27,7 @@ double get_speed(); //TODO je pense pas l'implementer
  * @param None
  * @return A RESULT value
  */
-RESULT reset_counter();
+RESULT reset_encoder_counter();
 
 /* @brief Sets left motor's speed, value between [-1;1]
  * @param The desired speed

@@ -4,11 +4,9 @@
 #include "utils.h"
 #include <Arduino.h>
 
-#define INTERVAL_STOP_SPEED 1.0 / 80.0
+#define INTERVAL_STOP_SPEED 1.0 / 32.0
 
 #define DEBBUG 1
-
-double threshold = 0.0015;
 
 RESULT adjust_front_distance() { return NO_ERROR; }
 
@@ -17,7 +15,7 @@ RESULT adjust_sides_distance() { return NO_ERROR; }
 RESULT alignement() { return NO_ERROR; }
 
 RESULT turn(double angle, MODE mode) {
-  update_gyro(threshold);
+  update_gyro();
   double curr_angle = get_angle() + angle;
   float rotation_speed = 0.01;
   Serial.print("goal:  ");
@@ -32,9 +30,9 @@ RESULT turn(double angle, MODE mode) {
 
   while (!is_close_enough) {
     speed = burst_speed_count < nbr_burst_speed ? 0.1 : 0.015;
-    update_gyro(0.00150);
+    update_gyro();
     double new_angle = get_angle();
-    Serial.println(new_angle);
+    Serial.println(new_angle, 10);
 
     if (new_angle > curr_angle + INTERVAL_STOP_SPEED) {
       turn_right(mode, speed);

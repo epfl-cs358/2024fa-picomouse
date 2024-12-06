@@ -129,7 +129,7 @@ MOTOR_STEPS get_steps_count()
 	return motor_steps;
 }
 
-RESULT reset_counter()
+RESULT reset_encoder_counter()
 {
 #ifdef DEBUG_MODE
 	Serial.print("count:");

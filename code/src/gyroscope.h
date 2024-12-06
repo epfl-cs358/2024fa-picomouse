@@ -3,10 +3,10 @@
 
 void reset_angle();
 
-double get_angle();
+float get_angle();
 
-RESULT update_gyro(double offset);
+RESULT update_gyro();
 
 RESULT setup_gyro();
 
-double compute_offset();
+RESULT compute_offset();

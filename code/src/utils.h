@@ -11,6 +11,7 @@ typedef enum {
     MOUSE_END,
     STACK_OVERFLOW,
     TOF_INNIT_FAIL,
+    GYRO_ERROR,
     TOF_READ_FAIL
 }RESULT;
 

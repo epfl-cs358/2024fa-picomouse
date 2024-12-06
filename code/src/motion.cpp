@@ -1,4 +1,5 @@
 #include "motion.h"
+#include "motors.h"
 #include <Arduino.h>
 #include <math.h>
 
@@ -53,6 +54,12 @@ MOTOR_STEPS new_steps_count = {0, 0};
 EXT_CORRECTION previous_correction = NO_CORR;
 
 // ========== Private functions ===========
+void set_delta_steps_count_to_zero() {
+    
+  old_steps_count = get_steps_count();
+  new_steps_count = old_steps_count;
+}
+
 float cap_speed(float speed) {
   speed = speed > 1 ? 1 : speed;
   speed = speed < -1 ? -1 : speed;
@@ -169,9 +176,7 @@ void set_new_speed_forward(float speed) {
   }
   last_time = millis();
 
-  reset_counter();
-  old_steps_count = {0, 0};
-  new_steps_count = {0, 0};
+  set_delta_steps_count_to_zero();
 
   // Set the new speed
   run_left_motor(speed);
@@ -184,7 +189,7 @@ RESULT break_wheels() {
   break_right(BREAKING_POWER);
 
   reset_speeds();
-  reset_counter();
+  set_delta_steps_count_to_zero();
   return NO_ERROR;
 }
 
@@ -193,7 +198,7 @@ RESULT turn_off_motors() {
   run_right_motor(0);
   // freiner bref
   reset_speeds();
-  reset_counter();
+  set_delta_steps_count_to_zero();
   return NO_ERROR;
 }
 
