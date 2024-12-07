@@ -39,6 +39,7 @@ A brief description of what this project does and its purpose.
 ## Mouse Preparation:
  ### 3d Printing the components:
   The 3d files are in the CAD folder.
+  We used 10% infill for .
   1.Print the base plate: \
   ![Base Plate](images/to/logo.png)
   2.Print the motors holders: \
