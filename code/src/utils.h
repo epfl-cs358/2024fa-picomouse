@@ -3,6 +3,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#define DEBBUG 1
 // size_t
 #include <cstdlib>
 
@@ -52,7 +53,7 @@ typedef struct {
 
 //#define MODULO_PI(angle) (((fmod((angle) + 1, 2)) <= 0 ? (fmod((angle) + 1, 2)) + 2 : fmod((angle) + 1, 2)) - 1)
 
-#define MODULO_PI(angle) 
+#define MODULO_PI(angle) \
     do{\
     DEBBUG_PRINT(Serial.printf("Before modulo: % 0.6f", angle));\
     float module = angle > 0 ? -2.0 : 2.0;\

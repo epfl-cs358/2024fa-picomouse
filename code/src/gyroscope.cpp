@@ -1,28 +1,24 @@
-#include "DFRobot_BMI160.h"
 #include "gyroscope.h"
+#include "DFRobot_BMI160.h"
 #include "utils.h"
 #include <math.h>
 
 #define GYRO_NB_ITERATIONS 2
 #define CALIBRATION_OFFSET_NB_ITERATIONS 300
 
-#define SCALE_FACTOR 0.5 / 0.65
-#define OVER_THRESHOLD(angle, threshold) (angle < -threshold || angle > threshold)
+#define SCALE_FACTOR 0.5 / 0.0743
+#define OVER_THRESHOLD(angle, threshold)\
+  (angle < -threshold || angle > threshold)
 
-
-
-float angle = 0.0;  //unit : radian
+float angle = 0.0; // unit : radian
 DFRobot_BMI160 bmi160;
 const int8_t i2c_addr = 0x68;
 float offset = 0.0;
+uint32_t start_time = 0; 
 
-void reset_angle() {
-  angle = 0.0;
-}
+void reset_angle() { angle = 0.0; }
 
-float get_angle() {
-  return angle;
-}
+float get_angle() { return angle; }
 /**
 RESULT update_gyro() {
   float mean_val = 0;
@@ -46,9 +42,9 @@ RESULT update_gyro() {
     }
     float angular_speed = static_cast<float>(angularSpeeds[2]);
     if(OVER_THRESHOLD(angular_speed, 0.00001)){
-      mean_val += angular_speed - offset; 
+      mean_val += angular_speed - offset;
     }
-  } 
+  }
 
   end_time = time_stamp[0];
   float elapsed_time_ns = (end_time - start_time);
@@ -57,51 +53,56 @@ RESULT update_gyro() {
 
   //if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), THRESHOLD)) {
     angle += (mean_val * elapsed_time_ns) / NS_TO_S;
-  
+
   angle = MODULO_PI(angle);
-  
+
   return NO_ERROR;
 }*/
 
 RESULT update_gyro() {
   int16_t gyroData[3];
-  uint32_t timestamp[2];
-  uint32_t start_time = 0;
+  uint32_t timestamp;
+  //uint32_t start_time = 0;
   float mean = 0;
+  
 
   for (int i = 0; i < GYRO_NB_ITERATIONS; i++) {
     // Lecture des données du gyroscope avec timestamp
-    if (bmi160.getGyroData(gyroData, timestamp) != BMI160_OK) {
+    if (bmi160.getGyroData(gyroData, &timestamp) != BMI160_OK) {
       Serial.println("Error reading gyro");
       return GYRO_ERROR;
     }
-    if (i == 0) {
-      start_time = timestamp[0];
+
+    if (start_time == 0) {
+     start_time = timestamp;
     }
 
     // Correction de l'offset
-    float angularSpeedZ = static_cast<float>(gyroData[2]) - offset;  // Convertir LSB en rad/s
-    mean += angularSpeedZ * SCALE_FACTOR;
+    float angularSpeedZ = static_cast<float>(gyroData[2]) - offset; // Convertir LSB en rad/s
+    mean += angularSpeedZ;
   }
 
-  float deltaTime = (timestamp[0] - start_time) / 1e6;  // Convertir ns en secondes
+  long deltaTime = (timestamp - start_time); // Convertir ns en secondes
+  DEBBUG_PRINT(Serial.print("deltaTime: "); Serial.println(deltaTime));
 
   // Mise à jour de l'angle accumulé
-  angle += mean * deltaTime  * (3.1415 / 180.0);
+  angle += mean * deltaTime * SCALE_FACTOR/ 1e9;
 
-  angle = MODULO_PI(angle);
+  MODULO_PI(angle);
+  start_time = timestamp;
+
   return NO_ERROR;
 }
 
 RESULT setup_gyro() {
-  //init the hardware bmin160
+  // init the hardware bmin160
   if (bmi160.softReset() != BMI160_OK) {
     Serial.println("reset false");
     while (1)
       ;
   }
 
-  //set and init the bmi160 i2c address
+  // set and init the bmi160 i2c address
   if (bmi160.I2cInit(i2c_addr) != BMI160_OK) {
     Serial.println("init false");
     while (1)
@@ -112,7 +113,7 @@ RESULT setup_gyro() {
 
   return NO_ERROR;
 }
-/** 
+/**
 RESULT compute_offset(){
   Serial.print("Computing offset...");
   float mean_val = 0;
@@ -138,7 +139,7 @@ RESULT compute_offset(){
   }
   end_time = time_stamp[0];
 
-  mean_val /= CALIBRATION_OFFSET_NB_ITERATIONS; 
+  mean_val /= CALIBRATION_OFFSET_NB_ITERATIONS;
 
 
   offset = mean_val;
@@ -159,11 +160,12 @@ RESULT compute_offset() {
       while (1)
         ;
     }
-    biasZ += gyroData[2];  // Composante Z du gyroscope (rotation autour de l'axe vertical)
+    biasZ += gyroData[2]; // Composante Z du gyroscope (rotation autour de l'axe
+                          // vertical)
     delay(10);
   }
 
-  biasZ /= CALIBRATION_OFFSET_NB_ITERATIONS;  // Moyenne pour obtenir le biais
+  biasZ /= CALIBRATION_OFFSET_NB_ITERATIONS; // Moyenne pour obtenir le biais
   offset = biasZ;
   Serial.print(offset, 10);
   Serial.println("   Done");

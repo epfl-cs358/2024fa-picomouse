@@ -4,6 +4,13 @@
 #include "motion.h"
 #include "gyroscope.h"
 
+
+typedef enum {
+    LEFT, 
+    RIGHT, 
+    HALF_TURN
+} ROTATION;
+
 /* @brief Adjusts the distance of the mouse with the front wall
  * @param None
  * @return A RESULT value
@@ -22,6 +29,6 @@ RESULT adjust_sides_distance();
  */
 RESULT alignement();
 
-RESULT turn(double angle, MODE mode);
+RESULT turn(ROTATION rotation, MODE mode);
 
 RESULT init_all_sensors();

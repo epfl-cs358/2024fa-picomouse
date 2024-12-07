@@ -18,7 +18,7 @@ double offset = 0.0;
 
 #define NB_MEASURES 4
 #define NS_TO_S 1000000
-double current_angle = 0;
+double mouse_absolute_angle = 0;
 double target_angle = 0;
 
 

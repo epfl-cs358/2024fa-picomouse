@@ -23,7 +23,7 @@
 
 // Max and min PWM values
 #define MAX_PWM 255
-#define MIN_PWM 46
+#define MIN_PWM 43
 
 bool motorR_running;
 bool motorL_running;
