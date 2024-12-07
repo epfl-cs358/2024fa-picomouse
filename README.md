@@ -36,23 +36,40 @@ A brief description of what this project does and its purpose.
 
 ## Mouse Preparation:
  ### 3d Printing the components:
-  The 3d files are in the CAD folder.
-  We used 10% infill for .
-  1.Print the base plate: \
-  ![Base Plate](images/to/logo.png)
-  2.Print the motors holders: \
-  ![Motor holder](images/to/logo.png) 
-  3.Print the bead holder (cap): \
-  ![Bead cap](images/to/logo.png) 
-  4.Print the weels: \
-  ![Wheels](images/to/logo.png) 
+  The 3d files are in the CAD folder. \
+  We used 10% infill for the printing. \
+  1.Print the base plate: 
+  
+  ![Base Plate](images/3d_printing/base_plate.jpg)
+  
+  2.Print the motors holders: 
+  
+  ![Motor holder](images/3d_printing/motor_holders.jpg) 
+  
+  3.Print the bead holder (cap): 
+  
+  ![Bead cap](images/3d_printing/bead_cap.jpg) 
+  
+  4.Print the weels: 
+  The weels are composed of 2 parts: 
+  - The inner wheel support printed in hard plastic (PETG/PLA). 
+  - The rubber is printed with ninjaflex TPU. 
 
-  The weels are composed of 2 parts:
-  - The inner wheel support printed in hard plastic (PETG/PLA).
-  - The rubber is printed with ninjaflex TPU.
+  ![wheels](images/assembly/wheel.jpg)
+  
+
+  
 
 ## Assembling the Mouse:
-  The whole mouse can be build with bolts and screws but threaded insert can be used to disassemble the mouse easily. 
+  The whole mouse can be build with bolts and screws but threaded insert can be used to disassemble the mouse easily.
+
+  #### 1.Assemble the wheels:
+  Glue the rubber on the wheel. \
+  Place a M2 hexnut in the dedicated slot.
+  
+  ![wheels_rubber](images/asembly/wheels_rubber.jpg)
+
+  
 
   #### 1.Place and screw the buck convertor: 
     
