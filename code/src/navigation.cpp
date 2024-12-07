@@ -19,6 +19,8 @@ float rotation_to_angle(ROTATION rotation) {
       return -0.5;
     case HALF_TURN:
       return 1;
+    case NO_TURN:
+      return 0;
     default:
       return 0;
   }

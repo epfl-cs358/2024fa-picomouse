@@ -1,12 +1,12 @@
 #include "motion.h"
 #include "motors.h"
+#include "utils.h"
 #include <Arduino.h>
 #include <math.h>
 
 // ========== DEBUG MODE ===========
-//#define DEBUG_MODE
+ #define DEBUG_MODE
 // ================================
-
 
 float left_speed_goal = 0;  // [-1;1]
 float right_speed_goal = 0; // [-1;1]
@@ -26,11 +26,13 @@ unsigned long current_time = 0;
 MOTOR_STEPS old_steps_count = {0, 0};
 MOTOR_STEPS new_steps_count = {0, 0};
 
+MOTOR_STEPS steps_count_for_distance = {0, 0};
+
 EXT_CORRECTION previous_correction = NO_CORR;
 
 // ========== Private functions ===========
 void set_delta_steps_count_to_zero() {
-    
+
   old_steps_count = get_steps_count();
   new_steps_count = old_steps_count;
 }
@@ -123,9 +125,9 @@ void update_speed() {
 void uptade_speed_external_correction(EXT_CORRECTION ext_corr) {
   correction_count += DELTA_CORR;
   if (ext_corr == CORR_RIGHT) {
-    update_speed_go_right(EXT_CORR_FACTOR / (float)correction_count);
+    update_speed_go_right(EXT_CORR_FACTOR / (float) correction_count);
   } else if (ext_corr == CORR_LEFT) {
-    update_speed_go_left(EXT_CORR_FACTOR / (float)correction_count);
+    update_speed_go_left(EXT_CORR_FACTOR / (float) correction_count);
   }
 }
 
@@ -159,6 +161,22 @@ void set_new_speed_forward(float speed) {
 }
 
 // ========== Public functions ===========
+
+void reset_traveled_distance() { steps_count_for_distance = get_steps_count(); }
+WHEELS_DISTANCES get_traveled_distance() {
+  MOTOR_STEPS current_steps = get_steps_count();
+  long deltaLeft =
+      current_steps.left_count - steps_count_for_distance.left_count;
+  long deltaRight =
+      current_steps.right_count - steps_count_for_distance.right_count;
+  WHEELS_DISTANCES distances;
+  distances.left_distance =
+      static_cast<float>(deltaLeft) * WHEEL_PERMIMER / ENCODER_RESOLUTION;
+  distances.right_distance =
+      static_cast<float>(deltaRight) * WHEEL_PERMIMER / ENCODER_RESOLUTION;
+  return distances;
+}
+
 RESULT break_wheels() {
   break_left(BREAKING_POWER);
   break_right(BREAKING_POWER);
@@ -246,7 +264,7 @@ void turn_right(MODE mode, float rotation_speed) {
 }
 
 void turn_left(MODE mode, float rotation_speed) {
-     if (last_time == 0) {
+  if (last_time == 0) {
     motors_init();
   }
   last_time = millis();

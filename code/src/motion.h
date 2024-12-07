@@ -47,20 +47,23 @@
 #define EXT_CORR_FACTOR 0.01
 #define DELTA_CORR 5.0
 
-// Enum for the mode of turning
-typedef enum
-{
-    INPLACE,
-    SMOOTH
-} MODE;
+// Wheels characteristics
+#define WHEEL_DIAMETER 38.0 //mm
+#define WHEEL_PERMIMER WHEEL_DIAMETER * 3.1415 //mm
+#define ENCODER_RESOLUTION 408.0 // 408 pulse per revolution
 
-// Enum for the correction direction, used in the forward function
-typedef enum
-{
-    CORR_RIGHT,
-    CORR_LEFT, 
-    NO_CORR
-} EXT_CORRECTION;
+/* @brief reset to 0 the traveled distance
+ * @param None
+ * @return a RESULT value 
+ */
+void reset_traveled_distance();
+
+/* @brief get the traveled distance in mm
+ * @param None
+ * @return the traveled distance
+*/
+WHEELS_DISTANCES get_traveled_distance();
+
 
 /* @brief Stops the two motors
  * @param None
@@ -99,5 +102,7 @@ void turn_right(MODE mode, float rotation_speed);
  * @return A RESULT value
  */
 void turn_left(MODE mode, float rotation_speed);
+
+
 
 #endif

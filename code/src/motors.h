@@ -40,7 +40,8 @@ MOTOR_STEPS get_steps_count();
  */
 double get_speed(); //TODO je pense pas l'implementer
 
-/* @brief Resets the two counters
+/* SHOULD NEVER BE USED
+ * @brief Resets the two counters
  * @param None
  * @return A RESULT value
  */

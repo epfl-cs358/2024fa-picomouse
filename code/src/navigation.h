@@ -8,7 +8,8 @@
 typedef enum {
     LEFT, 
     RIGHT, 
-    HALF_TURN
+    HALF_TURN,
+    NO_TURN
 } ROTATION;
 
 /* @brief Adjusts the distance of the mouse with the front wall

@@ -116,9 +116,7 @@ DEBBUG_PRINT(
 	Serial.print("    ");\
 	Serial.println(encoderR.getCount());
 	);
-	
-
-
+    
 	encoderL.clearCount();
 	encoderR.clearCount();
 	return NO_ERROR;

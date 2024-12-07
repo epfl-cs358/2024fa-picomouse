@@ -27,6 +27,26 @@ typedef struct {
     long right_count;
 } MOTOR_STEPS;
 
+typedef struct {
+    float left_distance;
+    float right_distance;
+} WHEELS_DISTANCES;
+
+// Enum for the mode of turning
+typedef enum
+{
+    INPLACE,
+    SMOOTH
+} MODE;
+
+// Enum for the correction direction, used in the forward function
+typedef enum
+{
+    CORR_RIGHT,
+    CORR_LEFT, 
+    NO_CORR
+} EXT_CORRECTION;
+
 #define EQUAL_COORD(coord_1, coord_2) (coord_1.x == coord_2.x && coord_1.y == coord_2.y)
 #define ADD_COORD(coord, dX, dY) coord.x += dX; coord.y += dY;
 #define MAX_UNSIGNED_BYTE 255
