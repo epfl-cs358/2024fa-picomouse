@@ -11,6 +11,7 @@ typedef enum {
     MOUSE_END,
     STACK_OVERFLOW,
     TOF_INNIT_FAIL,
+    GYRO_INNIT_FAIL,
     GYRO_ERROR,
     TOF_READ_FAIL
 }RESULT;
@@ -49,7 +50,18 @@ typedef struct {
         }\
     }while(0)\
 
-#define MODULO_PI(angle) (((fmod((angle) + 1, 2)) <= 0 ? (fmod((angle) + 1, 2)) + 2 : fmod((angle) + 1, 2)) - 1)
+//#define MODULO_PI(angle) (((fmod((angle) + 1, 2)) <= 0 ? (fmod((angle) + 1, 2)) + 2 : fmod((angle) + 1, 2)) - 1)
+
+#define MODULO_PI(angle) 
+    do{\
+    DEBBUG_PRINT(Serial.printf("Before modulo: % 0.6f", angle));\
+    float module = angle > 0 ? -2.0 : 2.0;\
+    while(!(-1.0 < angle && angle <= 1.0)){\
+        angle += module;\
+    }\
+    DEBBUG_PRINT(Serial.printf("After Modulo: % 0.6f", angle));\
+    }while(0)
+
 
 #endif
 
