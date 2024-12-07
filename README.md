@@ -101,18 +101,20 @@ We decided to make the first option to align with the competition design however
 We had the constraint to make a maze that is easily dissmountable thus we used Scratch to attach the walls and the pillars to a carpet. 
 
 ### Walls:
-    Option1. We used 6mm and 8mm thick mdf plates. \
+Option1. We used 6mm and 8mm thick mdf plates. \
     See the CAD for the dimension of the cut, we used a C02 laser cutter. \
-    The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4cm. \
-    They need to be glued as follow: \
-    ![TOF](images/assembly/) 
+    The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4cm that need to be glued together. \
+    ![walls2cm](images/maze/2cm_wall_side.jpg) 
+    ![walls2](images/maze/wall_assemble.jpg)     
 
-    Option2. Same as option 1 but with 3mm and 4mm thick mdf plates. \
-    We get the following wall:
-    ![TOF](images/assembly/) 
     
-    Using Scratch:
-    [TOF](images/assembly/) 
+
+Option2. Same as option 1 but with 3mm and 4mm thick mdf plates. \
+    We get the following wall:
+    ![wall1cm](images/maze/1cm_wall_above.jpg) 
+    
+Using Scratch:
+    [scratch](images/maze/wall_scratch) 
     
 
     
@@ -164,19 +166,19 @@ We had the constraint to make a maze that is easily dissmountable thus we used S
 
   Left TOF: 
   
-  ![Left TOF](images/left_captor_calibration.png)
+  ![Left TOF](images/calibration/left_captor_calibration.png)
 
   Mid Left TOF:
 
-  ![Mid-Left TOF](images/mid_left_captor_calibration.png)
+  ![Mid-Left TOF](images/calibration/mid_left_captor_calibration.png)
 
   Mid Right TOF:
   
-  ![Mid-Right TOF](images/mid_right_captor_calibration.png)
+  ![Mid-Right TOF](images/calibration/mid_right_captor_calibration.png)
 
   Right TOF
 
-  ![Right TOF](images/right_captor_calibration.png)
+  ![Right TOF](images/calibration/right_captor_calibration.png)
 
   We get 5 slopes: \
   Left_y = 0.951x - 6.273 \
