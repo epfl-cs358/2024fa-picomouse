@@ -4,6 +4,23 @@
 
 #include "utils.h"
 
+// TODO mettre les bons pins
+// Motor pins
+#define MOTOR_PIN_R1 27
+#define MOTOR_PIN_R2 26
+#define MOTOR_PIN_L1 14
+#define MOTOR_PIN_L2 12
+
+// Encoder pins
+#define ENCODER_R1 23
+#define ENCODER_R2 19
+#define ENCODER_L1 15
+#define ENCODER_L2 2
+
+// Max and min PWM values
+#define MAX_PWM 255
+#define MIN_PWM 43
+
 /* @brief Initialize the motor and the encoders. Set the count to 0 and set the last last toogle time to millis()
 * @param None
 * @return a RESULT value 

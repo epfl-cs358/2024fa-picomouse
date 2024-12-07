@@ -25,6 +25,28 @@
  * }
  */
 
+// Correction factor for the speed
+#define KP 0.1
+
+// Speed of the motors when a turning function is called (INPLACE mode)
+#define ROTATION_SPEED 0.001
+
+// Defined speeds for both run and search mode
+#define SPEED_SEARCH 0.2
+#define SPEED_RUN 1
+
+#define DELTA_TIME 50 // ms, the time between two measures of the counter
+
+// Breaking power [0;1]
+#define BREAKING_POWER 1
+
+// Correction angle
+#define CORRECTION_ANGLE 1.0 / 16.0
+
+// Correction factor if there is a CORR_RIGHT or CORR_LEFT
+#define EXT_CORR_FACTOR 0.01
+#define DELTA_CORR 5.0
+
 // Enum for the mode of turning
 typedef enum
 {
