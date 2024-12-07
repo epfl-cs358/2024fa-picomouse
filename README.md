@@ -23,8 +23,6 @@ A brief description of what this project does and its purpose.
 
 
 
-
-
 ## Mouse Components:
 - 2 x N20 600rpm dc brushed motors
 - MX1508 motor driver
@@ -104,35 +102,43 @@ We had the constraint to make a maze that is easily dissmountable thus we used S
 Option1. We used 6mm and 8mm thick mdf plates. \
     See the CAD for the dimension of the cut, we used a C02 laser cutter. \
     The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4cm that need to be glued together. \
-    ![walls2cm](images/maze/2cm_wall_side.jpg) 
-    ![walls2](images/maze/wall_assemble.jpg)     
+
+    
+![walls2cm](images/maze/2cm_wall_side.jpg) 
+
+![walls2](images/maze/wall_assemble.jpg)     
 
     
 
 Option2. Same as option 1 but with 3mm and 4mm thick mdf plates. \
-    We get the following wall:
-    ![wall1cm](images/maze/1cm_wall_above.jpg) 
+We get the following wall:
+
+![wall1cm](images/maze/1cm_wall_above.jpg) 
     
 Using Scratch:
-    [scratch](images/maze/wall_scratch) 
+
+[scratch](images/maze/wall_scratch) 
     
 
     
 ### Pillars:
-    Option1. 3d print the 2cm x 2cm x 5cm pillars \
-    ![TOF](images/assembly/) 
-    Option2. 3d print the 1cm x 1cm x 5cm pillars \
-    ![TOF](images/assembly/) 
+Option1. 3d print the 2cm x 2cm x 5cm pillars \
+![pillar_2](images/maze/) 
+Option2. 3d print the 1cm x 1cm x 5cm pillars \
+![pillar_1](images/maze) 
     
-    Both of them have an option to add a M2 hexnut inside so the pillars can be screwed underneath.\
-    The bolt can easily be placed using a screwdriver by pushing the bolt until you hear a pop. \
-    The bolt should be locked in place. \
+Both of them have an option to add a M2 hexnut inside so the pillars can be screwed underneath.\
+The bolt can easily be placed using a screwdriver by pushing the bolt until you hear a pop. \
+The bolt should be locked in place. \
 
-    ![TOF](images/assembly/) 
+![pillar_hexnut](images/maze/pillar_hexnut.jpg) 
+
+![pillar_screw](images/maze/pillar_screw.jpg) 
+
 
     
-    Using Scratch:
-    ![TOF](images/assembly/) 
+Using Scratch:
+![TOF](images/assembly/)  // TODO get the image of pillar with scratch
     
     
 
