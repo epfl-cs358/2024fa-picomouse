@@ -93,6 +93,47 @@ A brief description of what this project does and its purpose.
     // TODO 
   ![TOF](images/assembly/) 
 
+
+## Maze
+The competition maze is made by 18cm x 18cm cells with 2cm width walls and 16 cm x 16 cm space inside the cells.
+There is also an other maze design that uses 17cm x 17cm cells with 1cm width walls. \
+We decided to make the first option to align with the competition design however the second option uses less platic and wood. \
+We had the constraint to make a maze that is easily dissmountable thus we used Scratch to attach the walls and the pillars to a carpet. 
+
+### Walls:
+    Option1. We used 6mm and 8mm thick mdf plates. \
+    See the CAD for the dimension of the cut, we used a C02 laser cutter. \
+    The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4cm. \
+    They need to be glued as follow: \
+    ![TOF](images/assembly/) 
+
+    Option2. Same as option 1 but with 3mm and 4mm thick mdf plates. \
+    We get the following wall:
+    ![TOF](images/assembly/) 
+    
+    Using Scratch:
+    [TOF](images/assembly/) 
+    
+
+    
+### Pillars:
+    Option1. 3d print the 2cm x 2cm x 5cm pillars \
+    ![TOF](images/assembly/) 
+    Option2. 3d print the 1cm x 1cm x 5cm pillars \
+    ![TOF](images/assembly/) 
+    
+    Both of them have an option to add a M2 hexnut inside so the pillars can be screwed underneath.\
+    The bolt can easily be placed using a screwdriver by pushing the bolt until you hear a pop. \
+    The bolt should be locked in place. \
+
+    ![TOF](images/assembly/) 
+
+    
+    Using Scratch:
+    ![TOF](images/assembly/) 
+    
+    
+
 ## Software Installation
   ### Software Prerequisites:
   
