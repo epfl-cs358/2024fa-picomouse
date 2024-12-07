@@ -55,7 +55,7 @@ A brief description of what this project does and its purpose.
   - The inner wheel support printed in hard plastic (PETG/PLA). 
   - The rubber is printed with ninjaflex TPU. 
 
-  ![wheels](images/assembly/wheel.jpg)
+  ![wheels](images/assembly/wheels_rubber.jpg)
   
 
   
@@ -67,11 +67,10 @@ A brief description of what this project does and its purpose.
   Glue the rubber on the wheel. \
   Place a M2 hexnut in the dedicated slot.
   
-  ![wheels_rubber](images/asembly/wheels_rubber.jpg)
+  ![wheels_rubber](images/assembly/wheel.jpg)
 
-  
 
-  #### 1.Place and screw the buck convertor: 
+  #### 2.Place and screw the buck convertor: 
     
   ![Buck convertor](images/assembly/buck_convertor.jpg) 
 
@@ -81,26 +80,23 @@ A brief description of what this project does and its purpose.
    
   ![Motor holder](images/assembly/motor_holder.jpg) 
 
- ####4. Assemble the weels and fix them to the motor axis:
+ #### 4.Assemble the weels and fix them to the motor axis:
  
    ![Motor holder](images/assembly/) // TODO
 
- #### 4.Place the battery: 
+ #### 5.Place the battery: 
  
   ![Batery](images/assembly/batery.jpg) 
 
- #### 5.Place and screw the TOF's sensors to theire dedicated slot: 
+ #### 6.Place and screw the TOF's sensors to theire dedicated slot: 
    
   ![TOF](images/assembly/TOF.jpg) 
 
-
-
-
-  #### 6.Place and screw the gyroscope: 
+ #### 7.Place and screw the gyroscope: 
   
   ![Motor holder](images/assembly/gyroscope.jpg) 
   
-  #### 7.Place and screw the ESP-32 to the back of the motor holder: 
+  #### 8.Place and screw the ESP-32 to the back of the motor holder: 
   
   ![ESP-32](images/to/logo.png) // TODO
 
@@ -118,7 +114,7 @@ We had the constraint to make a maze that is easily dissmountable thus we used S
 ### Walls:
 Option1. We used 6mm and 8mm thick mdf plates. \
     See the CAD for the dimension of the cut, we used a C02 laser cutter. \
-    The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4cm that need to be glued together. \
+    The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4cm that need to be glued together. 
 
     
 ![walls2cm](images/maze/2cm_wall_side.jpg) 
@@ -155,7 +151,7 @@ The bolt should be locked in place. \
 
     
 Using Scratch:
-![TOF](images/assembly/)  // TODO get the image of pillar with scratch
+![pillar_scratch](images/assembly/)  // TODO get the image of pillar with scratch
     
     
 
