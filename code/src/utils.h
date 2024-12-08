@@ -21,7 +21,7 @@ typedef enum {
     NO_SOLUTION
 }RESULT;
 
-char error_table_translation[][MAX_LEN_STRING] = {
+static char error_table_translation[][MAX_LEN_STRING] = {
     "NO_ERROR",
     "MOUSE_END",
     "STACK_OVERFLOW",
