@@ -44,8 +44,8 @@
 #define CORRECTION_ANGLE 1.0 / 16.0
 
 // Correction factor if there is a CORR_RIGHT or CORR_LEFT
-#define EXT_CORR_FACTOR 0.01
-#define DELTA_CORR 5.0
+#define EXT_CORR_FACTOR 1.5
+#define EXT_CORR_MULT 10
 
 // Wheels characteristics
 #define WHEEL_DIAMETER 38.0 //mm
@@ -82,7 +82,7 @@ RESULT break_wheels();
  * CALL IT EVEN IF THE SPEED DOESN'T CHANGE --> it addapt if one wheel is too slow each DELTA_TIME
  * Never stop running --> give a next instruction to stop
  * @param The desired speed
- * @param The correction factor if need to turn a bit in a direction (if not alligned between the two walls)
+ * @param The correction factor if need to turn a bit in a direction (if not alligned between the two walls) ATTENTION; ITS FAST, CALL IT A VERY SHORT TIME
  * @return A RESULT value
  */
 
