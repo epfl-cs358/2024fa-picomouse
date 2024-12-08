@@ -6,7 +6,7 @@
 #define GYRO_NB_ITERATIONS 2
 #define CALIBRATION_OFFSET_NB_ITERATIONS 300
 
-#define SCALE_FACTOR 0.5 / 0.0743
+#define SCALE_FACTOR 1.0 / 0.0743
 #define OVER_THRESHOLD(angle, threshold)\
   (angle < -threshold || angle > threshold)
 
@@ -85,6 +85,7 @@ RESULT update_gyro() {
   long deltaTime = (timestamp - start_time); // Convertir ns en secondes
   DEBBUG_PRINT(Serial.print("deltaTime: "); Serial.println(deltaTime));
 
+  mean /= GYRO_NB_ITERATIONS;
   // Mise à jour de l'angle accumulé
   angle += mean * deltaTime * SCALE_FACTOR/ 1e9;
 
