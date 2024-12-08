@@ -19,6 +19,6 @@ void loop(){
   Serial.println(res);
   ///CHECK_AND_THROW(!sensor.begin(), TOF_INIT_FAIL);
   get_side_side_distances(distances);
-  Serial.printf("left: %hu mid_left: %hu  mid_right: %hu  right: %hu \n", distances[0],  distances[1], distances[3],  distances[4]);
+  Serial.printf("left: %hu mid_left: %hu  mid_right: %hu  right: %hu \n", distances[0],  distances[1], distances[2],  distances[3]);
   delay(500);
 }
