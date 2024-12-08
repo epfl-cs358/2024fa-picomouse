@@ -114,7 +114,7 @@ We had the constraint to make a maze that is easily dissmountable thus we used S
 ### Walls:
 Option1. We used 6mm and 8mm thick mdf plates. \
     See the CAD for the dimension of the cut, we used a C02 laser cutter. \
-    The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4cm that need to be glued together. 
+    The wall is composed of 2 plates of 16cm x 5cm and 2 dowel of 2.5cm x 4.5cm that need to be glued together. 
 
     
 ![walls2cm](images/maze/2cm_wall_side.jpg) 
