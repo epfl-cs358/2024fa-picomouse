@@ -6,7 +6,6 @@
 
 #define STOP_THRESHOLD 1.0 / 120.0
 
-
 float mouse_absolute_angle = 0;
 
 // ========== Private functions ===========
@@ -76,6 +75,7 @@ RESULT turn(float angle, MODE mode) {
 }*/
 RESULT turn(ROTATION rotation, MODE mode) {
   update_gyro();
+  if(rotation == NO_TURN) return NO_ERROR;
   mouse_absolute_angle = mouse_absolute_angle + rotation_to_angle(rotation);
   MODULO(mouse_absolute_angle);
   Serial.print("Goal: ");
@@ -140,4 +140,13 @@ RESULT init_all_sensors() {
   
   // init ToF sensors here
   return NO_ERROR;
+}
+/**
+  * @brief 
+  * 
+  * @param distance in mm
+  * @return RESULT 
+  */
+RESULT navigation_forward(float distance){
+
 }

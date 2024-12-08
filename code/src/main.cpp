@@ -5,6 +5,8 @@
 #include "utils.h"
 #include "flood_fill.h"
 
+#define CELL_LENGTH 180 //in mm
+
 bool in_new_cell = true;
 bool end = false;
 Maze maze;
@@ -53,12 +55,22 @@ void loop(){
             }
 
             rslt = one_iteration_flood_fill(&maze, &path_run1, &next_direction);
-            //TODO: check rslt
+            if(rslt != MOUSE_END) {
             
-            ROTATION rotation = calculate_turn(current_direction, next_direction);
+                ROTATION rotation = calculate_turn(current_direction, next_direction);
 
-            current_direction = next_direction;
+                current_direction = next_direction;
+
+                rslt = turn(rotation, INPLACE);
+                //TODO: check rslt
+
+                rslt = navigation_forward(CELL_LENGTH);
+                //TODO: check rslt
+            } else {
+                end = true;
+            }
         }
+
     }
 }
 

@@ -12,13 +12,8 @@
 RESULT adjust_front_distance();
 
 
- /**
-  * @brief 
-  * 
-  * @param distance in mm
-  * @return RESULT 
-  */
-RESULT nav_forward(float distance);
+ 
+
 
 /* @brief Assures that the two motors run at the same speed
  * @param None
@@ -26,13 +21,8 @@ RESULT nav_forward(float distance);
  */
 RESULT alignement();
 
-/**
- * @brief 
- * 
- * @param rotation 
- * @param mode 
- * @return RESULT 
- */
-RESULT turn(ROTATION rotation, MODE mode);
-
 RESULT init_all_sensors();
+
+RESULT navigation_forward(float distance);
+
+RESULT turn(ROTATION rotation, MODE mode);
