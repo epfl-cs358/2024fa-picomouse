@@ -17,7 +17,8 @@ A brief description of what this project does and its purpose.
 6. [Software Overview](#software-overview)
 7. [Software Installation](#software-installation)
 8. [Sensors calibration](#sensors-calibration)
-9. [License](#license)
+9. [Distance calculation](#distance-calculation)
+10. [License](#license)
     
 
 
@@ -216,7 +217,37 @@ Using Scratch:
    The gyroscope is also measured ???? times and average it out to mitigate the noise.
    This parameter can also be changed in gyroscope.h.
 
-  
+### Distance Calculation:
+Using the TOF sensors we can estimate the mouse position to a left or right wall.
+We can get the mouse orientation and its distance to the wall (from the center of the mouse).
+![trigo_1](images/other/)
+
+$$
+    \begin{aligned}
+    \text{Given: } \ & \alpha_1 , \ c_1 , \ \beta_1, \ r \\
+    \text{To be found: } \ & d, \ \theta_1 \\
+    \newline
+    d &= \sqrt{r^2 + c_1^2 - 2 \cdot r \cdot c_1 \cdot \cos(\pi - \beta_1)} \\
+    \theta_1 &= \alpha_1 + \arccos\left(\frac{d^2 + c_1^2 - r^2}{2 \cdot d \cdot c_1}\right) \\
+    \end{aligned}
+$$
+
+![Mid-Left TOF](images/calibration/mid_left_captor_calibration.png)
+
+$$
+    \begin{aligned}
+    \text{Given: } \ & d_1, \ \theta_1, \ d_2, \ \theta_2 \\
+    \text{To be found: } \ & d_3, \ d_5, \ d_6 \\
+    \newline
+    d_3 &= \sqrt{d_1^2 + d_2^2 - 2 \cdot d_1 \cdot d_2 \cdot \cos(\theta_1 - \theta_2)} \\
+    d_5 &= \frac{d_2^2 + d_3^2 - d_1^2}{2 \cdot d_3} \\
+    d_6 &= \sqrt{d_2^2 - d_5^2} \\
+    \end{aligned}
+$$
+
+If you change the sensorsdisposition you need to changes those values in sensors.cpp.
+
+
 
 ## Improvements:
   1. Reduce the use of floating point calculations in the code using "scaled" fixed point values to improve calculation speed.
