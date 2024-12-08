@@ -54,7 +54,7 @@ RESULT update_gyro() {
   //if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), THRESHOLD)) {
     angle += (mean_val * elapsed_time_ns) / NS_TO_S;
 
-  angle = MODULO_PI(angle);
+  angle = MODULO(angle);
 
   return NO_ERROR;
 }*/
@@ -89,26 +89,17 @@ RESULT update_gyro() {
   // Mise à jour de l'angle accumulé
   angle += mean * deltaTime * SCALE_FACTOR/ 1e9;
 
-  MODULO_PI(angle);
+  MODULO(angle);
   start_time = timestamp;
 
   return NO_ERROR;
 }
 
-RESULT setup_gyro() {
+RESULT init_gyro() {
   // init the hardware bmin160
-  if (bmi160.softReset() != BMI160_OK) {
-    Serial.println("reset false");
-    while (1)
-      ;
-  }
-
-  // set and init the bmi160 i2c address
-  if (bmi160.I2cInit(i2c_addr) != BMI160_OK) {
-    Serial.println("init false");
-    while (1)
-      ;
-  }
+  
+  CHECK_AND_THROW(bmi160.softReset() != BMI160_OK, GYRO_INIT_FAIL);
+  CHECK_AND_THROW(bmi160.I2cInit(i2c_addr) != BMI160_OK, GYRO_INIT_FAIL);
 
   compute_offset();
 

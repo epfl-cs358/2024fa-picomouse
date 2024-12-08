@@ -2,14 +2,6 @@
 #include "utils.h"
 
 #define MAZE_SIZE 8
-#define DEBBUG 1
-#define DEBBUG_PRINT(SENTENCE) \
-    do{\
-        if(DEBBUG){\
-            SENTENCE;\
-        }\
-    }while(0)\
-    
 
 #define LeftWall 1
 #define UpWall 2

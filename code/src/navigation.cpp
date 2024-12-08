@@ -47,7 +47,7 @@ RESULT turn(float angle, MODE mode) {
   float rotation_speed = 0.01;
   Serial.print("goal:  ");
   Serial.println(curr_angle, 5);
-  curr_angle = MODULO_PI(curr_angle);
+  curr_angle = MODULO(curr_angle);
   bool is_close_enough = false;
 
   int burst_speed_count = 0;
@@ -77,7 +77,7 @@ RESULT turn(float angle, MODE mode) {
 RESULT turn(ROTATION rotation, MODE mode) {
   update_gyro();
   mouse_absolute_angle = mouse_absolute_angle + rotation_to_angle(rotation);
-  MODULO_PI(mouse_absolute_angle);
+  MODULO(mouse_absolute_angle);
   Serial.print("Goal: ");
   Serial.println(mouse_absolute_angle, 5);
   bool is_close_enough = false;
@@ -99,7 +99,7 @@ RESULT turn(ROTATION rotation, MODE mode) {
     //Serial.println(new_angle, 10);
 
     error = mouse_absolute_angle - new_angle;
-    MODULO_PI(error);  // Gère les valeurs circulaires
+    MODULO(error);  // Gère les valeurs circulaires
     abs_error = fabs(error);
     Serial.print("Current error: ");
     Serial.println(abs_error, 10);
@@ -120,7 +120,7 @@ RESULT turn(ROTATION rotation, MODE mode) {
       }
       new_angle = get_angle();
       error = mouse_absolute_angle - new_angle;
-      MODULO_PI(error);  // Gère les valeurs circulaires
+      MODULO(error);  // Gère les valeurs circulaires
       abs_error = fabs(error);
       if (abs_error < STOP_THRESHOLD) {
         is_close_enough = true;
@@ -134,8 +134,10 @@ RESULT turn(ROTATION rotation, MODE mode) {
 
 
 RESULT init_all_sensors() {
-  setup_gyro();
-  //threshold = compute_offset();
+  RESULT rslt = init_gyro();
+  PROPAGATE_ERROR(rslt);
+
+  
   // init ToF sensors here
   return NO_ERROR;
 }

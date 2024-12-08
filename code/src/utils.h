@@ -7,15 +7,32 @@
 // size_t
 #include <cstdlib>
 
+#define MAX_LEN_STRING 30
 typedef enum {
     NO_ERROR,
     MOUSE_END,
     STACK_OVERFLOW,
-    TOF_INNIT_FAIL,
-    GYRO_INNIT_FAIL,
+    TOF_INIT_FAIL,
+    GYRO_INIT_FAIL,
     GYRO_ERROR,
-    TOF_READ_FAIL
+    TOF_READ_FAIL,
+    MAZE_INIT_FAIL,
+    NULL_PTR,
+    NO_SOLUTION
 }RESULT;
+
+char error_table_translation[][MAX_LEN_STRING] = {
+    "NO_ERROR",
+    "MOUSE_END",
+    "STACK_OVERFLOW",
+    "TOF_INIT_FAIL",
+    "GYRO_INIT_FAIL",
+    "GYRO_ERROR",
+    "TOF_READ_FAIL",
+    "MAZE_INIT_FAIL",
+    "NULL_PTR",
+    "NO_SOLUTION"
+};
 
 typedef struct {
     int x;
@@ -47,6 +64,20 @@ typedef enum
     NO_CORR
 } EXT_CORRECTION;
 
+typedef enum {
+    LEFT, 
+    RIGHT, 
+    HALF_TURN,
+    NO_TURN
+} ROTATION;
+
+typedef enum{
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+} CARDINALS;
+
 #define EQUAL_COORD(coord_1, coord_2) (coord_1.x == coord_2.x && coord_1.y == coord_2.y)
 #define ADD_COORD(coord, dX, dY) coord.x += dX; coord.y += dY;
 #define MAX_UNSIGNED_BYTE 255
@@ -71,9 +102,9 @@ typedef enum
         }\
     }while(0)\
 
-//#define MODULO_PI(angle) (((fmod((angle) + 1, 2)) <= 0 ? (fmod((angle) + 1, 2)) + 2 : fmod((angle) + 1, 2)) - 1)
+//#define MODULO(angle) (((fmod((angle) + 1, 2)) <= 0 ? (fmod((angle) + 1, 2)) + 2 : fmod((angle) + 1, 2)) - 1)
 
-#define MODULO_PI(angle) \
+#define MODULO(angle) \
     do{\
     DEBBUG_PRINT(Serial.printf("Before modulo: % 0.6f", angle));\
     float module = angle > 0 ? -2.0 : 2.0;\

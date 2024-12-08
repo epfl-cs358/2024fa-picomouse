@@ -7,6 +7,6 @@ float get_angle();
 
 RESULT update_gyro();
 
-RESULT setup_gyro();
+RESULT init_gyro();
 
 RESULT compute_offset();
