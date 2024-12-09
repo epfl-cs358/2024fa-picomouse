@@ -245,9 +245,17 @@ $$
     \end{aligned}
 $$
 
-If you change the sensorsdisposition you need to changes those values in sensors.cpp.
+If you change the sensors disposition you need to changes those values in sensors.cpp.
 
+## UI
+The UI made for monitoring the mouse's position and state of the maze stored in the micro-controller is written in Python, using the [Pygame Community Edition library](https://github.com/pygame-community/pygame-ce). 
+To use the provided code, you'll need to install pygame-ce (``pip install pygame-ce``) which should already be done if you installed the requirements.
 
+### How to use
+#### Bluetooth
+If your micromouse is connected to the bluetooth //TODO.
+#### Standalone
+If you are simply trying to visualize the maze and i
 
 ## Improvements:
   1. Reduce the use of floating point calculations in the code using "scaled" fixed point values to improve calculation speed.
