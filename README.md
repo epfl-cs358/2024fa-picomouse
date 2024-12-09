@@ -253,9 +253,22 @@ To use the provided code, you'll need to install pygame-ce (``pip install pygame
 
 ### How to use
 #### Bluetooth
-If your micromouse is connected to the bluetooth //TODO.
+If your micromouse is connected to the bluetooth //TODO
 #### Standalone
-If you are simply trying to visualize the maze and i
+If you are simply trying to visualize the maze and play with it offline, you'll have to understand how it is interpreted by the code. Every cell is represented by a set of 4 bits. Each of these bits represents a wall. In order, the first bit represents the left wall, the second, the upper wall, the third, the right wall, the fourth, the bottom wall (i.e. 0b1010 represents a cell with a wall on the left and wall on the right).
+##### Example of a complete maze
+```
+maze = [[0b0000, 0b0101, 0b0110, 0b1000, 0b0000, 0b0000, 0b0000, 0b0000],
+        [0b1010, 0b1111, 0b1011, 0b1000, 0b0000, 0b0001, 0b0000, 0b0000],
+        [0b1001, 0b0110, 0b1101, 0b0000, 0b0011, 0b1110, 0b1001, 0b0000],
+        [0b0110, 0b1001, 0b0110, 0b1011, 0b1110, 0b1010, 0b1111, 0b1000],
+        [0b0000, 0b0110, 0b1001, 0b0101, 0b0001, 0b0010, 0b1101, 0b0000],
+        [0b0000, 0b0000, 0b0100, 0b0100, 0b0110, 0b1001, 0b0110, 0b0000],
+        [0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0100, 0b0000, 0b0000],
+        [0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000]]
+```
+This represents the following maze :
+![Example UI Maze](https://github.com/user-attachments/assets/cf55897d-5dbc-45f4-a3e9-48da468660a9)
 
 ## Improvements:
   1. Reduce the use of floating point calculations in the code using "scaled" fixed point values to improve calculation speed.
