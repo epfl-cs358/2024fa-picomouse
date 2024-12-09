@@ -290,6 +290,10 @@ void turn_left(MODE mode, float rotation_speed) {
   }
 }
 
+float get_rps() {
+  return (left_rps + right_rps) / 2;
+}
+
 RESULT init_motors(){
   motors_init();
   return NO_ERROR;

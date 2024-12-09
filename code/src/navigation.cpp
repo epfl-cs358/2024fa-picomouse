@@ -1,14 +1,16 @@
 #include "navigation.h"
 #include "gyroscope.h"
 #include "motion.h"
-#include "utils.h"
 #include "sensors.h"
+#include "utils.h"
 #include <Arduino.h>
 #include <math.h>
 
 #define STOP_THRESHOLD 1.0 / 120.0
 
 #define POSITION_STOP_THRESHOLD 5 // mm
+
+#define MIN_RPS 0.01 // The minimum rps to consider the mouse stopped
 
 // The maxdifference of distance made by the wheels
 #define MAX_DELTA_DISTANCE 1.2
@@ -116,6 +118,7 @@ RESULT init_all_sensors() {
 
 RESULT navigation_forward(float distance, float max_speed) {
   const float correction_speed = 0.05;
+  bool correcting_mode = false;
   float speed = max_speed;
   WHEELS_DISTANCES dist = {0, 0};
   reset_traveled_distance();
@@ -149,13 +152,29 @@ RESULT navigation_forward(float distance, float max_speed) {
     // peut etre faire une condition qui vérifie que les deux distances ne
     // diffèrent pas trop
 
+    if (correcting_mode) {
+      //When the mouse has breaked, we check if we are at the right place
+      if (abs_dist_left < POSITION_STOP_THRESHOLD) {
+        // We are at the right distance
+        return NO_ERROR;
+      } else {
+        speed = dist_left >= 0 ? correction_speed : -correction_speed;
+        forward(speed);
+        continue;
+      }
+    }
+
     if (abs_dist_left <= breaking_dist) {
       // start_breaking
       speed = 0;
-      break_wheels();
-      update_gyro();
-      delay(10);
-      update_gyro();
+      while (get_rps() > MIN_RPS) {
+        // Wait for the mouse to stop
+        forward(0);
+        break_wheels();
+        update_gyro();
+        delay(5);
+      }
+      correcting_mode = true;
       continue;
     } else if (abs_dist_left <= very_slow_motor_dist) {
       // Slow down a lot
@@ -165,17 +184,30 @@ RESULT navigation_forward(float distance, float max_speed) {
       speed = max_speed / 2;
     }
 
-    if (speed == 0) {
-      if (abs_dist_left > POSITION_STOP_THRESHOLD) {
-        // We have break --> but we are too fare or too early
-        // we are going foward or backward
-        speed = dist_left >= 0 ? correction_speed : -correction_speed;
-      } else {
-        // We are fine
-        break;
-      }
-    }
     forward(speed);
   }
   return NO_ERROR;
 }
+
+void break_and_correct_distance() {
+
+  while (true) {
+    update_gyro();
+
+    WHEELS_DISTANCES dist = get_traveled_distance();
+
+    float mean_dist = (dist.left_distance + dist.right_distance) / 2;
+    float abs_mean_dist = fabs(mean_dist);
+
+    float dist_left = distance - abs_mean_dist;
+    float abs_dist_left = fabs(dist_left);
+
+    if (fabs(dist_left) > POSITION_STOP_THRESHOLD) {
+      // We have break --> but we are too fare or too early
+      // we are going foward or backward
+      float speed = dist_left >= 0 ? correction_speed : -correction_speed;
+      forward(correction);
+      if (abs_dist_left <= POSITION_STOP_THRESHOLD) {
+      }
+    }
+  }

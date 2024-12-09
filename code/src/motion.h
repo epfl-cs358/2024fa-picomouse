@@ -104,4 +104,11 @@ void turn_right(MODE mode, float rotation_speed);
  */
 void turn_left(MODE mode, float rotation_speed);
 
+/*
+* @brief Return the mens of the two rotation speed of the two wheels
+* @param None
+* @return the mean of the two rotation speed
+ */
+float get_rps();
+
 #endif
