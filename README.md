@@ -215,7 +215,7 @@ Using Scratch:
    The offset itself is not sufficient, we also calibrated it with an affine function.\
    The gyroscope is also measured GYRO_NB_ITERATIONS times and average it out to mitigate the noise. \
    This parameter can also be changed in gyroscope.h. \
-   If required, we can add and activation threshold.
+   If required, you can add and activation threshold.
 
 ### Distance Calculation:
 Using the TOF sensors we can estimate the mouse position to a left or right wall.
