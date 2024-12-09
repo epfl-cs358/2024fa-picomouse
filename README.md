@@ -211,11 +211,11 @@ Using Scratch:
 
   ### Gyroscope calibration:
    The bmi60 chip is knowned for it's natural drift. To counter that the mouse, at initialization, \
-   read's GYRO_CALIBRATION_NB_ITERATIONS times the gyroscope and average the values to obtain the offset.\
-   The offset itself is not sufficient, we also need an activation treshold to negate small angular speed variation. \
-   This parameter needs to be adapted to your gyroscope in gyroscope.h. \
-   The gyroscope is also measured ???? times and average it out to mitigate the noise.
-   This parameter can also be changed in gyroscope.h.
+   read's CALIBRATION_OFFSET_NB_ITERATIONS times the gyroscope and average the values to obtain the offset.\
+   The offset itself is not sufficient, we also calibrated it with an affine function.\
+   The gyroscope is also measured GYRO_NB_ITERATIONS times and average it out to mitigate the noise.
+   This parameter can also be changed in gyroscope.h. \
+   If required, we can add and activation threshold.
 
 ### Distance Calculation:
 Using the TOF sensors we can estimate the mouse position to a left or right wall.
