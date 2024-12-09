@@ -8,6 +8,10 @@
 
 #define CELL_LENGTH 180 //in mm
 
+// Defined speeds for both run and search mode
+#define MAX_SPEED_SEARCH 0.1
+#define MAX_SPEED_RUN 0.6
+
 bool in_new_cell = true;
 bool end = false;
 Maze maze;
@@ -50,6 +54,7 @@ void setup(){
 void loop(){
     if (in_new_cell) {
         if (!end) {
+            //TODO peut etre qu'il faut update le gyro plus que ça
             WALL_DIR new_walls[3];
             int len = 0;
             CARDINALS next_direction;
@@ -70,7 +75,7 @@ void loop(){
                 rslt = turn(rotation, INPLACE);
                 //TODO: check rslt
 
-                rslt = navigation_forward(CELL_LENGTH);
+                rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
                 //TODO: check rslt
             } else {
                 end = true;

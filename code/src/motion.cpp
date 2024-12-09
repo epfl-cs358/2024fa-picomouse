@@ -48,9 +48,6 @@ float cap_speed(float speed) {
 void turn_inplace(float roation_speed, bool right) {
   roation_speed = fabs(cap_speed(roation_speed));
 
-  if (last_time == 0) {
-    motors_init();
-  }
   last_time = millis();
 
   if (right) {
@@ -158,10 +155,6 @@ void set_new_speed_forward(float speed) {
   left_speed = speed;
   right_speed = speed;
 
-  // If the motors are not initialized, do it
-  if (last_time == 0) {
-    motors_init();
-  }
   last_time = millis();
 
   set_delta_steps_count_to_zero();
@@ -258,9 +251,6 @@ RESULT forward(float speed, EXT_CORRECTION ext_corr) {
 }
 
 void turn_right(MODE mode, float rotation_speed) {
-  if (last_time == 0) {
-    motors_init();
-  }
   last_time = millis();
 
   switch (mode) {
@@ -281,9 +271,6 @@ void turn_right(MODE mode, float rotation_speed) {
 }
 
 void turn_left(MODE mode, float rotation_speed) {
-  if (last_time == 0) {
-    motors_init();
-  }
   last_time = millis();
 
   switch (mode) {
@@ -301,4 +288,9 @@ void turn_left(MODE mode, float rotation_speed) {
     default:
       break;
   }
+}
+
+RESULT init_motors(){
+  motors_init();
+  return NO_ERROR;
 }

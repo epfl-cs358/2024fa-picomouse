@@ -3,8 +3,8 @@
 #ifndef MOTION_H
 #define MOTION_H
 
-#include "utils.h"
 #include "motors.h"
+#include "utils.h"
 
 /** This library control the two motors of the mouse
  * It uses a special encoder library wich uses the Serial with 115200 bauds
@@ -28,13 +28,6 @@
 // Correction factor for the speed
 #define KP 0.1
 
-// Speed of the motors when a turning function is called (INPLACE mode)
-#define ROTATION_SPEED 0.001
-
-// Defined speeds for both run and search mode
-#define SPEED_SEARCH 0.2
-#define SPEED_RUN 1
-
 #define DELTA_TIME 50 // ms, the time between two measures of the counter
 
 // Breaking power [0;1]
@@ -48,22 +41,26 @@
 #define EXT_CORR_MULT 10
 
 // Wheels characteristics
-#define WHEEL_DIAMETER 38.0 //mm
-#define WHEEL_PERMIMER WHEEL_DIAMETER * 3.1415 //mm
-#define ENCODER_RESOLUTION 408.0 // 408 pulse per revolution
+#define WHEEL_DIAMETER 38.0                    // mm
+#define WHEEL_PERMIMER WHEEL_DIAMETER * 3.1415 // mm
+#define ENCODER_RESOLUTION 408.0               // 408 pulse per revolution
+
+/*
+ * @brief Initialize the two motors and the two encoders
+ */
+RESULT init_motors();
 
 /* @brief reset to 0 the traveled distance
  * @param None
- * @return a RESULT value 
+ * @return a RESULT value
  */
 void reset_traveled_distance();
 
 /* @brief get the traveled distance in mm
  * @param None
  * @return the traveled distance
-*/
+ */
 WHEELS_DISTANCES get_traveled_distance();
-
 
 /* @brief Stops the two motors
  * @param None
@@ -79,30 +76,32 @@ RESULT turn_off_motors();
 RESULT break_wheels();
 
 /* @brief Runs the two motors at a certain speed [-1;1]
- * CALL IT EVEN IF THE SPEED DOESN'T CHANGE --> it addapt if one wheel is too slow each DELTA_TIME
- * Never stop running --> give a next instruction to stop
+ * CALL IT EVEN IF THE SPEED DOESN'T CHANGE --> it addapt if one wheel is too
+ * slow each DELTA_TIME Never stop running --> give a next instruction to stop
  * @param The desired speed
- * @param The correction factor if need to turn a bit in a direction (if not alligned between the two walls) ATTENTION; ITS FAST, CALL IT A VERY SHORT TIME
+ * @param The correction factor if need to turn a bit in a direction (if not
+ * alligned between the two walls) ATTENTION; ITS FAST, CALL IT A VERY SHORT
+ * TIME
  * @return A RESULT value
  */
 
-//TODO IMPLEMENT THE CORRECTION FACTOR -->
+// TODO IMPLEMENT THE CORRECTION FACTOR -->
 RESULT forward(float speed, EXT_CORRECTION ext_corr = NO_CORR);
 
-/* @brief Makes the mouse turn right. NEVER STOP ROTATING --> give a next instruction to stop
+/* @brief Makes the mouse turn right. NEVER STOP ROTATING --> give a next
+ * instruction to stop
  * @param A mode of turning
  * @param The speed of the rotation [0,1]
  * @return A RESULT value
  */
 void turn_right(MODE mode, float rotation_speed);
 
-/* @brief Makes the mouse turn turn left. NEVER STOP ROTATING --> give a next instruction to stop
+/* @brief Makes the mouse turn turn left. NEVER STOP ROTATING --> give a next
+ * instruction to stop
  * @param A mode of turning
  * @param The speed of the rotation [0,1]
  * @return A RESULT value
  */
 void turn_left(MODE mode, float rotation_speed);
-
-
 
 #endif
