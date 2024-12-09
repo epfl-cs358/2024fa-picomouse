@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "maze.h"
+#include "utils.h"
 
 #define MAZE_SIZE 8
 
@@ -21,11 +22,14 @@ typedef struct {
 #define IN_BOUNDARIES(coord) (0 <= coord.x && coord.x < MAZE_SIZE && 0 <= coord.y && coord.y < MAZE_SIZE)
 
 
-int dx[] = {0, -1, 0, 1};
-int dy[] = {-1, 0, 1, 0};
-int WALLS[] = {LeftWall, UpWall, RightWall, DownWall};
+static int dx[] = {0, -1, 0, 1};
+static int dy[] = {-1, 0, 1, 0};
+static int WALLS[] = {LeftWall, UpWall, RightWall, DownWall};
+
 
 RESULT init_maze(Maze* maze, COORDINATES start, COORDINATES exit);
-void add_wall(Maze* maze, WALL_DIR wall);
+RESULT add_wall(Maze* maze, WALL_DIR wall);
+
 RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* next_direction);
 RESULT init_stack(PATH_STACK* stack);
+

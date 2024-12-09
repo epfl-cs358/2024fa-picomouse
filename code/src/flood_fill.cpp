@@ -46,19 +46,32 @@ void weighted_BFS(Maze* maze, COORDINATES current_cell, unsigned char current_di
     }
 }
 
-
-void pop_n(size_t n, PATH_STACK* stack){
+/**
+ * @brief Pop n values on the stack, those values are not used (neither returned).
+ * 
+ * @param n Number of element to pop
+ * @param stack 
+ * @return RESULT STACK_OVERFLOW (underflow) / NO_ERROR
+ */
+RESULT pop_n(size_t n, PATH_STACK* stack){
+    CHECK_AND_THROW(n > stack->end, STACK_OVERFLOW);
     stack->end -= n;
-    return NO_ERROR;
 }
 
-void push(COORDINATES new_coord, PATH_STACK* stack){
-    if(stack->end >= stack->max_size){
-        return STACK_OVERFLOW;
-    }
+/**
+ * @brief Push the coordinate to the stack and also removes loops in the path.
+ * 
+ * @param new_coord Coordinate to add on the stack 
+ * @param stack 
+ * @return RESULT STACK_OVERFLOW / NO_ERROR
+ */
+RESULT push(COORDINATES new_coord, PATH_STACK* stack){
+    CHECK_AND_THROW(stack->end >= stack->max_size, STACK_OVERFLOW);
+
     for (size_t i = 0; i < stack->end; i++){
         if(EQUAL_COORD(stack->stack[i], new_coord)){
-            pop_n(stack->end-i-1, stack);
+            RESULT err = pop_n(stack->end-i-1, stack);
+            PROPAGATE_ERROR(err);
             return NO_ERROR;
         }
     }
@@ -90,7 +103,9 @@ RESULT add_wall(Maze* maze, WALL_DIR wall){
 RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* next_direction){
     CHECK_AND_THROW(!path_stack, NULL_PTR);
     CHECK_AND_THROW(!maze, NULL_PTR);
-    push(maze->mouse_pos, path_stack);
+    RESULT err = push(maze->mouse_pos, path_stack);
+    PROPAGATE_ERROR(err);
+    
     if(EQUAL_COORD(maze->mouse_pos, maze->exit)){
         return MOUSE_END;
     }

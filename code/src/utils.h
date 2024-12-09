@@ -106,12 +106,10 @@ typedef enum{
 
 #define MODULO(angle) \
     do{\
-    DEBBUG_PRINT(Serial.printf("Before modulo: % 0.6f", angle));\
-    float module = angle > 0 ? -2.0 : 2.0;\
-    while(!(-1.0 < angle && angle <= 1.0)){\
-        angle += module;\
-    }\
-    DEBBUG_PRINT(Serial.printf("After Modulo: % 0.6f", angle));\
+        float module = angle > 0 ? -2.0 : 2.0;\
+        while(!(-1.0 < angle && angle <= 1.0)){\
+            angle += module;\
+        }\
     }while(0)
 
 

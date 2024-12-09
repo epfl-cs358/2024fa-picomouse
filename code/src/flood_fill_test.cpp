@@ -1,5 +1,5 @@
-#include <flood_fill.h>
-#include <utils.h>
+#include "flood_fill.h"
+#include "utils.h"
 #include "maze.h"
 #include <iostream>
 
@@ -123,31 +123,69 @@ int main(int argc, char const *argv[]){
 
 
     // fake discovery of the new walls
+
+
+
+    PATH_STACK path1;
+    PATH_STACK path2;
+    init_stack(&path1);
+    init_stack(&path2);
+
+    /// @TODO call run_flood_fill once until the end is found
+
+    //run_flood_fill(&path1, true_walls);
+    //invert the maze
+
+    cout<< "First run : \n";
+    CARDINALS next_dir = NORTH;
+    display_walls(&path1, &maze);
+    
+    unsigned char new_walls =  true_walls[maze.mouse_pos.x][maze.mouse_pos.y];
+    for (size_t i = 0; i < 4; i++){
+        if(WALLS[i]& new_walls){
+            add_wall(&maze, static_cast<WALL_DIR>(i));
+        }
+    }
+    while(one_iteration_flood_fill(&maze, &path1, &next_dir) != MOUSE_END){
+        
+        display_walls(&path1, &maze);
         unsigned char new_walls =  true_walls[maze.mouse_pos.x][maze.mouse_pos.y];
         for (size_t i = 0; i < 4; i++){
             if(WALLS[i]& new_walls){
                 add_wall(&maze, static_cast<WALL_DIR>(i));
             }
         }
+    
+    }
 
-
-    PATH_STACK path1;
-    PATH_STACK path2;
-    INIT_STACK(path1);
-    INIT_STACK(path2);
-
-    /// @TODO call run_flood_fill once until the end is found
-
-    //run_flood_fill(&path1, true_walls);
-    //invert the maze
     maze.exit = start;
     maze.start = exit;
-    cout<< "First run : \n";
-    display_walls(&path1, &maze);
+
+    
 
     //run_flood_fill(&path2, true_walls);
 
     cout<< "Return path: \n";
     display_walls(&path2, &maze);
+
+    new_walls =  true_walls[maze.mouse_pos.x][maze.mouse_pos.y];
+    for (size_t i = 0; i < 4; i++){
+        if(WALLS[i]& new_walls){
+            add_wall(&maze, static_cast<WALL_DIR>(i));
+        }
+    }
+
+    while(one_iteration_flood_fill(&maze, &path2, &next_dir) != MOUSE_END){
+        
+        display_walls(&path2, &maze);
+        unsigned char new_walls =  true_walls[maze.mouse_pos.x][maze.mouse_pos.y];
+        for (size_t i = 0; i < 4; i++){
+            if(WALLS[i]& new_walls){
+                add_wall(&maze, static_cast<WALL_DIR>(i));
+            }
+        }
+    
+    }
+
     return 0;
 }
