@@ -178,8 +178,7 @@ Using Scratch:
 
 ## Sensors calibration:
   ### TOF calibration:
-  The Tof sensors need to be calibrated individualy, take measure of the sensors at different distances \
-  and do a linear regression on the measure given the actual distance. \
+  The Tof sensors need to be calibrated individually, to do that we measured different distances for each sensors and did a linear regression on the measurement     given the actual distance. \
   For our sensors we get the following graphs: \
   Where the x axis denotes the real distance and the y axis denotes the measured value. \
   The green line represent the expected slope, and the black line represent the measurements. \
