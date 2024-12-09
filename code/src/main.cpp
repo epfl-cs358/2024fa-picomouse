@@ -4,6 +4,7 @@
 #include "sensors.h"
 #include "utils.h"
 #include "flood_fill.h"
+#include  <wire.h>
 
 #define CELL_LENGTH 180 //in mm
 
@@ -14,28 +15,33 @@ COORDINATES start = {0,0};
 COORDINATES exit = {4,4};
 PATH_STACK path_run1;
 PATH_STACK path_run2;
-ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT, NO_TURN, RIGHT, HALF_TURN};
+ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT_TURN, NO_TURN, RIGHT_TURN, HALF_TURN};
 CARDINALS current_direction;
 
 ROTATION calculate_turn(CARDINALS curr, CARDINALS target);
 
+#define BLOCK_ON_ERROR(error,message) \
+    while(error){\
+        message;\
+        delay(1000); \
+    } 
+
 void setup(){
     Serial.begin(115200);
     delay(20);
+    Wire.begin();
+
     RESULT err = init_all_sensors();
-    while(err){
-        DEBBUG_PRINT(Serial.printf("Error occured in initialization: %s \n", error_table_translation[err]));
-        delay(1000);
-    }
+    
+    BLOCK_ON_ERROR(err, Serial.printf("Error occured in initialization: %s \n", error_table_translation[err]));
 
     err = init_maze(&maze,start,exit);
-    while(err){
-        DEBBUG_PRINT(Serial.printf("Btw you need to give valid start and exit coordinates: %s \n", error_table_translation[err]));
-        delay(1000);
-    }
+    BLOCK_ON_ERROR(err, Serial.printf("Btw you need to give valid start and exit coordinates: %s \n", error_table_translation[err]));
 
     err = init_stack(&path_run1);
+    BLOCK_ON_ERROR(err, Serial.printf("Stack failed :(  %s \n", error_table_translation[err]));
     err = init_stack(&path_run2);
+    BLOCK_ON_ERROR(err, Serial.printf("Stack failed :(  %s \n", error_table_translation[err]));
 
     current_direction = EAST;
 

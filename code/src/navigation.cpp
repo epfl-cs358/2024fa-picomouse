@@ -12,9 +12,9 @@ float mouse_absolute_angle = 0;
 // Convert a cardinal to an angle, return the angle in radian ]-1;1]
 float rotation_to_angle(ROTATION rotation) {
   switch (rotation) {
-    case LEFT:
+    case LEFT_TURN:
       return 0.5;
-    case RIGHT:
+    case RIGHT_TURN:
       return -0.5;
     case HALF_TURN:
       return 1;

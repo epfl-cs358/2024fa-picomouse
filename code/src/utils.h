@@ -65,8 +65,8 @@ typedef enum
 } EXT_CORRECTION;
 
 typedef enum {
-    LEFT, 
-    RIGHT, 
+    LEFT_TURN, 
+    RIGHT_TURN, 
     HALF_TURN,
     NO_TURN
 } ROTATION;
