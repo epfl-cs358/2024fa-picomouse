@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "flood_fill.h"
 #include "maze.h"
+#include <Arduino.h>
 
 
 #define WEIGHT_AT(weight_matrix, coord) weight_matrix[coord.x][coord.y]
@@ -105,7 +106,6 @@ RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* n
     CHECK_AND_THROW(!maze, NULL_PTR);
     RESULT err = push(maze->mouse_pos, path_stack);
     PROPAGATE_ERROR(err);
-    
     if(EQUAL_COORD(maze->mouse_pos, maze->exit)){
         return MOUSE_END;
     }
@@ -120,6 +120,10 @@ RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* n
         if(WALLS[i] & WALLS_AT(maze->walls, maze->mouse_pos)){
             continue;
         }
+        COORDINATES next_cell = {maze->mouse_pos.x+dx[i],maze->mouse_pos.y+dy[i]};
+        if(!IN_BOUNDARIES(next_cell)){
+          continue;
+        }
         if(current_min > maze->matrix[maze->mouse_pos.x+dx[i]][maze->mouse_pos.y+dy[i]]){
             current_min = maze->matrix[maze->mouse_pos.x+dx[i]][maze->mouse_pos.y+dy[i]];
             min_dir = i;
@@ -128,6 +132,7 @@ RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* n
 
     int delta_x = dx[min_dir];
     int delta_y = dy[min_dir];
+    Serial.printf("delta_x = %d, delta_y = %d \n", delta_x, delta_y);
 
     ADD_COORD(maze->mouse_pos, delta_x, delta_y);  
 

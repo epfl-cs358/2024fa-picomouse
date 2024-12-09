@@ -1,8 +1,10 @@
 #pragma once
 
 #include "utils.h"
+#include "maze.h"
 #include <cstdint>
 #include <math.h>
+
 
 typedef enum {CALC_LEFT, CALC_RIGHT, CALC_BOTH}CALC_CHOICE;
 
@@ -17,11 +19,11 @@ typedef struct {
   float deviation_right;
 }POSITION_TO_WALL;
 
-RESULT position_to_wall (POSITION_TO_WALL* result, CALC_CHOICE choice);
+RESULT position_to_wall(POSITION_TO_WALL* result, CALC_CHOICE choice);
 
 RESULT init_TOF();
 
-RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direction)
+RESULT detect_walls(WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direction);
 
 RESULT update_left();
 RESULT update_right();

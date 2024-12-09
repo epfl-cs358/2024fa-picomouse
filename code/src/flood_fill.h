@@ -3,7 +3,6 @@
 #include "maze.h"
 #include "utils.h"
 
-#define MAZE_SIZE 8
 
 
 #define LeftWall 1

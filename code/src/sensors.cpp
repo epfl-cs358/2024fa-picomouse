@@ -16,8 +16,22 @@
 #define NEW_ADDRESS_MID_RIGHT 0x46
 #define NEW_ADDRESS_RIGHT 0x48
 
-#define MID_WALL_TRESHOLD 150
+#define SLOPE_LEFT 0.95
+#define SLOPE_MID_LEFT 1
+#define SLOPE_MID 1.03
+#define SLOPE_MID_RIGHT 1
+#define SLOPE_RIGHT 0.96
+
+#define OFFSET_LEFT -6.3
+#define OFFSET_MID_LEFT -0.19
+#define OFFSET_MID 40.0
+#define OFFSET_MID_RIGHT -4.41
+#define OFFSET_RIGHT -1.18
+
+#define MID_WALL_THRESHOLD 150
 #define SIDE_WALL_THRESHOLD 80
+typedef enum {LEFT_D, MID_LEFT_D, MID_RIGHT_D, RIGHT_D}SIDE_SENSOR_ID;
+void calc_d(SIDE_SENSOR_ID id);
 
 DFRobot_VL6180X left;
 DFRobot_VL6180X mid_left;
@@ -46,18 +60,11 @@ void get_side_side_distances(uint16_t* dist){
     }
 }
 
-
-DFRobot_VL6180X left;
-DFRobot_VL6180X mid_left;
-DFRobot_VL53L0X mid;
-DFRobot_VL6180X mid_right;
-DFRobot_VL6180X right;
-
 #define INNIT_ONE_TOF(sensor, pin, new_address)\
     do{\
         digitalWrite(pin, HIGH);\
         delay(DELAY);\
-        CHECK_AND_THROW(!sensor.begin(), TOF_INNIT_FAIL);\
+        CHECK_AND_THROW(!sensor.begin(), TOF_INIT_FAIL);\
         delay(DELAY);\
         sensor.setIICAddr(new_address);\
     }while(0)
@@ -72,11 +79,12 @@ DFRobot_VL6180X right;
         d5_squared *= d5_squared;\
         d5_squared /= (4 * d3_squared);\
         d6 = sqrt(d2_squared - d5_squared);\
-        float teta3 = acos(d2/d6);\
-        orientation = teta2 - teta3;\
-      }while(0)
+        }while(0)
 
-typedef enum {LEFT_D, MID_LEFT_D, MID_RIGHT_D, RIGHT_D}SENSOR_ID;
+        // float teta3 = acos(d2/d6);
+        // orientation = teta2 - teta3;
+      
+
 
 #define CALIB_SENSOR(measured_value, slope, offset) (measured_value - offset)/slope
 
@@ -213,18 +221,23 @@ void calc_d(SIDE_SENSOR_ID id) {
 }
 
 RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direction){
-  PROPAGATE_ERROR(update_all);
+  for(int i = 0 ; i < 5 ; i++){
+  PROPAGATE_ERROR(update_all());
+  }
   int index = 0;
   if (mid_distance < MID_WALL_THRESHOLD){
     // + 1 MOD 4 for the translation from CARDINALS to WALL_DIR
+    Serial.println("mid found");
     int wall_dir_index = (static_cast<int>(mouse_direction) + 1) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);
+    Serial.printf("mouse direction: %d, computed: %d \n", mouse_direction, result[index]);
     index ++;
   }
   if (side_distances[0] < SIDE_WALL_THRESHOLD){
     // + 1 - 1 MOD 4 for the translation from CARDINALS left side of the mouse to WALL_DIR
     int wall_dir_index = (static_cast<int>(mouse_direction)) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);
+    Serial.printf("mouse direction: %d, computed: %d \n", mouse_direction, result[index]);
     index ++;
   }
   if(side_distances[3] < SIDE_WALL_THRESHOLD){

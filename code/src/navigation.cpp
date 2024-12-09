@@ -2,6 +2,7 @@
 #include "gyroscope.h"
 #include "motion.h"
 #include "utils.h"
+#include "sensors.h"
 #include <Arduino.h>
 #include <math.h>
 
@@ -104,12 +105,12 @@ RESULT turn(ROTATION rotation, MODE mode) {
 }
 
 RESULT init_all_sensors() {
-  RESULT rslt = init_gyro();
+  RESULT rslt = init_motors();
   PROPAGATE_ERROR(rslt);
-  rslt = init_motors();
+  rslt = init_gyro();
   PROPAGATE_ERROR(rslt);
-
-  // init ToF sensors here
+  rslt = init_TOF();
+  PROPAGATE_ERROR(rslt);
   return NO_ERROR;
 }
 

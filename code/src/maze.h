@@ -1,7 +1,7 @@
 #pragma once
 #include "utils.h"
 
-#define MAZE_SIZE 8
+#define MAZE_SIZE 4
 
 #define LeftWall 1
 #define UpWall 2
