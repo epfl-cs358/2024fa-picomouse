@@ -2,6 +2,7 @@
 #include "DFRobot_VL53L0X.h"
 #include "DFRobot_VL6180X.h"
 
+
 #define DELAY 10
 
 #define LEFT_PIN 4
@@ -14,6 +15,9 @@
 #define NEW_ADDRESS_MID 0x44
 #define NEW_ADDRESS_MID_RIGHT 0x46
 #define NEW_ADDRESS_RIGHT 0x48
+
+#define MID_WALL_TRESHOLD 150
+#define SIDE_WALL_THRESHOLD 80
 
 DFRobot_VL6180X left;
 DFRobot_VL6180X mid_left;
@@ -71,10 +75,12 @@ DFRobot_VL6180X right;
         float teta3 = acos(d2/d6);\
         orientation = teta2 - teta3;\
       }while(0)
-typedef enum {LEFT, MID_LEFT, MID_RIGHT, RIGHT}SIDE_SENSOR_ID;
+
+typedef enum {LEFT_D, MID_LEFT_D, MID_RIGHT_D, RIGHT_D}SENSOR_ID;
+
 #define CALIB_SENSOR(measured_value, slope, offset) (measured_value - offset)/slope
 
-RESULT innit_TOF(){
+RESULT init_TOF(){
     pinMode(LEFT_PIN, OUTPUT);
     pinMode(MID_LEFT_PIN, OUTPUT);
     pinMode(MID_RIGHT_PIN, OUTPUT);
@@ -166,27 +172,28 @@ RESULT position_to_wall (POSITION_TO_WALL* result, CALC_CHOICE choice) {
   POSITION_TO_WALL pos = {0};
   switch (choice){
     case CALC_LEFT :
-      calc_d(LEFT);
-      calc_d(MID_LEFT);
-      CALC_D6(d_calc[MID_LEFT], d_calc[LEFT], teta_calc[MID_LEFT], teta_calc[LEFT], pos.distance_left, pos.deviation_left);
+      calc_d(LEFT_D);
+      calc_d(MID_LEFT_D);
+      CALC_D6(d_calc[MID_LEFT_D], d_calc[LEFT_D], teta_calc[MID_LEFT_D], teta_calc[LEFT_D], pos.distance_left, pos.deviation_left);
       *result = pos;
       break;
     case CALC_RIGHT : 
-      calc_d(RIGHT);
-      calc_d(MID_RIGHT);
-      CALC_D6(d_calc[MID_RIGHT], d_calc[RIGHT], teta_calc[MID_RIGHT], teta_calc[RIGHT],  pos.distance_right, pos.deviation_right);
+      calc_d(RIGHT_D);
+      calc_d(MID_RIGHT_D);
+      CALC_D6(d_calc[MID_RIGHT_D], d_calc[RIGHT_D], teta_calc[MID_RIGHT_D], teta_calc[RIGHT_D],  pos.distance_right, pos.deviation_right);
       *result = pos;
       break;
     case CALC_BOTH :
-      calc_d(LEFT);
-      calc_d(MID_LEFT);
-      CALC_D6(d_calc[MID_LEFT], d_calc[LEFT], teta_calc[MID_LEFT], teta_calc[LEFT],  pos.distance_left, pos.deviation_left);
-      calc_d(RIGHT);
-      calc_d(MID_RIGHT);  
-      CALC_D6(d_calc[MID_RIGHT], d_calc[RIGHT], teta_calc[MID_RIGHT], teta_calc[RIGHT],  pos.distance_right, pos.deviation_right);
+      calc_d(LEFT_D);
+      calc_d(MID_LEFT_D);
+      CALC_D6(d_calc[MID_LEFT_D], d_calc[LEFT_D], teta_calc[MID_LEFT_D], teta_calc[LEFT_D],  pos.distance_left, pos.deviation_left);
+      calc_d(RIGHT_D);
+      calc_d(MID_RIGHT_D);  
+      CALC_D6(d_calc[MID_RIGHT_D], d_calc[RIGHT_D], teta_calc[MID_RIGHT_D], teta_calc[RIGHT_D],  pos.distance_right, pos.deviation_right);
       *result = pos;
       break;
 
+    return NO_ERROR;
   }
 
 }
@@ -203,4 +210,30 @@ void calc_d(SIDE_SENSOR_ID id) {
   float d = sqrt(d_squared);
   d_calc[index] = d;
   teta_calc[index] = alpha + acos((d_squared + c_squared - r_squared) / (2 * d * c));
+}
+
+RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direction){
+  PROPAGATE_ERROR(update_all);
+  int index = 0;
+  if (mid_distance < MID_WALL_THRESHOLD){
+    // + 1 MOD 4 for the translation from CARDINALS to WALL_DIR
+    int wall_dir_index = (static_cast<int>(mouse_direction) + 1) & 0b11;
+    result[index] = static_cast<WALL_DIR>(wall_dir_index);
+    index ++;
+  }
+  if (side_distances[0] < SIDE_WALL_THRESHOLD){
+    // + 1 - 1 MOD 4 for the translation from CARDINALS left side of the mouse to WALL_DIR
+    int wall_dir_index = (static_cast<int>(mouse_direction)) & 0b11;
+    result[index] = static_cast<WALL_DIR>(wall_dir_index);
+    index ++;
+  }
+  if(side_distances[3] < SIDE_WALL_THRESHOLD){
+    // + 1 + 1 MOD 4 for the translation from CARDINALS right side of the mouse to WALL_DIR
+    int wall_dir_index = (static_cast<int>(mouse_direction) + 2) & 0b11;
+    result[index] = static_cast<WALL_DIR>(wall_dir_index);
+    index ++;
+  }
+  *n_walls_found = index;
+
+  return NO_ERROR;
 }
