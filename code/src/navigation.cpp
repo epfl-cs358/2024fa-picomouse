@@ -148,5 +148,6 @@ RESULT init_all_sensors() {
   * @return RESULT 
   */
 RESULT navigation_forward(float distance){
+  return NO_ERROR;
 
 }
