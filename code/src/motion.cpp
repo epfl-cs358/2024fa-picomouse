@@ -47,6 +47,7 @@ float cap_speed(float speed) {
 // means the mouse will turn right
 void turn_inplace(float roation_speed, bool right) {
   roation_speed = fabs(cap_speed(roation_speed));
+  set_delta_steps_count_to_zero();
 
   last_time = millis();
 
@@ -296,5 +297,7 @@ float get_rps() {
 
 RESULT init_motors(){
   motors_init();
+  reset_speeds();
+  set_delta_steps_count_to_zero();
   return NO_ERROR;
 }
