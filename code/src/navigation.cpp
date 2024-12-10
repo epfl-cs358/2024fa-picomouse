@@ -8,7 +8,7 @@
 
 #define STOP_THRESHOLD 1.0 / 120.0
 
-#define POSITION_STOP_THRESHOLD 2// mm
+#define POSITION_STOP_THRESHOLD 2 // mm
 
 #define MIN_RPS 0.01 // The minimum rps to consider the mouse stopped
 
@@ -56,7 +56,7 @@ RESULT turn(ROTATION rotation, MODE mode) {
 
   bool is_close_enough = false;
 
-  const float BASE_SPEED = 0.08; // Vitesse de rotation de base changed from 0.6 to 0.8
+  const float BASE_SPEED = 0.07; // Vitesse de rotation de base changed from 0.06 to 0.08
   const float MIN_SPEED = 0.01;  // Vitesse minimale pour corriger
   // const float KP = 0.5;             // Gain proportionnel pour ajuster la
   // vitesse

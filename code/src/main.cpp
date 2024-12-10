@@ -4,19 +4,20 @@
 #include "sensors.h"
 #include "utils.h"
 #include "flood_fill.h"
-#include  <wire.h>
+#include  <Wire.h>
 
 #define CELL_LENGTH 180 //in mm
 
 // Defined speeds for both run and search mode
-#define MAX_SPEED_SEARCH 0.1
+#define MAX_SPEED_SEARCH 0.08
 #define MAX_SPEED_RUN 0.6
 
-bool in_new_cell = true;
-bool end = false;
+int run1 = 1;
+int run2 = 0;
+int end = 0;
 Maze maze;
-COORDINATES start = {0,0};
-COORDINATES exit = {4,4};
+COORDINATES start_cell = {0,0};
+COORDINATES exit_cell = {2,2};
 PATH_STACK path_run1;
 PATH_STACK path_run2;
 ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT_TURN, NO_TURN, RIGHT_TURN, HALF_TURN};
@@ -36,60 +37,106 @@ void setup(){
     delay(20);
     Wire.begin();
     delay(20);
+    delay(5000);
     RESULT err = init_all_sensors();
     
     BLOCK_ON_ERROR(err, Serial.println("Error occured in initialization."));
 
-    err = init_maze(&maze,start,exit);
+    err = init_maze(&maze,start_cell,exit_cell);
+    Serial.printf("mouse x : %d, mouse y : %d, end x: %d, end y : %d \n", maze.mouse_pos.x, maze.mouse_pos.y, maze.exit.x, maze.exit.y);
     BLOCK_ON_ERROR(err, Serial.println("Btw you need to give valid start and exit coordinates"));
 
     err = init_stack(&path_run1);
-    BLOCK_ON_ERROR(err, Serial.prinln("Stack failed."));
+    BLOCK_ON_ERROR(err, Serial.println("Stack failed."));
     err = init_stack(&path_run2);
-    BLOCK_ON_ERROR(err, Serial.printf("Stack failed."));
+    BLOCK_ON_ERROR(err, Serial.println("Stack failed."));
 
     current_direction = EAST;
 
 }
 
 void loop(){
-    if (in_new_cell) {
-        if (!end) {
-            //TODO peut etre qu'il faut update le gyro plus que ça
-            WALL_DIR new_walls[3];
-            int len = 0;
-            CARDINALS next_direction;
-            RESULT rslt = detect_walls(new_walls, &len, current_direction); 
-            BLOCK_ON_ERROR(rslt, Serial.println("wall detection failed !!"));
-            //TODO: check rslt
+    if (run1) {
+      Serial.println("code started");      
+      //TODO peut etre qu'il faut update le gyro plus que ça
+      WALL_DIR new_walls[3];
+      int len = 0;
+      CARDINALS next_direction;
+      RESULT rslt = detect_walls(new_walls, &len, current_direction); 
 
-            for (int i = 0; i<len; i++) {
-                rslt = add_wall(&maze, new_walls[i]);  
-                BLOCK_ON_ERROR(rslt, Serial.println("add wall failed !!"));
-            }
+      BLOCK_ON_ERROR(rslt, Serial.println("wall detection failed !!"));
+      //TODO: check rslt
+      for (int i = 0; i<len; i++) {
+          Serial.println(new_walls[i]);
+          rslt = add_wall(&maze, new_walls[i]);  
+          BLOCK_ON_ERROR(rslt, Serial.println("add wall failed !!"));
+      }
+      Serial.println("add walls done");
 
-            rslt = one_iteration_flood_fill(&maze, &path_run1, &next_direction);
-            BLOCK_ON_ERROR(rslt && rslt != MOUSE_END, Serial.println("flood fill failed !!"));
-            if(rslt != MOUSE_END) {
-            
-                ROTATION rotation = calculate_turn(current_direction, next_direction);
+      rslt = one_iteration_flood_fill(&maze, &path_run1, &next_direction);
+      Serial.println("flood fill done");
+      Serial.println(rslt);
 
-                current_direction = next_direction;
+      //BLOCK_ON_ERROR(rslt && rslt != MOUSE_END, Serial.println("flood fill failed !!"));
 
-                rslt = turn(rotation, INPLACE);
-                BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
-                //TODO: check rslt
+      if(rslt != MOUSE_END) {
+          Serial.println(next_direction);
+          ROTATION rotation = calculate_turn(current_direction, next_direction);
 
-                rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
-                BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
-                //TODO: check rslt
-            } else {
-                end = true;
-            }
-        }
+          current_direction = next_direction;
 
+          rslt = turn(rotation, INPLACE);
+          BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
+          //TODO: check rslt
+          delay(100);
+          rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
+          BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
+          //TODO: check rslt
+      } else {
+          run1 = 0;
+          run2 = 1;
+          turn(HALF_TURN, INPLACE);
+          delay(10);
+          int tkt = (static_cast<int>(current_direction)+2) & 0b11;
+          current_direction = static_cast<CARDINALS>(tkt);
+          maze.start = exit_cell;
+          maze.exit = start_cell;
+      }
+    
     }
-}
+    else if(run2){
+      Serial.println("code started");
+      
+      //TODO peut etre qu'il faut update le gyro plus que ça
+      CARDINALS next_direction;
+
+      RESULT rslt = one_iteration_flood_fill(&maze, &path_run2, &next_direction);
+      Serial.println("flood fill done");
+      Serial.println(rslt);
+
+      //BLOCK_ON_ERROR(rslt && rslt != MOUSE_END, Serial.println("flood fill failed !!"));
+
+      if(rslt != MOUSE_END) {
+          Serial.println(next_direction);
+          ROTATION rotation = calculate_turn(current_direction, next_direction);
+
+          current_direction = next_direction;
+
+          rslt = turn(rotation, INPLACE);
+          BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
+          //TODO: check rslt
+          delay(100);
+          rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
+          BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
+          //TODO: check rslt
+      } else {
+          run2 = 0;
+      }
+    }
+    for (int i = 0; i < 15; i++){
+      update_gyro();
+    }
+  }
 
 
 ROTATION calculate_turn(CARDINALS curr, CARDINALS target){
