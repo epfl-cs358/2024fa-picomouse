@@ -232,23 +232,23 @@ RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direc
   }
   int index = 0;
   if ((mid_sum/5) < MID_WALL_THRESHOLD){
-    // + 1 MOD 4 for the translation from CARDINALS to WALL_DIR
+    // + 1 MOD 4 CARDINALS to WALL_DIR
     Serial.println("mid found");
-    int wall_dir_index = (static_cast<int>(mouse_direction) + 1) & 0b11;
+    int wall_dir_index = static_cast<int>(mouse_direction) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);
     Serial.printf("mouse direction: %d, computed: %d \n", mouse_direction, result[index]);
     index ++;
   }
   if ((sum[0]/5) < SIDE_WALL_THRESHOLD){
-    // + 1 - 1 MOD 4 for the translation from CARDINALS left side of the mouse to WALL_DIR
-    int wall_dir_index = (static_cast<int>(mouse_direction)) & 0b11;
+    // + 3 MOD 4 CARDINALS left side of the mouse to WALL_DIR
+    int wall_dir_index = (static_cast<int>(mouse_direction) + 3) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);
     Serial.printf("mouse direction: %d, computed: %d \n", mouse_direction, result[index]);
     index ++;
   }
   if((sum[3]/5) < SIDE_WALL_THRESHOLD){
-    // + 1 + 1 MOD 4 for the translation from CARDINALS right side of the mouse to WALL_DIR
-    int wall_dir_index = (static_cast<int>(mouse_direction) + 2) & 0b11;
+    // + 1  CARDINALS right side of the mouse to WALL_DIR
+    int wall_dir_index = (static_cast<int>(mouse_direction) + 1) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);
     index ++;
   }
