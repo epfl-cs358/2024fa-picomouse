@@ -8,7 +8,7 @@
 
 #define STOP_THRESHOLD 1.0 / 120.0
 
-#define POSITION_STOP_THRESHOLD 5 // mm
+#define POSITION_STOP_THRESHOLD 2// mm
 
 #define MIN_RPS 0.01 // The minimum rps to consider the mouse stopped
 
@@ -43,9 +43,11 @@ RESULT alignement() { return NO_ERROR; }
 
 RESULT turn(ROTATION rotation, MODE mode) {
   update_gyro();
-  if (rotation == NO_TURN) {
-    return NO_ERROR;
-  }
+  // if (rotation == NO_TURN) {
+  //   //correct angle here
+  //   if()
+  //   return NO_ERROR;
+  // }
   mouse_absolute_angle = mouse_absolute_angle + rotation_to_angle(rotation);
   MODULO(mouse_absolute_angle);
 
@@ -54,7 +56,7 @@ RESULT turn(ROTATION rotation, MODE mode) {
 
   bool is_close_enough = false;
 
-  const float BASE_SPEED = 0.06; // Vitesse de rotation de base
+  const float BASE_SPEED = 0.08; // Vitesse de rotation de base changed from 0.6 to 0.8
   const float MIN_SPEED = 0.01;  // Vitesse minimale pour corriger
   // const float KP = 0.5;             // Gain proportionnel pour ajuster la
   // vitesse
@@ -156,9 +158,15 @@ RESULT navigation_forward(float distance, float max_speed) {
       //When the mouse has breaked, we check if we are at the right place
       if (abs_dist_left < POSITION_STOP_THRESHOLD) {
         // We are at the right distance
+        Serial.println("I returned");
+        forward(0);
+        break_wheels();
+        update_gyro();
+        delay(5);
         return NO_ERROR;
       } else {
         speed = dist_left >= 0 ? correction_speed : -correction_speed;
+        Serial.println("hello");
         forward(speed);
         continue;
       }
@@ -174,6 +182,7 @@ RESULT navigation_forward(float distance, float max_speed) {
         update_gyro();
         delay(5);
       }
+      Serial.println("entering correcting mode");
       correcting_mode = true;
       continue;
     } else if (abs_dist_left <= very_slow_motor_dist) {
@@ -189,25 +198,25 @@ RESULT navigation_forward(float distance, float max_speed) {
   return NO_ERROR;
 }
 
-void break_and_correct_distance() {
+// void break_and_correct_distance() {
 
-  while (true) {
-    update_gyro();
+//   while (true) {
+//     update_gyro();
 
-    WHEELS_DISTANCES dist = get_traveled_distance();
+//     WHEELS_DISTANCES dist = get_traveled_distance();
 
-    float mean_dist = (dist.left_distance + dist.right_distance) / 2;
-    float abs_mean_dist = fabs(mean_dist);
+//     float mean_dist = (dist.left_distance + dist.right_distance) / 2;
+//     float abs_mean_dist = fabs(mean_dist);
 
-    float dist_left = distance - abs_mean_dist;
-    float abs_dist_left = fabs(dist_left);
+//     float dist_left = distance - abs_mean_dist;
+//     float abs_dist_left = fabs(dist_left);
 
-    if (fabs(dist_left) > POSITION_STOP_THRESHOLD) {
-      // We have break --> but we are too fare or too early
-      // we are going foward or backward
-      float speed = dist_left >= 0 ? correction_speed : -correction_speed;
-      forward(correction);
-      if (abs_dist_left <= POSITION_STOP_THRESHOLD) {
-      }
-    }
-  }
+//     if (fabs(dist_left) > POSITION_STOP_THRESHOLD) {
+//       // We have break --> but we are too fare or too early
+//       // we are going foward or backward
+//       float speed = dist_left >= 0 ? correction_speed : -correction_speed;
+//       forward(correction);
+//       if (abs_dist_left <= POSITION_STOP_THRESHOLD) {
+//       }
+//     }
+//   }

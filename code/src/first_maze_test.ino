@@ -16,7 +16,7 @@ int in_new_cell = 1;
 int end = 0;
 Maze maze;
 COORDINATES start = {0,0};
-COORDINATES exit_cell = {3,3};
+COORDINATES exit_cell = {2,2};
 PATH_STACK path_run1;
 PATH_STACK path_run2;
 ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT_TURN, NO_TURN, RIGHT_TURN, HALF_TURN};
@@ -36,6 +36,7 @@ void setup(){
     delay(20);
     Wire.begin();
     delay(20);
+    delay(5000);
     RESULT err = init_all_sensors();
     
     BLOCK_ON_ERROR(err, Serial.println("Error occured in initialization."));
@@ -88,7 +89,7 @@ void loop(){
                 rslt = turn(rotation, INPLACE);
                 BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
                 //TODO: check rslt
-
+                delay(100);
                 rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
                 BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
                 //TODO: check rslt
@@ -98,7 +99,9 @@ void loop(){
         }
 
     }
-  delay(3000);
+  for (int i = 0; i < 25; i++){
+    update_gyro();
+  }
   }
 
 
