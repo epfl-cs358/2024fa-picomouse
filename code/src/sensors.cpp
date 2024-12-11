@@ -165,9 +165,9 @@ RESULT update_right(){
 }   
 
 RESULT update_mid(){
-    uint8_t temp_mid = right.rangePollMeasurement();
-    uint8_t right_status = right.getRangeResult();
-    side_distances[2] = CALIB_SENSOR(temp_mid, SLOPE_MID_RIGHT, OFFSET_MID_RIGHT);
+    uint8_t temp_mid = mid.rangePollMeasurement();
+    uint8_t right_status = mid.getRangeResult();
+    side_distances[2] = temp_mid;
      size_t current_time = millis();
     side_update_time[2] = current_time;
     return NO_ERROR;
@@ -177,6 +177,7 @@ RESULT update_all(){
     PROPAGATE_ERROR(update_left());
     PROPAGATE_ERROR(update_mid());
     PROPAGATE_ERROR(update_right());
+    Serial.printf("mid sensor = %hu \n", side_distances[2]);
     return NO_ERROR;
 }
 
