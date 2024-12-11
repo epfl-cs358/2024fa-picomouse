@@ -7,6 +7,7 @@
 
 #define LEFT_PIN 4
 #define MID_LEFT_PIN 17
+#define MID_PIN 13
 #define MID_RIGHT_PIN 16
 #define RIGHT_PIN 5
 
@@ -28,14 +29,14 @@
 #define OFFSET_MID_RIGHT -4.41
 #define OFFSET_RIGHT -1.18
 
-#define MID_WALL_THRESHOLD 100
+#define MID_WALL_THRESHOLD 80
 #define SIDE_WALL_THRESHOLD 80
 typedef enum {LEFT_D, MID_LEFT_D, MID_RIGHT_D, RIGHT_D}SIDE_SENSOR_ID;
 void calc_d(SIDE_SENSOR_ID id);
 
 DFRobot_VL6180X left;
 DFRobot_VL6180X mid_left;
-DFRobot_VL53L0X mid;
+DFRobot_VL6180X mid;
 DFRobot_VL6180X mid_right;
 DFRobot_VL6180X right;
 
@@ -47,9 +48,9 @@ float betas[4] = {0.5426, 0.4021, 0.4021, 0.5426};
 float d_calc[4];
 float teta_calc[4];
 // Array of side_distances detected by sensors 
-// in order LEFT MID_LEFT MID_RIGHT RIGHT
-uint16_t side_distances[4];
-size_t side_update_time[4];
+// in order LEFT MID_LEFT MID MID_RIGHT RIGHT
+uint16_t side_distances[5];
+size_t side_update_time[5];
 
 float mid_distance = 0;
 size_t mid_update_time = 0;
@@ -91,29 +92,28 @@ void get_side_side_distances(uint16_t* dist){
 RESULT init_TOF(){
     pinMode(LEFT_PIN, OUTPUT);
     pinMode(MID_LEFT_PIN, OUTPUT);
+    pinMode(MID_PIN, OUTPUT);
     pinMode(MID_RIGHT_PIN, OUTPUT);
     pinMode(RIGHT_PIN, OUTPUT);
 
     digitalWrite(LEFT_PIN, LOW);
     digitalWrite(MID_LEFT_PIN, LOW);
+    digitalWrite(MID_PIN, LOW);
     digitalWrite(MID_RIGHT_PIN, LOW);
     digitalWrite(RIGHT_PIN, LOW);
     delay(50);
 
-   mid.begin(NEW_ADDRESS_MID);
-   mid.setMode(mid.eContinuous,mid.eLow);
-    mid.start();
-   Serial.println("0 long success");
-
 
     INNIT_ONE_TOF(left, LEFT_PIN, NEW_ADDRESS_LEFT);
-    Serial.println("1 short success");
+    Serial.println("0 short success");
     INNIT_ONE_TOF(mid_left, MID_LEFT_PIN, NEW_ADDRESS_MID_LEFT);
+    Serial.println("1 short success");
+    INNIT_ONE_TOF(mid, MID_PIN, NEW_ADDRESS_MID);
     Serial.println("2 short success");
     INNIT_ONE_TOF(mid_right, MID_RIGHT_PIN, NEW_ADDRESS_MID_RIGHT);
     Serial.println("3 short success");
     INNIT_ONE_TOF(right, RIGHT_PIN, NEW_ADDRESS_RIGHT);
-   
+    Serial.println("4 short success");
 
     Serial.println("I2C Scanner");
     for (byte i = 8; i < 120; i++) {
@@ -156,16 +156,20 @@ RESULT update_right(){
 
     //CHECK_AND_THROW(right_status || mid_right_status, TOF_READ_FAIL);
     
-    side_distances[2] = CALIB_SENSOR(temp_mid_right, SLOPE_MID_RIGHT, OFFSET_MID_RIGHT);
-    side_distances[3] =  CALIB_SENSOR(temp_right, SLOPE_RIGHT, OFFSET_RIGHT);
+    side_distances[3] = CALIB_SENSOR(temp_mid_right, SLOPE_MID_RIGHT, OFFSET_MID_RIGHT);
+    side_distances[4] =  CALIB_SENSOR(temp_right, SLOPE_RIGHT, OFFSET_RIGHT);
     size_t current_time = millis();
-    side_update_time[2] = current_time;
     side_update_time[3] = current_time;
+    side_update_time[4] = current_time;
     return NO_ERROR;
 }   
 
 RESULT update_mid(){
-    mid_distance = static_cast<float>(mid.getDistance());
+    uint8_t temp_mid = right.rangePollMeasurement();
+    uint8_t right_status = right.getRangeResult();
+    side_distances[2] = CALIB_SENSOR(temp_mid, SLOPE_MID_RIGHT, OFFSET_MID_RIGHT);
+     size_t current_time = millis();
+    side_update_time[2] = current_time;
     return NO_ERROR;
 }
 
@@ -200,10 +204,8 @@ RESULT position_to_wall (POSITION_TO_WALL* result, CALC_CHOICE choice) {
       CALC_D6(d_calc[MID_RIGHT_D], d_calc[RIGHT_D], teta_calc[MID_RIGHT_D], teta_calc[RIGHT_D],  pos.distance_right, pos.deviation_right);
       *result = pos;
       break;
-
-    return NO_ERROR;
   }
-
+  return NO_ERROR;
 }
 
 void calc_d(SIDE_SENSOR_ID id) {
@@ -212,6 +214,9 @@ void calc_d(SIDE_SENSOR_ID id) {
   float beta = betas[index];
   float c = cs[index];
   float c_squared = c*c;
+  if(index > 1){
+    float r = static_cast<float>(side_distances[index+1]);
+  }
   float r = static_cast<float>(side_distances[index]); 
   float r_squared = r*r;
   float d_squared = r_squared + c_squared - 2*r*c*cos(M_PI - alpha);
@@ -225,13 +230,12 @@ RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direc
   float mid_sum = 0;
   for(int i = 0 ; i < 5 ; i++){
     PROPAGATE_ERROR(update_all());
-    mid_sum += mid_distance;
     for (int j = 0 ; j < 4 ; j++){
       sum[j]+= side_distances[j];
     }
   }
   int index = 0;
-  if ((mid_sum/5) < MID_WALL_THRESHOLD){
+  if ((sum[2]/5) < MID_WALL_THRESHOLD){
     // + 1 MOD 4 CARDINALS to WALL_DIR
     int wall_dir_index = (static_cast<int>(mouse_direction) + 1) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);
@@ -241,7 +245,6 @@ RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direc
     // + 3 MOD 4 CARDINALS left side of the mouse to WALL_DIR
     int wall_dir_index = static_cast<int>(mouse_direction) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);
-    Serial.printf("mouse direction: %d, computed: %d \n", mouse_direction, result[index]);
     index ++;
   }
   if((sum[3]/5) < SIDE_WALL_THRESHOLD){

@@ -128,7 +128,7 @@ RESULT navigation_forward(float distance, float max_speed) {
   // TODO use physic bcs breaking dst arn't linear
   float slow_dist = 0.30 * distance;
   float very_slow_motor_dist = 0.20 * distance;
-  float breaking_dist = 0.1 * distance;
+  float breaking_dist = 0.15 * distance; // went from 10 percent to 15
 
   
   while (true) {
