@@ -29,7 +29,7 @@
 #define OFFSET_MID_RIGHT -4.41
 #define OFFSET_RIGHT -1.18
 
-#define MID_WALL_THRESHOLD 80
+#define MID_WALL_THRESHOLD 100
 #define SIDE_WALL_THRESHOLD 80
 typedef enum {LEFT_D, MID_LEFT_D, MID_RIGHT_D, RIGHT_D}SIDE_SENSOR_ID;
 void calc_d(SIDE_SENSOR_ID id);
@@ -44,15 +44,17 @@ float alphas[4] = {0.7669, 0.384, 0.384, 0.7669};
 float cs[4] = {57.007, 62.533, 62.533, 57.007};
 float betas[4] = {0.5426, 0.4021, 0.4021, 0.5426};
 
+float mid_sensor_d_from_center = 65.0; 
+
 
 float d_calc[4];
 float teta_calc[4];
 // Array of side_distances detected by sensors 
 // in order LEFT MID_LEFT MID MID_RIGHT RIGHT
-uint16_t side_distances[5];
-size_t side_update_time[5];
+uint16_t side_distances[4];
+size_t side_update_time[4];
 
-float mid_distance = 0;
+uint16_t mid_distance = 0;
 size_t mid_update_time = 0;
 
 void get_side_side_distances(uint16_t* dist){
@@ -150,26 +152,27 @@ RESULT update_left(){
 RESULT update_right(){
     uint8_t temp_right = right.rangePollMeasurement();
     uint8_t right_status = right.getRangeResult();
+
     delay(100);
     uint8_t temp_mid_right = mid_right.rangePollMeasurement();
     uint8_t mid_right_status = mid_right.getRangeResult();
 
     //CHECK_AND_THROW(right_status || mid_right_status, TOF_READ_FAIL);
     
-    side_distances[3] = CALIB_SENSOR(temp_mid_right, SLOPE_MID_RIGHT, OFFSET_MID_RIGHT);
-    side_distances[4] =  CALIB_SENSOR(temp_right, SLOPE_RIGHT, OFFSET_RIGHT);
+    side_distances[2] = CALIB_SENSOR(temp_mid_right, SLOPE_MID_RIGHT, OFFSET_MID_RIGHT);
+    side_distances[3] =  CALIB_SENSOR(temp_right, SLOPE_RIGHT, OFFSET_RIGHT);
     size_t current_time = millis();
+    side_update_time[2] = current_time;
     side_update_time[3] = current_time;
-    side_update_time[4] = current_time;
     return NO_ERROR;
 }   
 
 RESULT update_mid(){
     uint8_t temp_mid = mid.rangePollMeasurement();
     uint8_t right_status = mid.getRangeResult();
-    side_distances[2] = temp_mid;
-     size_t current_time = millis();
-    side_update_time[2] = current_time;
+    mid_distance = temp_mid;
+    size_t current_time = millis();
+    mid_update_time = current_time;
     return NO_ERROR;
 }
 
@@ -177,7 +180,6 @@ RESULT update_all(){
     PROPAGATE_ERROR(update_left());
     PROPAGATE_ERROR(update_mid());
     PROPAGATE_ERROR(update_right());
-    Serial.printf("mid sensor = %hu \n", side_distances[2]);
     return NO_ERROR;
 }
 
@@ -185,21 +187,24 @@ RESULT position_to_wall (POSITION_TO_WALL* result, CALC_CHOICE choice) {
   POSITION_TO_WALL pos = {0};
   switch (choice){
     case CALC_LEFT :
+      PROPAGATE_ERROR(update_left());
       calc_d(LEFT_D);
       calc_d(MID_LEFT_D);
       CALC_D6(d_calc[MID_LEFT_D], d_calc[LEFT_D], teta_calc[MID_LEFT_D], teta_calc[LEFT_D], pos.distance_left, pos.deviation_left);
       *result = pos;
       break;
     case CALC_RIGHT : 
+      PROPAGATE_ERROR(update_right());
       calc_d(RIGHT_D);
       calc_d(MID_RIGHT_D);
       CALC_D6(d_calc[MID_RIGHT_D], d_calc[RIGHT_D], teta_calc[MID_RIGHT_D], teta_calc[RIGHT_D],  pos.distance_right, pos.deviation_right);
       *result = pos;
       break;
     case CALC_BOTH :
+      PROPAGATE_ERROR(update_all());
       calc_d(LEFT_D);
       calc_d(MID_LEFT_D);
-      CALC_D6(d_calc[MID_LEFT_D], d_calc[LEFT_D], teta_calc[MID_LEFT_D], teta_calc[LEFT_D],  pos.distance_left, pos.deviation_left);
+      CALC_D6(d_calc[MID_LEFT_D], d_calc[LEFT_D], teta_calc[MID_LEFT_D], teta_calc[LEFT_D],  pos.distance_left,  pos.deviation_left);
       calc_d(RIGHT_D);
       calc_d(MID_RIGHT_D);  
       CALC_D6(d_calc[MID_RIGHT_D], d_calc[RIGHT_D], teta_calc[MID_RIGHT_D], teta_calc[RIGHT_D],  pos.distance_right, pos.deviation_right);
@@ -208,17 +213,22 @@ RESULT position_to_wall (POSITION_TO_WALL* result, CALC_CHOICE choice) {
   }
   return NO_ERROR;
 }
-
+RESULT position_to_front(POSITION_TO_FRONT* result){
+  PROPAGATE_ERROR(update_all());
+  calc_d(MID_LEFT_D);
+  calc_d(MID_RIGHT_D);
+  result->front_distance_mid = mid_distance + mid_sensor_d_from_center;
+  result->front_distance_left = d_calc[MID_LEFT_D]*cos(teta_calc[MID_LEFT_D]);
+  result->front_distance_right = d_calc[MID_RIGHT_D]*cos(teta_calc[MID_RIGHT_D]);
+  return NO_ERROR;
+}
 void calc_d(SIDE_SENSOR_ID id) {
   int index = static_cast<int>(id);
   float alpha = alphas[index];
   float beta = betas[index];
   float c = cs[index];
   float c_squared = c*c;
-  if(index > 1){
-    float r = static_cast<float>(side_distances[index+1]);
-  }
-  float r = static_cast<float>(side_distances[index]); 
+  float r = static_cast<float>(side_distances[index]);
   float r_squared = r*r;
   float d_squared = r_squared + c_squared - 2*r*c*cos(M_PI - alpha);
   float d = sqrt(d_squared);
@@ -226,17 +236,19 @@ void calc_d(SIDE_SENSOR_ID id) {
   teta_calc[index] = alpha + acos((d_squared + c_squared - r_squared) / (2 * d * c));
 }
 
+
 RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direction){
   float sum[4] = {0}; 
-  float mid_sum = 0;
+  float temp_mid = 0;
   for(int i = 0 ; i < 5 ; i++){
     PROPAGATE_ERROR(update_all());
+    temp_mid += mid_distance;
     for (int j = 0 ; j < 4 ; j++){
       sum[j]+= side_distances[j];
     }
   }
   int index = 0;
-  if ((sum[2]/5) < MID_WALL_THRESHOLD){
+  if ((temp_mid/5) < MID_WALL_THRESHOLD){
     // + 1 MOD 4 CARDINALS to WALL_DIR
     int wall_dir_index = (static_cast<int>(mouse_direction) + 1) & 0b11;
     result[index] = static_cast<WALL_DIR>(wall_dir_index);

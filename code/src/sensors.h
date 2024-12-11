@@ -19,7 +19,14 @@ typedef struct {
   float deviation_right;
 }POSITION_TO_WALL;
 
+typedef struct {
+  float front_distance_mid;
+  float front_distance_left;
+  float front_distance_right;
+}POSITION_TO_FRONT;
+
 RESULT position_to_wall(POSITION_TO_WALL* result, CALC_CHOICE choice);
+RESULT position_to_front(POSITION_TO_FRONT* result);
 
 RESULT init_TOF();
 
