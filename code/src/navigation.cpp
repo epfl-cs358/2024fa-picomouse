@@ -160,7 +160,6 @@ RESULT navigation_forward(float distance, float max_speed) {
       //When the mouse has breaked, we check if we are at the right place
       if (abs_dist_left < POSITION_STOP_THRESHOLD) {
         // We are at the right distance
-        Serial.println("I returned");
         forward(0);
         break_wheels();
         update_gyro();
@@ -168,7 +167,6 @@ RESULT navigation_forward(float distance, float max_speed) {
         return NO_ERROR;
       } else {
         speed = dist_left >= 0 ? correction_speed : -correction_speed;
-        Serial.println("hello");
         forward(speed);
         continue;
       }
@@ -184,7 +182,6 @@ RESULT navigation_forward(float distance, float max_speed) {
         update_gyro();
         delay(5);
       }
-      Serial.println("entering correcting mode");
       correcting_mode = true;
       continue;
     } else if (abs_dist_left <= very_slow_motor_dist) {

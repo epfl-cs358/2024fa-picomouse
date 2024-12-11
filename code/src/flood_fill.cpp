@@ -57,6 +57,7 @@ void weighted_BFS(Maze* maze, COORDINATES current_cell, unsigned char current_di
 RESULT pop_n(size_t n, PATH_STACK* stack){
     CHECK_AND_THROW(n > stack->end, STACK_OVERFLOW);
     stack->end -= n;
+    return NO_ERROR;
 }
 
 /**
@@ -132,7 +133,6 @@ RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* n
 
     int delta_x = dx[min_dir];
     int delta_y = dy[min_dir];
-    Serial.printf("delta_x = %d, delta_y = %d \n", delta_x, delta_y);
 
     ADD_COORD(maze->mouse_pos, delta_x, delta_y);  
 

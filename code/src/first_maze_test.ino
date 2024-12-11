@@ -16,7 +16,7 @@ int in_new_cell = 1;
 int end = 0;
 Maze maze;
 COORDINATES start = {0,0};
-COORDINATES exit_cell = {2,2};
+COORDINATES exit_cell = {MAZE_SIZE-1,MAZE_SIZE-1};
 PATH_STACK path_run1;
 PATH_STACK path_run2;
 ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT_TURN, NO_TURN, RIGHT_TURN, HALF_TURN};
@@ -56,8 +56,6 @@ void setup(){
 
 void loop(){
     if (in_new_cell) {
-      Serial.println("code started");
-      Serial.println(!end);
         if (!end) {
             //TODO peut etre qu'il faut update le gyro plus que ça
             WALL_DIR new_walls[3];
@@ -68,14 +66,15 @@ void loop(){
             BLOCK_ON_ERROR(rslt, Serial.println("wall detection failed !!"));
             //TODO: check rslt
             for (int i = 0; i<len; i++) {
-                Serial.println(new_walls[i]);
+                Serial.print("addring wall");
+                Serial.print(new_walls[i]);
+                Serial.println();
                 rslt = add_wall(&maze, new_walls[i]);  
                 BLOCK_ON_ERROR(rslt, Serial.println("add wall failed !!"));
             }
             Serial.println("add walls done");
 
             rslt = one_iteration_flood_fill(&maze, &path_run1, &next_direction);
-            Serial.println("flood fill done");
             Serial.println(rslt);
 
             BLOCK_ON_ERROR(rslt && rslt != MOUSE_END, Serial.println("flood fill failed !!"));
@@ -99,7 +98,7 @@ void loop(){
         }
 
     }
-  for (int i = 0; i < 25; i++){
+  for (int i = 0; i < 100; i++){
     update_gyro();
   }
   }

@@ -3,7 +3,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#define DEBBUG 1
+#define DEBBUG 0
 // size_t
 #include <cstdlib>
 
