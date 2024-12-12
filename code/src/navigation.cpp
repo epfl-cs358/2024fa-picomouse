@@ -56,8 +56,9 @@ RESULT turn(ROTATION rotation, MODE mode) {
 
   bool is_close_enough = false;
 
-  const float BASE_SPEED = 0.07; // Vitesse de rotation de base changed from 0.06 to 0.08
-  const float MIN_SPEED = 0.01;  // Vitesse minimale pour corriger
+  const float BASE_SPEED =
+      0.08; // Vitesse de rotation de base changed from 0.06 to 0.08
+  const float MIN_SPEED = 0.01; // Vitesse minimale pour corriger
   // const float KP = 0.5;             // Gain proportionnel pour ajuster la
   // vitesse
   float error;
@@ -130,7 +131,12 @@ RESULT navigation_forward(float distance, float max_speed) {
   float very_slow_motor_dist = 0.20 * distance;
   float breaking_dist = 0.15 * distance; // went from 10 percent to 15
 
-  
+  float mean_dist;
+  float abs_mean_dist;
+
+  float dist_left;
+  float abs_dist_left;
+
   while (true) {
     update_gyro();
     // --------- THRESHOLD GYRO CHECK ---------
@@ -145,19 +151,40 @@ RESULT navigation_forward(float distance, float max_speed) {
     // Si la place pour faire demi tour sauvegarder traveled dist, faire demi
     // tour, aller au centre faire quart de tour, recommencer à compter la
     // distance
+    // FRONT_DISTANCE_MID > (7 + 3)
 
-    // update_gypro(); SPAM un max pour la précision
-    dist = get_traveled_distance();
-    float mean_dist = (dist.left_distance + dist.right_distance) / 2;
-    float abs_mean_dist = fabs(mean_dist);
+    POSITION_TO_FRONT tof_dist = postiont_to_front();
 
-    float dist_left = distance - abs_mean_dist;
-    float abs_dist_left = fabs(dist_left);
-    // peut etre faire une condition qui vérifie que les deux distances ne
-    // diffèrent pas trop
+    if (tof_dist.front_distance_mid < 150) {
+      // There is a front wall in the cell --> we trust the TOFs to cetner the
+      // mouse in the cell
+      float mean_dist = (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
+      //TODO vérifier que la mouse est droite =============
+      if(mean_dist < 100) {
+        // We use the two side sesors 
+        dist_left = tof_dist.front_distance_mid - 8;
+        abs_dist_left = fabs(dist_left);
+      }
+
+      // 150 mm distance from wall
+      //  8: half of a cell
+      dist_left = tof_dist.front_distance_mid - 8;
+      abs_dist_left = fabs(dist_left);
+
+    } else {
+      // We use encoders
+      dist = get_traveled_distance();
+      float mean_dist = (dist.left_distance + dist.right_distance) / 2;
+      float abs_mean_dist = fabs(mean_dist);
+
+      dist_left = distance - abs_mean_dist;
+      abs_dist_left = fabs(dist_left);
+      // peut etre faire une condition qui vérifie que les deux distances ne
+      // diffèrent pas trop
+    }
 
     if (correcting_mode) {
-      //When the mouse has breaked, we check if we are at the right place
+      // When the mouse has breaked, we check if we are at the right place
       if (abs_dist_left < POSITION_STOP_THRESHOLD) {
         // We are at the right distance
         forward(0);
@@ -172,6 +199,11 @@ RESULT navigation_forward(float distance, float max_speed) {
       }
     }
 
+    // If the mouse is too far. True for small distances
+    if (dist_left < 0) {
+      correcting_mode = true;
+    }
+
     if (abs_dist_left <= breaking_dist) {
       // start_breaking
       speed = 0;
@@ -179,8 +211,9 @@ RESULT navigation_forward(float distance, float max_speed) {
         // Wait for the mouse to stop
         forward(0);
         break_wheels();
-        update_gyro();
-        delay(5);
+        for (int i = 0; i < 3; i++) {
+          update_gyro();
+        }
       }
       correcting_mode = true;
       continue;

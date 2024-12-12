@@ -7,6 +7,7 @@
 #define CALIBRATION_OFFSET_NB_ITERATIONS 300
 
 #define SCALE_FACTOR 1.0 / 0.0743
+
 #define OVER_THRESHOLD(angle, threshold)\
   (angle < -threshold || angle > threshold)
 
