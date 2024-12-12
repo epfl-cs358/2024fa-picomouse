@@ -1,11 +1,10 @@
 #include "run.h"
 #include "navigation.h"
 
-typedef enum {SHORTEST_PATH, FASTEST_PATH}RUN_TYPE;
-#define RUN_POLICY SHORTEST_PATH
+
 
 // Maximum 2 instructions per cell
-#define INSTRUCTION_LIST_SIZE 2*MAZE_SIZE*MAZE_SIZE
+#define INSTRUCTION_STACK_SIZE 2*MAZE_SIZE*MAZE_SIZE
 
 typedef enum {NAVIGATION_FORWARD, NAVIGATION_TURN}INSTRUCTION_TYPE;
 
@@ -39,15 +38,11 @@ typedef struct{
 
 
 
-// TODO add it in utils or smth
-
-
-
 //// Instruction stack ////
 
 typedef struct{
     size_t end;
-    STEP step_stack[INSTRUCTION_LIST_SIZE];
+    STEP step_stack[INSTRUCTION_STACK_SIZE];
 }INSTRUCTION_STACK;
 
 static RESULT init_instruction_stack(INSTRUCTION_STACK* stack){
@@ -58,7 +53,7 @@ static RESULT init_instruction_stack(INSTRUCTION_STACK* stack){
 
 static RESULT push(INSTRUCTION_STACK* stack, STEP step){
     CHECK_AND_THROW(!stack, NULL_PTR);
-    CHECK_AND_THROW(stack->end >= INSTRUCTION_LIST_SIZE, STACK_OVERFLOW);
+    CHECK_AND_THROW(stack->end >= INSTRUCTION_STACK_SIZE, STACK_OVERFLOW);
 
     stack->step_stack[stack->end] = step;
     stack->end++;
@@ -101,6 +96,7 @@ static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
         PROPAGATE_ERROR(err);
     }
     
+    return NO_ERROR;
 }
 
 
@@ -108,7 +104,6 @@ static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
 RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
     CHECK_AND_THROW(!path_1, NULL_PTR);
     CHECK_AND_THROW(!path_2, NULL_PTR);
-
 
     PATH_STACK run_path;
     RESULT err = init_stack(&run_path);
@@ -161,6 +156,7 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
         // avoid the first iteration 
         if(rotation == NO_TURN && index_in_path != 0){
             STEP last_forward;
+            // the last step is always a forward
             err = pop(&instruction_stack, &last_forward);
             PROPAGATE_ERROR(err);
             forward_distance = last_forward.args.forward_args.distance + CELL_SIZE;
@@ -187,9 +183,11 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
 
         err = push(&instruction_stack, forward_step);
         PROPAGATE_ERROR(err);
+
+        current_direction = next_direction;
     }
 
-    err = follow_instructions(& instruction_stack);
+    err = follow_instructions(&instruction_stack);
     PROPAGATE_ERROR(err);
     
     return NO_ERROR;
@@ -229,12 +227,13 @@ static RESULT choose_path(PATH_STACK* path_1, PATH_STACK* path_2, PATH_STACK* re
             else{
 
                 *return_path = *path_2;
-                // since the second path is in the wrong order we need to reverse the path
+                // Since the second path is in the wrong order we need to reverse the path
                 RESULT err = reverse_stack(return_path);
                 PROPAGATE_ERROR(err);
             }
             break;
         case FASTEST_PATH:
+            *return_path = *path_1; 
             //TODO;
             break;
         default:
