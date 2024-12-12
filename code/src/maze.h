@@ -2,6 +2,8 @@
 #include "utils.h"
 
 #define MAZE_SIZE 4
+#define CELL_SIZE 180
+#define START_ORIENTATION EAST
 
 #define LeftWall 1
 #define UpWall 2

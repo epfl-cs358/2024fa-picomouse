@@ -18,7 +18,8 @@ typedef enum {
     TOF_READ_FAIL,
     MAZE_INIT_FAIL,
     NULL_PTR,
-    NO_SOLUTION
+    NO_SOLUTION,
+    OUT_OF_BOUND
 }RESULT;
 
 static char error_table_translation[][MAX_LEN_STRING] = {
@@ -31,7 +32,9 @@ static char error_table_translation[][MAX_LEN_STRING] = {
     "TOF_READ_FAIL",
     "MAZE_INIT_FAIL",
     "NULL_PTR",
-    "NO_SOLUTION"
+    "NO_SOLUTION",
+    "OUT_OF_BOUND"
+
 };
 
 typedef struct {
@@ -78,8 +81,22 @@ typedef enum{
     WEST
 } CARDINALS;
 
+static ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT_TURN, NO_TURN, RIGHT_TURN, HALF_TURN};
+ROTATION calculate_turn(CARDINALS curr, CARDINALS target){
+    int diff = target - curr;
+
+    if(diff > 2) diff -= 4;
+    if (diff < -2) diff += 4;
+
+    diff += 2;
+
+    return direction_to_rotation[diff];
+}
+
 #define EQUAL_COORD(coord_1, coord_2) (coord_1.x == coord_2.x && coord_1.y == coord_2.y)
 #define ADD_COORD(coord, dX, dY) coord.x += dX; coord.y += dY;
+
+
 #define MAX_UNSIGNED_BYTE 255
 
 // helper macro to throw an given error if the condition is satisfied 
