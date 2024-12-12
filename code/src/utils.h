@@ -82,7 +82,8 @@ typedef enum{
 } CARDINALS;
 
 static ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT_TURN, NO_TURN, RIGHT_TURN, HALF_TURN};
-ROTATION calculate_turn(CARDINALS curr, CARDINALS target){
+
+static ROTATION calculate_turn(CARDINALS curr, CARDINALS target){
     int diff = target - curr;
 
     if(diff > 2) diff -= 4;

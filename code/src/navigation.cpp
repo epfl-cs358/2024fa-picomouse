@@ -8,9 +8,9 @@
 
 #define STOP_THRESHOLD 1.0 / 120.0
 
-#define POSITION_STOP_THRESHOLD 2 // mm
+#define POSITION_STOP_THRESHOLD 2  // mm
 
-#define MIN_RPS 0.01 // The minimum rps to consider the mouse stopped
+#define MIN_RPS 0.01  // The minimum rps to consider the mouse stopped
 
 // The maxdifference of distance made by the wheels
 #define MAX_DELTA_DISTANCE 1.2
@@ -21,25 +21,31 @@ float mouse_absolute_angle = 0;
 // Convert a cardinal to an angle, return the angle in radian ]-1;1]
 float rotation_to_angle(ROTATION rotation) {
   switch (rotation) {
-  case LEFT_TURN:
-    return 0.5;
-  case RIGHT_TURN:
-    return -0.5;
-  case HALF_TURN:
-    return 1;
-  case NO_TURN:
-    return 0;
-  default:
-    return 0;
+    case LEFT_TURN:
+      return 0.5;
+    case RIGHT_TURN:
+      return -0.5;
+    case HALF_TURN:
+      return 1;
+    case NO_TURN:
+      return 0;
+    default:
+      return 0;
   }
 }
 
 // ========== Public functions ===========
-RESULT adjust_front_distance() { return NO_ERROR; }
+RESULT adjust_front_distance() {
+  return NO_ERROR;
+}
 
-RESULT adjust_sides_distance() { return NO_ERROR; }
+RESULT adjust_sides_distance() {
+  return NO_ERROR;
+}
 
-RESULT alignement() { return NO_ERROR; }
+RESULT alignement() {
+  return NO_ERROR;
+}
 
 RESULT turn(ROTATION rotation, MODE mode) {
   update_gyro();
@@ -56,9 +62,8 @@ RESULT turn(ROTATION rotation, MODE mode) {
 
   bool is_close_enough = false;
 
-  const float BASE_SPEED =
-      0.08; // Vitesse de rotation de base changed from 0.06 to 0.08
-  const float MIN_SPEED = 0.01; // Vitesse minimale pour corriger
+  const float BASE_SPEED = 0.1;   // Vitesse de rotation de base changed from 0.06 to 0.08
+  const float MIN_SPEED = 0.015;  // Vitesse minimale pour corriger
   // const float KP = 0.5;             // Gain proportionnel pour ajuster la
   // vitesse
   float error;
@@ -75,7 +80,7 @@ RESULT turn(ROTATION rotation, MODE mode) {
     // Serial.println(new_angle, 10);
 
     error = mouse_absolute_angle - new_angle;
-    MODULO(error); // Gère les valeurs circulaires
+    MODULO(error);  // Gère les valeurs circulaires
     abs_error = fabs(error);
 
     DEBBUG_PRINT(Serial.print("Current error: ");
@@ -91,13 +96,13 @@ RESULT turn(ROTATION rotation, MODE mode) {
         turn_right(mode, speed);
       }
     } else {
-      break_wheels(); // Stop the robot
+      break_wheels();  // Stop the robot
       for (int j = 0; j < 2; j++) {
         update_gyro();
       }
       new_angle = get_angle();
       error = mouse_absolute_angle - new_angle;
-      MODULO(error); // Gère les valeurs circulaires
+      MODULO(error);  // Gère les valeurs circulaires
       abs_error = fabs(error);
 
       if (abs_error < STOP_THRESHOLD) {
@@ -120,17 +125,17 @@ RESULT init_all_sensors() {
 }
 
 RESULT navigation_forward(float distance, float max_speed) {
-  const float correction_speed = 0.03;
+  const float correction_speed = 0.01;
   bool correcting_mode = false;
   int tof_mode = 0;
   float speed = max_speed;
-  WHEELS_DISTANCES dist = {0, 0};
+  WHEELS_DISTANCES dist = { 0, 0 };
   reset_traveled_distance();
 
   // TODO use physic bcs breaking dst arn't linear
-  float slow_dist = 0.30 * distance;
-  float very_slow_motor_dist = 0.20 * distance;
-  float breaking_dist = 0.15 * distance; // went from 10 percent to 15
+  float slow_dist = 0.50 * distance;
+  float very_slow_motor_dist = 0.40 * distance;
+  float breaking_dist = 0.30 * distance;  // went from 10 percent to 15
 
   float mean_dist;
   float abs_mean_dist;
@@ -138,7 +143,7 @@ RESULT navigation_forward(float distance, float max_speed) {
   float dist_left;
   float abs_dist_left;
 
-  int i = 0; 
+  int i = 0;
   while (true) {
     i++;
     update_gyro();
@@ -157,33 +162,32 @@ RESULT navigation_forward(float distance, float max_speed) {
     // FRONT_DISTANCE_MID > (7 + 3)
 
     POSITION_TO_FRONT tof_dist;
-    position_to_front(&tof_dist);
     
+    position_to_front(&tof_dist);
+
     if (tof_mode && i > 10) {
       float side_tof_mean_dist =
-          (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
+        (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
+      float diff = fabs(tof_dist.front_distance_left - tof_dist.front_distance_right);
       // TODO vérifier que la mouse est droite =============
-      if (side_tof_mean_dist < 90) {
+      if (diff <= 6 && side_tof_mean_dist < 80) {
         // We use the two side sesors
         dist_left = side_tof_mean_dist - 80;
         abs_dist_left = fabs(dist_left);
       } else {
         // We use the front sensor
         dist_left = tof_dist.front_distance_mid - 80;
-        abs_dist_left = fabs(dist_left); 
+        abs_dist_left = fabs(dist_left);
         Serial.println("TOF");
       }
-    }
-    else if (tof_dist.front_distance_mid < 150 && i > 10) {
+    } else if (tof_dist.front_distance_mid < 150 && i > 10) {
       // There is a front wall in the cell --> we trust the TOFs to cetner the
       // mouse in the cell
       // 150 mm distance from wall
       //  8: half of a cell
-      dist_left = tof_dist.front_distance_mid - 80;
-      abs_dist_left = fabs(dist_left);
       tof_mode = 1;
       Serial.println("TOF ON");
-    }else{
+    } else {
       // We trust encoders
       dist = get_traveled_distance();
       float mean_dist = (dist.left_distance + dist.right_distance) / 2;
@@ -216,7 +220,7 @@ RESULT navigation_forward(float distance, float max_speed) {
       }
     }
 
-    
+
     // If the mouse is too far. True for small distances
     if (dist_left < 0) {
       correcting_mode = true;

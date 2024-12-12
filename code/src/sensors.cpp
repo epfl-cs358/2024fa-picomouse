@@ -152,8 +152,6 @@ RESULT update_left(){
 RESULT update_right(){
     uint8_t temp_right = right.rangePollMeasurement();
     uint8_t right_status = right.getRangeResult();
-
-    delay(100);
     uint8_t temp_mid_right = mid_right.rangePollMeasurement();
     uint8_t mid_right_status = mid_right.getRangeResult();
 
@@ -180,6 +178,7 @@ RESULT update_all(){
     PROPAGATE_ERROR(update_left());
     PROPAGATE_ERROR(update_mid());
     PROPAGATE_ERROR(update_right());
+    delay(5);
     return NO_ERROR;
 }
 
@@ -241,6 +240,7 @@ RESULT detect_walls (WALL_DIR* result, int* n_walls_found, CARDINALS mouse_direc
   float sum[4] = {0}; 
   float temp_mid = 0;
   for(int i = 0 ; i < 5 ; i++){
+    delay(50);
     PROPAGATE_ERROR(update_all());
     temp_mid += mid_distance;
     for (int j = 0 ; j < 4 ; j++){
