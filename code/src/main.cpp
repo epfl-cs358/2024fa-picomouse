@@ -9,8 +9,8 @@
 #define CELL_LENGTH 180 //in mm
 
 // Defined speeds for both run and search mode
-#define MAX_SPEED_SEARCH 0.08
-#define MAX_SPEED_RUN 0.6
+#define MAX_SPEED_SEARCH 0.2
+#define MAX_SPEED_RUN 0.5
 
 int run1 = 1;
 int run2 = 0;

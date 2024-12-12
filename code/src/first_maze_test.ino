@@ -5,26 +5,28 @@
 #include "utils.h"
 #include "flood_fill.h"
 #include "gyroscope.h"
+#include "run.h"
 #include  <Wire.h>
 
 #define CELL_LENGTH 180 //in mm
 
 // Defined speeds for both run and search mode
 #define MAX_SPEED_SEARCH 0.08
-#define MAX_SPEED_RUN 0.6
+#define MAX_SPEED_RUN 0.16
 
 int run1 = 1;
 int run2 = 0;
+int final_run = 1;
 int end = 0;
 Maze maze;
 COORDINATES start_cell = {0,0};
 COORDINATES exit_cell = {MAZE_SIZE-1,MAZE_SIZE-1};
 PATH_STACK path_run1;
 PATH_STACK path_run2;
-ROTATION direction_to_rotation[5] = {HALF_TURN, LEFT_TURN, NO_TURN, RIGHT_TURN, HALF_TURN};
+
 CARDINALS current_direction;
 
-ROTATION calculate_turn(CARDINALS curr, CARDINALS target);
+
 
 #define BLOCK_ON_ERROR(error,message) \
     while(error){\
@@ -52,7 +54,7 @@ void setup(){
     err = init_stack(&path_run2);
     BLOCK_ON_ERROR(err, Serial.println("Stack failed."));
 
-    current_direction = EAST;
+    current_direction = START_ORIENTATION;
 
 }
 
@@ -96,10 +98,6 @@ void loop(){
       } else {
           run1 = 0;
           run2 = 1;
-          turn(HALF_TURN, INPLACE);
-          delay(10);
-          int tkt = (static_cast<int>(current_direction)+2) & 0b11;
-          current_direction = static_cast<CARDINALS>(tkt);
           maze.start = exit_cell;
           maze.exit = start_cell;
       }
@@ -107,13 +105,25 @@ void loop(){
     }
     else if(run2){
       Serial.println("code started");
-      
-      //TODO peut etre qu'il faut update le gyro plus que ça
-      CARDINALS next_direction;
 
-      RESULT rslt = one_iteration_flood_fill(&maze, &path_run2, &next_direction);
+      WALL_DIR new_walls[3];
+      int len = 0;
+      CARDINALS next_direction;
+      RESULT rslt = detect_walls(new_walls, &len, current_direction); 
+
+      BLOCK_ON_ERROR(rslt, Serial.println("wall detection failed !!"));
+      //TODO: check rslt
+      for (int i = 0; i<len; i++) {
+          Serial.println(new_walls[i]);
+          rslt = add_wall(&maze, new_walls[i]);  
+          BLOCK_ON_ERROR(rslt, Serial.println("add wall failed !!"));
+      }
+      Serial.println("add walls done");
+
+      rslt = one_iteration_flood_fill(&maze, &path_run1, &next_direction);
       Serial.println("flood fill done");
       Serial.println(rslt);
+
 
       //BLOCK_ON_ERROR(rslt && rslt != MOUSE_END, Serial.println("flood fill failed !!"));
 
@@ -134,20 +144,17 @@ void loop(){
           run2 = 0;
       }
     }
+    else if(final_run){
+      ROTATION rotation = calculate_turn(current_direction, START_ORIENTATION);
+      RESULT rslt = turn(rotation, INPLACE);
+      BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
+      run(&path_run1, &path_run2, MAX_SPEED_RUN);
+      final_run = 0;
+    }
+
     for (int i = 0; i < 15; i++){
       update_gyro();
     }
   }
 
-
-ROTATION calculate_turn(CARDINALS curr, CARDINALS target){
-    int diff = target - curr;
-
-    if(diff > 2) diff -= 4;
-    if (diff < -2) diff += 4;
-
-    diff += 2;
-
-    return direction_to_rotation[diff];
-}
 

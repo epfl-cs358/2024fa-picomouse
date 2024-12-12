@@ -38,6 +38,54 @@ typedef struct{
 
 
 
+static RESULT reverse_stack(PATH_STACK* stack){
+    CHECK_AND_THROW(!stack, NULL_PTR);
+
+    PATH_STACK out_stack;   
+    RESULT err = init_stack(&out_stack);
+    size_t stack_end = stack->end; 
+
+
+    // The following is not securely satisfying but it removes the loop check that would be done
+    //if we pushed each element one by one. WARNING: THIS higly depends on paths stack implementation.
+    out_stack.end = stack_end;
+    for (size_t i = 0; i < stack_end; i++){
+        out_stack.stack[i] = stack->stack[(stack_end-1) - i];
+    }
+    *stack = out_stack;
+    return NO_ERROR;
+}
+
+
+
+static RESULT choose_path(PATH_STACK* path_1, PATH_STACK* path_2, PATH_STACK* return_path){
+    CHECK_AND_THROW(!path_1, NULL_PTR);
+    CHECK_AND_THROW(!path_2, NULL_PTR);
+    CHECK_AND_THROW(!return_path, NULL_PTR);
+
+    // We make a safe copy of the choosen path
+    switch (RUN_POLICY){
+        case SHORTEST_PATH:
+            if(path_1->end < path_2->end){
+                *return_path = *path_1;
+            }
+            else{
+
+                *return_path = *path_2;
+                // Since the second path is in the wrong order we need to reverse the path
+                RESULT err = reverse_stack(return_path);
+                PROPAGATE_ERROR(err);
+            }
+            break;
+        case FASTEST_PATH:
+            *return_path = *path_1; 
+            //TODO;
+            break;
+        default:
+            break;
+    }
+    return NO_ERROR;
+}
 //// Instruction stack ////
 
 typedef struct{
@@ -82,13 +130,12 @@ static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
         switch (curent_step.type){
 
         case NAVIGATION_FORWARD:
-            NAVIGATION_FORWARD_ARGS forward_args = curent_step.args.forward_args;
-            err = curent_step.instruction.instruction_forward(forward_args.distance, forward_args.speed);
+            curent_step.args.forward_args;
+            err = curent_step.instruction.instruction_forward(curent_step.args.forward_args.distance, curent_step.args.forward_args.speed);
             break;
         
         case NAVIGATION_TURN:
-            NAVIGATION_TURN_ARGS turn_args = curent_step.args.turn_args;
-            err = curent_step.instruction.instruction_turn(turn_args.instruction, turn_args.mode);
+            err = curent_step.instruction.instruction_turn(curent_step.args.turn_args.instruction, curent_step.args.turn_args.mode);
             break;
         default:
             break;
@@ -112,7 +159,7 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
     PROPAGATE_ERROR(err);
 
     INSTRUCTION_STACK instruction_stack;
-    RESULT err = init_instruction_stack(&instruction_stack);
+    err = init_instruction_stack(&instruction_stack);
     PROPAGATE_ERROR(err);
 
 
@@ -193,51 +240,3 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
     return NO_ERROR;
 }
 
-
-
-static RESULT reverse_stack(PATH_STACK* stack){
-    CHECK_AND_THROW(!stack, NULL_PTR);
-
-    PATH_STACK out_stack;   
-    RESULT err = init_stack(&out_stack);
-    size_t stack_end = stack->end; 
-
-
-    // The following is not securely satisfying but it removes the loop check that would be done
-    //if we pushed each element one by one. WARNING: THIS higly depends on paths stack implementation.
-    out_stack.end = stack_end;
-    for (size_t i = 0; i < stack_end; i++){
-        out_stack.stack[i] = stack->stack[(stack_end-1) - i];
-    }
-    *stack = out_stack;
-    return NO_ERROR;
-}
-
-static RESULT choose_path(PATH_STACK* path_1, PATH_STACK* path_2, PATH_STACK* return_path){
-    CHECK_AND_THROW(!path_1, NULL_PTR);
-    CHECK_AND_THROW(!path_2, NULL_PTR);
-    CHECK_AND_THROW(!return_path, NULL_PTR);
-
-    // We make a safe copy of the choosen path
-    switch (RUN_POLICY){
-        case SHORTEST_PATH:
-            if(path_1->end < path_2->end){
-                *return_path = *path_1;
-            }
-            else{
-
-                *return_path = *path_2;
-                // Since the second path is in the wrong order we need to reverse the path
-                RESULT err = reverse_stack(return_path);
-                PROPAGATE_ERROR(err);
-            }
-            break;
-        case FASTEST_PATH:
-            *return_path = *path_1; 
-            //TODO;
-            break;
-        default:
-            break;
-    }
-    return NO_ERROR;
-}
