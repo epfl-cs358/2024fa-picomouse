@@ -120,8 +120,9 @@ RESULT init_all_sensors() {
 }
 
 RESULT navigation_forward(float distance, float max_speed) {
-  const float correction_speed = 0.05;
+  const float correction_speed = 0.03;
   bool correcting_mode = false;
+  int tof_mode = 0;
   float speed = max_speed;
   WHEELS_DISTANCES dist = {0, 0};
   reset_traveled_distance();
@@ -137,7 +138,9 @@ RESULT navigation_forward(float distance, float max_speed) {
   float dist_left;
   float abs_dist_left;
 
+  int i = 0; 
   while (true) {
+    i++;
     update_gyro();
     // --------- THRESHOLD GYRO CHECK ---------
     // TODO implémenter plus tard
@@ -155,36 +158,49 @@ RESULT navigation_forward(float distance, float max_speed) {
 
     POSITION_TO_FRONT tof_dist;
     position_to_front(&tof_dist);
-
-    if (tof_dist.front_distance_mid < 150) {
-      // There is a front wall in the cell --> we trust the TOFs to cetner the
-      // mouse in the cell
-      float mean_dist =
+    
+    if (tof_mode && i > 10) {
+      float side_tof_mean_dist =
           (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
       // TODO vérifier que la mouse est droite =============
-      if (mean_dist < 100) {
+      if (side_tof_mean_dist < 90) {
         // We use the two side sesors
-        dist_left = tof_dist.front_distance_mid - 80;
+        dist_left = side_tof_mean_dist - 80;
         abs_dist_left = fabs(dist_left);
       } else {
-        // 150 mm distance from wall
-        //  8: half of a cell
+        // We use the front sensor
         dist_left = tof_dist.front_distance_mid - 80;
-        abs_dist_left = fabs(dist_left);
+        abs_dist_left = fabs(dist_left); 
+        Serial.println("TOF");
       }
-    } else {
-      // We use encoders
+    }
+    else if (tof_dist.front_distance_mid < 150 && i > 10) {
+      // There is a front wall in the cell --> we trust the TOFs to cetner the
+      // mouse in the cell
+      // 150 mm distance from wall
+      //  8: half of a cell
+      dist_left = tof_dist.front_distance_mid - 80;
+      abs_dist_left = fabs(dist_left);
+      tof_mode = 1;
+      Serial.println("TOF ON");
+    }else{
+      // We trust encoders
       dist = get_traveled_distance();
       float mean_dist = (dist.left_distance + dist.right_distance) / 2;
       float abs_mean_dist = fabs(mean_dist);
 
       dist_left = distance - abs_mean_dist;
       abs_dist_left = fabs(dist_left);
+      Serial.println("encoders");
       // peut etre faire une condition qui vérifie que les deux distances ne
       // diffèrent pas trop
     }
 
+    Serial.println(dist_left);
+    Serial.println(abs_dist_left);
+
     if (correcting_mode) {
+      Serial.println("correcting");
       // When the mouse has breaked, we check if we are at the right place
       if (abs_dist_left < POSITION_STOP_THRESHOLD) {
         // We are at the right distance
@@ -200,6 +216,7 @@ RESULT navigation_forward(float distance, float max_speed) {
       }
     }
 
+    
     // If the mouse is too far. True for small distances
     if (dist_left < 0) {
       correcting_mode = true;
@@ -208,6 +225,7 @@ RESULT navigation_forward(float distance, float max_speed) {
     if (abs_dist_left <= breaking_dist) {
       // start_breaking
       speed = 0;
+      Serial.println("breaking");
       while (get_rps() > MIN_RPS) {
         // Wait for the mouse to stop
         forward(0);
