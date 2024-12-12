@@ -153,24 +153,25 @@ RESULT navigation_forward(float distance, float max_speed) {
     // distance
     // FRONT_DISTANCE_MID > (7 + 3)
 
-    POSITION_TO_FRONT tof_dist = postiont_to_front();
+    POSITION_TO_FRONT tof_dist;
+    position_to_front(&tof_dist);
 
     if (tof_dist.front_distance_mid < 150) {
       // There is a front wall in the cell --> we trust the TOFs to cetner the
       // mouse in the cell
-      float mean_dist = (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
-      //TODO vérifier que la mouse est droite =============
-      if(mean_dist < 100) {
-        // We use the two side sesors 
-        dist_left = tof_dist.front_distance_mid - 8;
+      float mean_dist =
+          (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
+      // TODO vérifier que la mouse est droite =============
+      if (mean_dist < 100) {
+        // We use the two side sesors
+        dist_left = tof_dist.front_distance_mid - 80;
+        abs_dist_left = fabs(dist_left);
+      } else {
+        // 150 mm distance from wall
+        //  8: half of a cell
+        dist_left = tof_dist.front_distance_mid - 80;
         abs_dist_left = fabs(dist_left);
       }
-
-      // 150 mm distance from wall
-      //  8: half of a cell
-      dist_left = tof_dist.front_distance_mid - 8;
-      abs_dist_left = fabs(dist_left);
-
     } else {
       // We use encoders
       dist = get_traveled_distance();
