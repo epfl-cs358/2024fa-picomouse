@@ -93,8 +93,8 @@ RESULT motors_init()
 	// Set the initial count to 0
 	encoderL.clearCount();
 	encoderR.clearCount();
-	encoderL.setCount(3000);
-	encoderR.setCount(3000);
+	encoderL.setCount(10000);
+	encoderR.setCount(10000);
 
 	return NO_ERROR;
 }
