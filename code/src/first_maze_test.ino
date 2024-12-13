@@ -91,7 +91,7 @@ void loop(){
           rslt = turn(rotation, INPLACE);
           BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
           //TODO: check rslt
-          delay(100);
+          delay(10);
           rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
           BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
           //TODO: check rslt
@@ -136,7 +136,7 @@ void loop(){
           rslt = turn(rotation, INPLACE);
           BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
           //TODO: check rslt
-          delay(100);
+          delay(10);
           rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
           BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
           //TODO: check rslt

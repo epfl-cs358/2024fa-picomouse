@@ -65,7 +65,10 @@ RESULT turn(ROTATION rotation, MODE mode) {
   int i = 0;
 
   while (!is_close_enough) {
-    if (++i > 5) {
+    if (++i > 5 && rotation != HALF_TURN) {
+      speed = MIN_SPEED;
+    }
+    else if (i > 10 && rotation == HALF_TURN) {
       speed = MIN_SPEED;
     }
     update_gyro();
