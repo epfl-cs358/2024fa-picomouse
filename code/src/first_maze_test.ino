@@ -120,7 +120,7 @@ void loop(){
       }
       Serial.println("add walls done");
 
-      rslt = one_iteration_flood_fill(&maze, &path_run1, &next_direction);
+      rslt = one_iteration_flood_fill(&maze, &path_run2, &next_direction);
       Serial.println("flood fill done");
       Serial.println(rslt);
 

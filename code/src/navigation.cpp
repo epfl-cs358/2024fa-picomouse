@@ -16,12 +16,12 @@
 float mouse_absolute_angle = 0;
 
 // --------- Rotation speed ---------
-#define BASE_SPEED 0.09 // Vitesse de rotation de base changed from 0.06 to 0.08
-#define MIN_SPEED 0.05 // Vitesse minimale pour corriger vitesse
+#define BASE_SPEED 0.08 // Vitesse de rotation de base changed from 0.06 to 0.08
+#define MIN_SPEED 0.03 // Vitesse minimale pour corriger vitesse
 #define STOP_THRESHOLD 1.0 / 120.0 // Angle threshold to stop the rotation
 
 // --------- Correction speed forward---------
-#define CORRECTION_SPEED 0.05
+#define CORRECTION_SPEED 0.03
 #define HALF_CELL 80 // mm
 
 // ========== Private functions ===========

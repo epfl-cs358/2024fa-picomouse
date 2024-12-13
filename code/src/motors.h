@@ -19,7 +19,7 @@
 
 // Max and min PWM values
 #define MAX_PWM 255
-#define MIN_PWM 43
+#define MIN_PWM 40
 
 /* @brief Initialize the motor and the encoders. Set the count to 0 and set the last last toogle time to millis()
 * @param None
