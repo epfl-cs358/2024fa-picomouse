@@ -3,7 +3,7 @@
 #include "utils.h"
 #include <math.h>
 
-#define GYRO_NB_ITERATIONS 2
+#define GYRO_NB_ITERATIONS 1
 #define CALIBRATION_OFFSET_NB_ITERATIONS 300
 
 #define SCALE_FACTOR 1.0 / 0.0743

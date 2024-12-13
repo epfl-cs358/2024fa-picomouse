@@ -16,8 +16,8 @@
 float mouse_absolute_angle = 0;
 
 // --------- Rotation speed ---------
-#define BASE_SPEED 0.08 // Vitesse de rotation de base changed from 0.06 to 0.08
-#define MIN_SPEED 0.03 // Vitesse minimale pour corriger vitesse
+#define BASE_SPEED 0.06 // Vitesse de rotation de base changed from 0.06 to 0.08
+#define MIN_SPEED 0.02 // Vitesse minimale pour corriger vitesse
 #define STOP_THRESHOLD 1.0 / 120.0 // Angle threshold to stop the rotation
 
 // --------- Correction speed forward---------
@@ -87,8 +87,9 @@ RESULT turn(ROTATION rotation, MODE mode) {
       }
     } else {
       break_wheels(); // Stop the robot
-      for (int j = 0; j < 2; j++) {
+      for (int j = 0; j < 5; j++) {
         update_gyro();
+        delay(5);
       }
       new_angle = get_angle();
       error = mouse_absolute_angle - new_angle;
@@ -124,9 +125,9 @@ RESULT navigation_forward(float distance, float max_speed) {
   reset_traveled_distance();
 
   // TODO use physic bcs breaking dst arn't linear
-  float slow_dist = 0.50 * distance;
-  float very_slow_motor_dist = 0.40 * distance;
-  float breaking_dist = 0.30 * distance; // went from 10 percent to 15
+  float slow_dist = 0.40 * distance;
+  float very_slow_motor_dist = 0.30 * distance;
+  float breaking_dist = 0.20 * distance; // went from 10 percent to 15
 
   float mean_dist;
   float abs_mean_dist;
