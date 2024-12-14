@@ -4,18 +4,6 @@
 #include "motion.h"
 #include "utils.h"
 
-/* @brief Adjusts the distance of the mouse with the front wall
- * @param None
- * @return A RESULT value
- */
-RESULT adjust_front_distance();
-
-/* @brief Assures that the two motors run at the same speed
- * @param None
- * @return A RESULT value
- */
-RESULT alignement();
-
 /**
  * @brief Initialize all the sensors
  * @param None

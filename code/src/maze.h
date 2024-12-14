@@ -1,7 +1,7 @@
 #pragma once
 #include "utils.h"
 
-#define MAZE_SIZE 4
+#define MAZE_SIZE 6
 #define CELL_SIZE 180
 #define START_ORIENTATION EAST
 
