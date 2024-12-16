@@ -6,8 +6,6 @@
 
 
 
-typedef enum {SHORTEST_PATH, FASTEST_PATH}RUN_TYPE;
-#define RUN_POLICY SHORTEST_PATH
 
 /**
  * @brief Runs the mouse in the maze optimizing the path for the given RUN_POLICY.
