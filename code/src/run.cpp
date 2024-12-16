@@ -58,6 +58,19 @@ static RESULT reverse_stack(PATH_STACK* stack){
 
 
 
+static RESULT choose_path(PATH_STACK* path_1, PATH_STACK* path_2, PATH_STACK* return_path){
+    CHECK_AND_THROW(!path_1, NULL_PTR);
+    CHECK_AND_THROW(!path_2, NULL_PTR);
+    CHECK_AND_THROW(!return_path, NULL_PTR);
+
+    // We make a safe copy of the choosen path
+
+    if(path_1->end < path_2->end){
+        *return_path = *path_1;
+    }
+  
+    return NO_ERROR;
+}
 //// Instruction stack ////
 
 typedef struct{
@@ -118,15 +131,22 @@ static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
     return NO_ERROR;
 }
 
-static RESULT compute_instructions_stack(PATH_STACK* run_path, float run_speed, INSTRUCTION_STACK* out){
-    CHECK_AND_THROW(!run_path, NULL_PTR);
-    CHECK_AND_THROW(!out, NULL_PTR);
-    RESULT err = init_instruction_stack(out);
+
+
+RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
+    CHECK_AND_THROW(!path_1, NULL_PTR);
+    CHECK_AND_THROW(!path_2, NULL_PTR);
+
+    PATH_STACK run_path;
+    RESULT err = init_stack(&run_path);
+    PROPAGATE_ERROR(err);
+    err = choose_path(path_1, path_2,  &run_path);
     PROPAGATE_ERROR(err);
 
     INSTRUCTION_STACK instruction_stack;
     err = init_instruction_stack(&instruction_stack);
     PROPAGATE_ERROR(err);
+
 
     CARDINALS current_direction = START_ORIENTATION;
     CARDINALS next_direction;
@@ -137,10 +157,10 @@ static RESULT compute_instructions_stack(PATH_STACK* run_path, float run_speed, 
     COORDINATES current_cell;
     COORDINATES next_cell;
 
-    for (size_t index_in_path = 0; index_in_path < (run_path->end-1); index_in_path++){
+    for (size_t index_in_path = 0; index_in_path < (run_path.end-1); index_in_path++){
 
-        current_cell = run_path->stack[index_in_path];
-        next_cell = run_path->stack[index_in_path+1];
+        current_cell = run_path.stack[index_in_path];
+        next_cell = run_path.stack[index_in_path+1];
 
         next_dx = next_cell.x - current_cell.x;
         next_dy = next_cell.y - current_cell.y;
@@ -198,24 +218,8 @@ static RESULT compute_instructions_stack(PATH_STACK* run_path, float run_speed, 
 
         current_direction = next_direction;
     }
-    *out = instruction_stack;
-    return NO_ERROR;
-}
 
-
-RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
-    CHECK_AND_THROW(!path_1, NULL_PTR);
-    CHECK_AND_THROW(!path_2, NULL_PTR);
-    INSTRUCTION_STACK stack_1;
-    INSTRUCTION_STACK stack_2;
-
-    RESULT err = compute_instructions_stack(path_1, run_speed, &stack_1);
-    PROPAGATE_ERROR(err);
-    err = compute_instructions_stack(path_2, run_speed, &stack_2);
-    PROPAGATE_ERROR(err);
-    
-
-    err = follow_instructions((stack_1.end < stack_2.end)? &stack_1: &stack_2);
+    err = follow_instructions(&instruction_stack);
     PROPAGATE_ERROR(err);
     
     return NO_ERROR;
