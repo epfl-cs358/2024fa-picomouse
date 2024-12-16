@@ -202,7 +202,7 @@ Using Scratch:
   We get 5 slopes: \
   Left_y = 0.951x - 6.273 \
   Mid_Left_y = 0.998x - 0.189 \
-  Mid_y = ???? \
+  Mid_y = 1.000x - 0.000\
   Mid_Right_y = 0.995x - 4.407 \
   Right_y = 0.958x - 1.176 
 
