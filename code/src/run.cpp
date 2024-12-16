@@ -198,6 +198,7 @@ static RESULT compute_instructions_stack(PATH_STACK* run_path, float run_speed, 
 
         current_direction = next_direction;
     }
+    *out = instruction_stack;
     return NO_ERROR;
 }
 
