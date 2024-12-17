@@ -262,7 +262,6 @@ This represents the following maze :
   2. Reduce the BLE (bluetooth) library so it can be compiled on the esp and used for the python script.
   3. Use a PCB as the mouse base plate to reduce the weight of the plastic plate and the cable.
   4. Make smooth turns when running the maze (after the exploration phase).
-  5. Use a simpler/cheaper gyroscope since we use only the angular speed of the x to y axis.
 
 ## License
 
