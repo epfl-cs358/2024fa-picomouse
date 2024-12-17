@@ -18,7 +18,8 @@ A brief description of what this project does and its purpose.
 7. [Software Installation](#software-installation)
 8. [Sensors calibration](#sensors-calibration)
 9. [Distance calculation](#distance-calculation)
-10. [License](#license)
+10. [Computation distances with encoders](#computation-distances-with-encoders)
+11. [License](#license)
     
 
 
@@ -233,6 +234,9 @@ $$
 $$
 
 If you change the sensors disposition you need to changes those values in sensors.cpp.
+
+## Computation distances with encoders
+To compute the travel distance, one needs to know the real perimeter of the wheels and the number of pulsations transmitted by the encoder during one wheel revolution. To do that, you can modify in motion.h the constant WHEEL_DIAMETER and ENCODER_RESOLUTION.
 
 ## UI
 The UI made for monitoring the mouse's position and state of the maze stored in the micro-controller is written in Python, using the [Pygame Community Edition library](https://github.com/pygame-community/pygame-ce). 
