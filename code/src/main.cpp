@@ -10,6 +10,8 @@
 #include <cmath>
 #include <math.h>
 
+#define BUTTON_PIN 34
+
 #define CELL_LENGTH 180  // in mm
 
 // Defined speeds for both run and search mode
@@ -22,6 +24,7 @@ int run1 = 1;
 int run2 = 0;
 int final_run = 1;
 int end = 0;
+int button_state = 0;
 Maze maze;
 COORDINATES start_cell = { 0, 0 };
 COORDINATES exit_cell = { MAZE_SIZE - 1, MAZE_SIZE - 1 };
@@ -46,6 +49,7 @@ void setup() {
   delay(20);
   Wire.begin();
   delay(20);
+  pinMode(BUTTON_PIN, INPUT);
   delay(5000);
   RESULT err = init_all_sensors();
 
@@ -165,6 +169,10 @@ void loop() {
       run2 = 0;
     }
   } else if (final_run) {
+    while (button_state == LOW) {
+      button_state = digitalRead(BUTTON_PIN);
+      delay(100);
+    }
     ROTATION rotation = calculate_turn(current_direction, START_ORIENTATION);
     RESULT rslt = turn(rotation, INPLACE);
     BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
