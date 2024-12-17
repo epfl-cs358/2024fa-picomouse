@@ -69,6 +69,8 @@ static RESULT choose_path(PATH_STACK* path_1, PATH_STACK* path_2, PATH_STACK* re
     if(path_1->end < path_2->end){
         *return_path = *path_1;
     }else{
+        RESULT err = reverse_stack(path_2);
+        PROPAGATE_ERROR(err);
         *return_path = *path_2;
     }
     return NO_ERROR;

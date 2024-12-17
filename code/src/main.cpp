@@ -16,6 +16,8 @@
 #define MAX_SPEED_SEARCH 0.08
 #define MAX_SPEED_RUN 0.16
 
+#define NB_TOF_SAMPLE 2
+
 int run1 = 1;
 int run2 = 0;
 int final_run = 1;
@@ -35,34 +37,9 @@ CARDINALS current_direction;
     delay(1000); \
   }
 
-RESULT correct_direction(CALC_CHOICE choice) {
-  POSITION_TO_WALL tof_dist;
+RESULT correct_direction(CALC_CHOICE choice);
 
-  update_all();
-  RESULT rslt = position_to_wall(&tof_dist, choice);
-  PROPAGATE_ERROR(rslt);
 
-  float total_dist = tof_dist.distance_left + tof_dist.distance_right;
-
-  if (total_dist > 150 && total_dist < 170) {
-    // We trust the sensors
-    float error = (tof_dist.distance_left - tof_dist.distance_right) / 2;
-    float angle = error > 0 ? 1 : -1;
-    angle *= 0.5 - atan(CELL_SIZE / fabs(error)) / M_PI;
-
-    float dist = sqrt(pow(fabs(error), 2) + pow(CELL_SIZE, 2));
-
-    Serial.print("distance     ");
-    Serial.println(dist);
-
-    turn_with_angle(angle, INPLACE);
-    navigation_forward(dist, MAX_SPEED_SEARCH, 1);
-    update_gyro();
-    turn_with_angle(-angle, INPLACE);
-    return NO_ERROR;
-  }
-  return CANNOT_CORRECT;
-}
 
 void setup() {
   Serial.begin(115200);
@@ -170,13 +147,20 @@ void loop() {
 
       current_direction = next_direction;
 
-      rslt = turn(rotation, INPLACE);
-      BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
-      // TODO: check rslt
-      delay(10);
-      rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
-      BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
-      // TODO: check rslt
+
+      if (rotation == NO_TURN) {
+        rslt = correct_direction(CALC_BOTH);
+      }
+      if (rslt == CANNOT_CORRECT || rotation != NO_TURN) {
+
+        rslt = turn(rotation, INPLACE);
+        BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
+        // TODO: check rslt
+        delay(10);
+        rslt = navigation_forward(CELL_LENGTH, MAX_SPEED_SEARCH);
+        BLOCK_ON_ERROR(rslt, Serial.println("navigation forward failed !!"));
+        // TODO: check rslt
+      }
     } else {
       run2 = 0;
     }
@@ -191,4 +175,58 @@ void loop() {
   for (int i = 0; i < 15; i++) {
     update_gyro();
   }
+}
+
+
+RESULT correct_direction(CALC_CHOICE choice) {
+  POSITION_TO_WALL tof_dist;
+
+  float dist_L = 0;
+  float dist_R = 0;
+
+  for (int i = 0; i < NB_TOF_SAMPLE;i++) {
+    RESULT rslt = position_to_wall(&tof_dist, choice);
+    PROPAGATE_ERROR(rslt);
+    dist_L += tof_dist.distance_left;
+    dist_R += tof_dist.distance_right;
+    delay(2);
+  }
+  dist_L /= NB_TOF_SAMPLE;
+  dist_R /= NB_TOF_SAMPLE;
+
+  float total_dist = dist_L + dist_R;
+  float dist;
+  float angle;
+
+  if (total_dist > 155 && total_dist < 165) {
+    // We trust the sensors
+    float error = (dist_L - dist_R) / 2;
+
+    angle = error > 0 ? 1 : -1;
+    angle *= 0.5 - atan(CELL_SIZE / fabs(error)) / M_PI;
+
+    dist = sqrt(pow(fabs(error), 2) + pow(CELL_SIZE, 2));
+
+  } /**else if (dist_L < 55) {
+    float error = (dist_L / 2);
+
+    angle = -(0.5 - atan(CELL_SIZE / error) / M_PI);
+    dist = sqrt(pow(fabs(error), 2) + pow(CELL_SIZE, 2));
+
+  } else if (dist_R < 55) {
+    float error = (dist_R / 2);
+
+    angle = 0.5 - atan(CELL_SIZE / (error)) / M_PI;
+    dist = sqrt(pow(fabs(error), 2) + pow(CELL_SIZE, 2));
+  } */else {
+    return CANNOT_CORRECT;
+  }
+
+  DEBBUG_PRINT(Serial.print("distance     "); Serial.println(dist););
+
+  turn_with_angle(angle, INPLACE);
+  navigation_forward(dist, MAX_SPEED_SEARCH);
+  update_gyro();
+  turn_with_angle(-angle, INPLACE);
+  return NO_ERROR;
 }

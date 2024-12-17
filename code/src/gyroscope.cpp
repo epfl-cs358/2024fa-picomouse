@@ -70,41 +70,6 @@ RESULT init_gyro() {
 
   return NO_ERROR;
 }
-/**
-RESULT compute_offset(){
-  Serial.print("Computing offset...");
-  float mean_val = 0;
-  int8_t rslt;
-  int16_t angularSpeeds[6] = { 0 };
-  uint32_t time_stamp[2] = { 0 };
-  uint32_t start_time = 0;
-  uint32_t end_time = 0;
-
-  for (int i = 0; i < CALIBRATION_OFFSET_NB_ITERATIONS; i++) {
-
-    rslt = bmi160.getAccelGyroData(angularSpeeds, time_stamp);
-
-    if (rslt != 0) {
-      Serial.println("I fucking died mate");
-      while (1)
-        ;
-    }
-    if (i == 0) {
-      start_time = time_stamp[0];
-    }
-    mean_val += static_cast<float>(angularSpeeds[2]);
-  }
-  end_time = time_stamp[0];
-
-  mean_val /= CALIBRATION_OFFSET_NB_ITERATIONS;
-
-
-  offset = mean_val;
-  Serial.print(offset, 10);
-  Serial.println("Done");
-
-  return NO_ERROR;
-}*/
 
 RESULT compute_offset() {
   Serial.print("Computing offset...");
