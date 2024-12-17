@@ -236,7 +236,8 @@ $$
 If you change the sensors disposition you need to changes those values in sensors.cpp.
 
 ## Computation distances with encoders
-To compute the travel distance, one needs to know the real perimeter of the wheels and the number of pulsations transmitted by the encoder during one wheel revolution. To do that, you can modify in motion.h the constant WHEEL_DIAMETER and ENCODER_RESOLUTION.
+To compute the travel distance, one needs to know the real perimeter of the wheels and the number of pulsations transmitted by the encoder during one wheel revolution. To do that, you can modify in motion.h the constant WHEEL_DIAMETER and ENCODER_RESOLUTION.\
+To compute the encoder's resolution, print get_steps_count() in a while loop and turn manually the wheel to measure the number of steps needed for one revolution.
 
 ## UI
 The UI made for monitoring the mouse's position and state of the maze stored in the micro-controller is written in Python, using the [Pygame Community Edition library](https://github.com/pygame-community/pygame-ce). 
