@@ -145,23 +145,11 @@ static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
     return NO_ERROR;
 }
 
+RESULT compute_instruction_stack(PATH_STACK* run_path, INSTRUCTION_STACK* out, float run_speed){
+    CHECK_AND_THROW(!run_path, NULL_PTR);
+    CHECK_AND_THROW(!out, NULL_PTR);
 
-
-RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
-    CHECK_AND_THROW(!path_1, NULL_PTR);
-    CHECK_AND_THROW(!path_2, NULL_PTR);
-
-    PATH_STACK run_path;
-    RESULT err = init_stack(&run_path);
-    PROPAGATE_ERROR(err);
-    err = choose_path(path_1, path_2,  &run_path);
-    PROPAGATE_ERROR(err);
-
-    INSTRUCTION_STACK instruction_stack;
-    err = init_instruction_stack(&instruction_stack);
-    PROPAGATE_ERROR(err);
-
-
+    RESULT err = NO_ERROR;
     CARDINALS current_direction = START_ORIENTATION;
     CARDINALS next_direction;
     int current_dx = 0;
@@ -171,10 +159,10 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
     COORDINATES current_cell;
     COORDINATES next_cell;
 
-    for (size_t index_in_path = 0; index_in_path < (run_path.end-1); index_in_path++){
+    for (size_t index_in_path = 0; index_in_path < (run_path->end-1); index_in_path++){
 
-        current_cell = run_path.stack[index_in_path];
-        next_cell = run_path.stack[index_in_path+1];
+        current_cell = run_path->stack[index_in_path];
+        next_cell = run_path->stack[index_in_path+1];
 
         next_dx = next_cell.x - current_cell.x;
         next_dy = next_cell.y - current_cell.y;
@@ -203,7 +191,7 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
         if(rotation == NO_TURN && index_in_path != 0){
             STEP last_forward;
             // the last step is always a forward
-            err = pop(&instruction_stack, &last_forward);
+            err = pop(out, &last_forward);
             PROPAGATE_ERROR(err);
             forward_distance = last_forward.args.forward_args.distance + CELL_SIZE;
         }else{
@@ -215,7 +203,7 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
             args.turn_args = turn_args;
             STEP turn_step = {NAVIGATION_TURN, function, args};
 
-            err = push(&instruction_stack, turn_step);
+            err = push(out, turn_step);
             PROPAGATE_ERROR(err);
         }
             // create the forward instruction
@@ -227,15 +215,38 @@ RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
         STEP forward_step  = {NAVIGATION_FORWARD, function, args};
         
 
-        err = push(&instruction_stack, forward_step);
+        err = push(out, forward_step);
         PROPAGATE_ERROR(err);
-
         current_direction = next_direction;
     }
-
-    err = follow_instructions(&instruction_stack);
-    PROPAGATE_ERROR(err);
     
+    return NO_ERROR;
+}
+
+RESULT run(PATH_STACK* path_1, PATH_STACK* path_2, float run_speed){
+    CHECK_AND_THROW(!path_1, NULL_PTR);
+    CHECK_AND_THROW(!path_2, NULL_PTR);
+
+    RESULT err = reverse_stack(path_2);
+    PROPAGATE_ERROR(err);
+
+    INSTRUCTION_STACK instruction_stack_1;
+    err = init_instruction_stack(&instruction_stack_1);
+    INSTRUCTION_STACK instruction_stack_2;
+    PROPAGATE_ERROR(err);
+    err = init_instruction_stack(&instruction_stack_2);
+    PROPAGATE_ERROR(err);
+    err = compute_instruction_stack(path_1, &instruction_stack_1, run_speed);
+    PROPAGATE_ERROR(err);
+    err = compute_instruction_stack(path_2, &instruction_stack_2, run_speed);
+    PROPAGATE_ERROR(err);
+    if(instruction_stack_1.end < instruction_stack_2.end){
+        err = follow_instructions(&instruction_stack_1);
+    }else{
+        err = follow_instructions(&instruction_stack_2);
+    }
+    PROPAGATE_ERROR(err);
+
     return NO_ERROR;
 }
 
