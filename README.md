@@ -155,7 +155,9 @@ Using Scratch:
 ![pillar_scratch](images/assembly/)  // TODO get the image of pillar with scratch
     
     
-
+## Software Overview
+### Code interface
+You can find a detailed scheme representing the relations of all components and pieces of code ![here](c4_model.png) (in .png) and ![here](c4_model.pdf) (in .pdf).
 ## Software Installation
   ### Software Prerequisites:
   
