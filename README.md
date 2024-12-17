@@ -183,7 +183,7 @@ You can find a detailed scheme representing the relations of all components and 
   The Tof sensors need to be calibrated individually, to do that we measured different distances for each sensors and did a linear regression on the measurement     given the actual distance. \
   For our sensors we get the following graphs: \
   Where the x axis denotes the real distance and the y axis denotes the measured value. \
-  The green line represent the expected slope, and the black line represent the measurements. \
+  The green line represent the expected slope, and the black line represent the measurements. 
 
   ![all TOFs](images/calibration/all_tofs_calibration.png)
 
@@ -207,7 +207,7 @@ You can find a detailed scheme representing the relations of all components and 
 ### Distance Calculation:
 Using the TOF sensors we can estimate the mouse position to a left or right wall.
 We can get the mouse orientation and its distance to the wall (from the center of the mouse).
-![trigo_1](images/other/)
+![trigo_1](images/calibration/distance_calcul.jpg)
 
 $$
     \begin{aligned}
