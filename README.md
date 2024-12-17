@@ -185,21 +185,7 @@ You can find a detailed scheme representing the relations of all components and 
   Where the x axis denotes the real distance and the y axis denotes the measured value. \
   The green line represent the expected slope, and the black line represent the measurements. \
 
-  Left TOF: 
-  
-  ![Left TOF](images/calibration/left_captor_calibration.png)
-
-  Mid Left TOF:
-
-  ![Mid-Left TOF](images/calibration/mid_left_captor_calibration.png)
-
-  Mid Right TOF:
-  
-  ![Mid-Right TOF](images/calibration/mid_right_captor_calibration.png)
-
-  Right TOF
-
-  ![Right TOF](images/calibration/right_captor_calibration.png)
+  ![all TOFs](images/calibration/all_tofs_calibration.png)
 
   We get 5 slopes: \
   Left_y = 0.951x - 6.273 \
