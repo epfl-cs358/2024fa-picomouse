@@ -207,7 +207,7 @@ You can find a detailed scheme representing the relations of all components and 
 ### Distance Calculation:
 Using the TOF sensors we can estimate the mouse position to a left or right wall.
 We can get the mouse orientation and its distance to the wall (from the center of the mouse).
-![trigo_1](images/calibration/distance_calcul.jpg)
+![Mid-Left TOF](images/calibration/mid_left_captor_calibration.png)
 
 $$
     \begin{aligned}
@@ -219,7 +219,7 @@ $$
     \end{aligned}
 $$
 
-![Mid-Left TOF](images/calibration/mid_left_captor_calibration.png)
+![trigo_1](images/calibration/distance_calcul.jpg)
 
 $$
     \begin{aligned}
