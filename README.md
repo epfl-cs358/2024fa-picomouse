@@ -102,7 +102,8 @@ This project aims to create from scratch a micromouse and be able to run it on a
   ![ESP-32](images/assembly/esp32_on_holder_2.jpg)
 
   ### Wiring:
-    // TODO 
+   ![image](https://github.com/user-attachments/assets/c0026920-46d1-4338-90c0-385cb2a7d65f)
+
   ![TOF](images/assembly/) 
 
 
