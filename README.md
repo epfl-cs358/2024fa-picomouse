@@ -267,12 +267,12 @@ This represents the following maze :
   2. Reduce the BLE (bluetooth) library so it can be compiled on the esp and used for the python script.
   3. Use a PCB as the mouse base plate to reduce the weight of the plastic plate and the cable.
   4. Make smooth turns when running the maze (after the exploration phase).
-  5. Redesign of the mouse: bring closer the center of rotation to the sensors for better precision.
-  6. Better error handling for imperfect maze
-  7. Implement of PID algorithm for sensors
-  8. Ligthen weight of the mouse with a LiPo and a smaller buck converter
-  9. Usage of buck converter on motors to run at constant 6V
-  10. Redesign the floor of the maze to be more consistent (especially for the walls)
+  5. Redesign of the mouse: bring closer the center of rotation to the sensors to make in place turns in less space.
+  6. Better error handling for imperfect maze.
+  7. Implementation of PID algorithm for sensors. The gyroscope has some limits in the precision of the turns and in straight lines, inclusion of the sensors in         the process would improve the general navigation.
+  8. Ligthen weight of the mouse with a LiPo and a smaller buck converter.
+  9. Usage of buck converter on motors to run at constant 6V.
+  10. Redesign the floor of the maze to be more consistent (especially for the walls).
 
 ## License
 
