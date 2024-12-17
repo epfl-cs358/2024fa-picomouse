@@ -3,9 +3,8 @@
 ![Project Logo](path/to/logo.png) <!-- Optional: Add a project logo if needed -->
 
 ## Description
-
-A brief description of what this project does and its purpose. 
-
+ 
+This project aims to create from scratch a micromouse and be able to run it on a 10x10 maze. The design of the mouse, the choice of components, the implementation of the code and the construction of the maze are parts of the project. Our team was responsible of the walls and pillars and another team had to construct the floor. The purpose of this project is to discover how to combine hardware and software and to learn how to work in a team of 6 persons.
 
 
 ## Table of Contents
@@ -244,11 +243,8 @@ The UI made for monitoring the mouse's position and state of the maze stored in 
 To use the provided code, you'll need to install pygame-ce (``pip install pygame-ce``) which should already be done if you installed the requirements.
 
 ### How to use
-#### Bluetooth
-If your micromouse is connected to the bluetooth //TODO
-#### Standalone
 If you are simply trying to visualize the maze and play with it offline, you'll have to understand how it is interpreted by the code. Every cell is represented by a set of 4 bits. Each of these bits represents a wall. In order, the first bit represents the left wall, the second, the upper wall, the third, the right wall, the fourth, the bottom wall (i.e. 0b1010 represents a cell with a wall on the left and wall on the right).
-##### Example of a complete maze
+#### Example of a complete maze
 ```
 maze = [[0b0000, 0b0101, 0b0110, 0b1000, 0b0000, 0b0000, 0b0000, 0b0000],
         [0b1010, 0b1111, 0b1011, 0b1000, 0b0000, 0b0001, 0b0000, 0b0000],
