@@ -29,8 +29,7 @@ A brief description of what this project does and its purpose.
 - MX1508 motor driver
 - 9 volt battery
 - ESP-32-vroom 32
-- 4 x DFROBOT SEN0427 TOF
-- DFROBOT SEN0245 TOF
+- 5 x DFROBOT SEN0427 TOF
 - DFRobot Gravity I2C BMI160 Gyroscope
 - Small Bead size=??????
 - M2 screws and bolts 
@@ -89,7 +88,7 @@ A brief description of what this project does and its purpose.
  
   ![Batery](images/assembly/batery.jpg) 
 
- #### 6.Place and screw the TOF's sensors to theire dedicated slot: 
+ #### 6.Place and screw the TOF's sensors to their dedicated slot: 
    
   ![TOF](images/assembly/TOF.jpg) 
 
@@ -99,7 +98,8 @@ A brief description of what this project does and its purpose.
   
   #### 8.Place and screw the ESP-32 to the back of the motor holder: 
   
-  ![ESP-32](images/to/logo.png) // TODO
+  ![ESP-32](images/assembly/esp32_on_holder.jpg) 
+  ![ESP-32](images/assembly/esp32_on_holder_2.jpg)
 
   ### Wiring:
     // TODO 
