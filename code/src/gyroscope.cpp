@@ -1,3 +1,9 @@
+/**
+ * @file gyroscope.cpp
+ * @author KACEM Sophia, AUMONT Adrien
+ * @copyright Copyright (c) 2024
+ */
+
 #include "gyroscope.h"
 #include "DFRobot_BMI160.h"
 #include "utils.h"

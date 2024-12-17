@@ -1,3 +1,9 @@
+/**
+ * @file flood_fill.h
+ * @author AUMONT Adrien, KNABENHANS Felix
+ * @copyright Copyright (c) 2024
+ */
+
 #include <cstring>
 #include "utils.h"
 #include "flood_fill.h"

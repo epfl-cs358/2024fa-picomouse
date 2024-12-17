@@ -1,3 +1,9 @@
+/**
+ * @file utils.h
+ * @author KNABENHANS Felix, KACEM Sophia, AUMONT Adrien, PEREGO Zac
+ * @copyright Copyright (c) 2024
+ */
+
 #pragma once 
 
 #ifndef UTILS_H
@@ -121,7 +127,7 @@ static ROTATION calculate_turn(CARDINALS curr, CARDINALS target){
         }\
     }while(0)\
 
-//#define MODULO(angle) (((fmod((angle) + 1, 2)) <= 0 ? (fmod((angle) + 1, 2)) + 2 : fmod((angle) + 1, 2)) - 1)
+
 
 #define MODULO(angle) \
     do{\

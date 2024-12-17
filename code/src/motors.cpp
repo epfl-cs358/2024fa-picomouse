@@ -1,3 +1,9 @@
+/**
+ * @file motion.cpp
+ * @author PEREGO Zac 
+ * @copyright Copyright (c) 2024
+ */
+
 #include "motors.h"
 #include "math.h"
 #include "utils.h"

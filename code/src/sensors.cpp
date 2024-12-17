@@ -1,3 +1,9 @@
+/**
+ * @file sensors.cpp
+ * @author AUMONT Adrien, KNABENHANS Felix
+ * @copyright Copyright (c) 2024
+ */
+
 #include "sensors.h"
 #include "DFRobot_VL6180X.h"
 
@@ -43,7 +49,7 @@ float alphas[4] = {0.7669, 0.384, 0.384, 0.7669};
 float cs[4] = {57.007, 62.533, 62.533, 57.007};
 float betas[4] = {0.5426, 0.4021, 0.4021, 0.5426};
 
-float mid_sensor_d_from_center = 65.0; 
+int mid_sensor_d_from_center = 65; 
 
 
 float d_calc[4];

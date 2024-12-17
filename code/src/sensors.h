@@ -1,3 +1,9 @@
+/**
+ * @file sensors.h
+ * @author AUMONT Adrien, KNABENHANS Felix
+ * @copyright Copyright (c) 2024
+ */
+
 #pragma once
 
 #include "utils.h"

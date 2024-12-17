@@ -1,3 +1,8 @@
+/**
+ * @file run.h
+ * @author KNABENHANS Felix
+ * @copyright Copyright (c) 2024
+ */
 
 #pragma once 
 #include "utils.h"

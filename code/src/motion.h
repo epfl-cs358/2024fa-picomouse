@@ -1,3 +1,9 @@
+/**
+ * @file motion.cpp
+ * @author PEREGO Zac 
+ * @copyright Copyright (c) 2024
+ */
+
 #pragma once
 
 #ifndef MOTION_H

@@ -1,3 +1,9 @@
+/**
+ * @file motors.h
+ * @author PEREGO Zacharie, KNABENHANS Felix, AUMONT Adrien, KACEM Sophia
+ * @copyright Copyright (c) 2024
+ */
+
 #include "navigation.h"
 #include "gyroscope.h"
 #include "motion.h"

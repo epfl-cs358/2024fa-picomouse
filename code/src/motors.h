@@ -1,3 +1,9 @@
+/**
+ * @file motors.h
+ * @author PEREGO Zacharie
+ * @copyright Copyright (c) 2024
+ */
+
 #pragma once
 #ifndef MOTORS_H
 #define MOTORS_H

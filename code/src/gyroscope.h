@@ -1,3 +1,8 @@
+/**
+ * @file gyroscope.h
+ * @author KACEM Sophia, AUMONT Adrien
+ * @copyright Copyright (c) 2024
+ */
 #pragma once
 #include "utils.h"
 

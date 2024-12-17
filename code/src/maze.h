@@ -1,3 +1,9 @@
+/**
+ * @file maze.h
+ * @author AUMONT Adrien, KACEM Sophia, KNABENHANS Felix
+ * @copyright Copyright (c) 2024
+ */
+
 #pragma once
 #include "utils.h"
 
