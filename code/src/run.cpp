@@ -25,7 +25,8 @@ typedef union{
 }RUN_ARGS;
 
 typedef union {
-    RESULT (*instruction_forward)(float , float);
+    //RESULT (*instruction_forward)(float , float, int);
+    RESULT (*instruction_forward)(float , float, int);
     RESULT (*instruction_turn)(ROTATION, MODE);
 }RUN_INSTRUCTION;
 
@@ -122,7 +123,7 @@ static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
 
         case NAVIGATION_FORWARD:
             curent_step.args.forward_args;
-            err = curent_step.instruction.instruction_forward(curent_step.args.forward_args.distance, curent_step.args.forward_args.speed);
+            err = curent_step.instruction.instruction_forward(curent_step.args.forward_args.distance, curent_step.args.forward_args.speed, 0);
             break;
         
         case NAVIGATION_TURN:

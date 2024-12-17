@@ -120,7 +120,7 @@ RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* n
     for (size_t i = 0; i < 4; i++){
         if(WALLS[i] & WALLS_AT(maze->walls, maze->mouse_pos)){
             continue;
-        }
+        } 
         COORDINATES next_cell = {maze->mouse_pos.x+dx[i],maze->mouse_pos.y+dy[i]};
         if(!IN_BOUNDARIES(next_cell)){
           continue;
@@ -165,4 +165,16 @@ RESULT init_stack(PATH_STACK* stack){
     stack->max_size = MAZE_SIZE*MAZE_SIZE;
 
     return NO_ERROR;
+}
+int between_walls(Maze* maze){
+  int walls = WALLS_AT(maze->walls, maze->mouse_pos); 
+  int check_1 = 0b1000 & walls;
+  int check_2 = 0b0010 & walls;
+  int check_3 = 0b0100 & walls;
+  int check_4 = 0b0001 & walls;
+
+  if ((check_1 && check_2)||(check_3 && check_4)){
+    return 1;
+  }
+  return 0;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "utils.h"
 
-void reset_angle();
+void reset_angle(float new_angle);
 
 float get_angle();
 

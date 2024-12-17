@@ -8,64 +8,27 @@
 
 #define SCALE_FACTOR 1.0 / 0.0743
 
-#define OVER_THRESHOLD(angle, threshold)\
+#define OVER_THRESHOLD(angle, threshold)                                       \
   (angle < -threshold || angle > threshold)
 
 float angle = 0.0; // unit : radian
 DFRobot_BMI160 bmi160;
 const int8_t i2c_addr = 0x68;
 float offset = 0.0;
-uint32_t start_time = 0; 
+uint32_t start_time = 0;
 
-void reset_angle() { angle = 0.0; }
+void reset_angle(float new_angle) {
+  angle = new_angle;
+  start_time = 0;
+}
 
 float get_angle() { return angle; }
-/**
-RESULT update_gyro() {
-  float mean_val = 0;
-  int8_t rslt;
-  int16_t angularSpeeds[6] = { 0 };
-  uint32_t time_stamp[2] = { 0 };
-  uint32_t start_time = 0;
-  uint32_t end_time = 0;
-
-  for (int i = 0; i < GYRO_NB_ITERATIONS; i++) {
-
-    rslt = bmi160.getAccelGyroData(angularSpeeds, time_stamp);
-
-    if (rslt != 0) {
-      Serial.println("I fucking died mate");
-      while (1)
-        ;
-    }
-    if (i == 0) {
-      start_time = time_stamp[0];
-    }
-    float angular_speed = static_cast<float>(angularSpeeds[2]);
-    if(OVER_THRESHOLD(angular_speed, 0.00001)){
-      mean_val += angular_speed - offset;
-    }
-  }
-
-  end_time = time_stamp[0];
-  float elapsed_time_ns = (end_time - start_time);
-  mean_val /= GYRO_NB_ITERATIONS;
-  mean_val *= 3.1415 / 180.0;
-
-  //if (OVER_THRESHOLD(((mean_val * elapsed_time_ns) / NS_TO_S), THRESHOLD)) {
-    angle += (mean_val * elapsed_time_ns) / NS_TO_S;
-
-  angle = MODULO(angle);
-
-  return NO_ERROR;
-}*/
 
 RESULT update_gyro() {
   int16_t gyroData[3];
   uint32_t timestamp;
-  //uint32_t start_time = 0;
+  // uint32_t start_time = 0;
   float mean = 0;
-  
 
   for (int i = 0; i < GYRO_NB_ITERATIONS; i++) {
     // Lecture des données du gyroscope avec timestamp
@@ -75,11 +38,12 @@ RESULT update_gyro() {
     }
 
     if (start_time == 0) {
-     start_time = timestamp;
+      start_time = timestamp;
     }
 
     // Correction de l'offset
-    float angularSpeedZ = static_cast<float>(gyroData[2]) - offset; // Convertir LSB en rad/s
+    float angularSpeedZ =
+        static_cast<float>(gyroData[2]) - offset; // Convertir LSB en rad/s
     mean += angularSpeedZ;
   }
 
@@ -88,7 +52,7 @@ RESULT update_gyro() {
 
   mean /= GYRO_NB_ITERATIONS;
   // Mise à jour de l'angle accumulé
-  angle += mean * deltaTime * SCALE_FACTOR/ 1e9;
+  angle += mean * deltaTime * SCALE_FACTOR / 1e9;
 
   MODULO(angle);
   start_time = timestamp;
@@ -98,7 +62,7 @@ RESULT update_gyro() {
 
 RESULT init_gyro() {
   // init the hardware bmin160
-  
+
   CHECK_AND_THROW(bmi160.softReset() != BMI160_OK, GYRO_INIT_FAIL);
   CHECK_AND_THROW(bmi160.I2cInit(i2c_addr) != BMI160_OK, GYRO_INIT_FAIL);
 

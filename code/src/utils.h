@@ -19,7 +19,8 @@ typedef enum {
     MAZE_INIT_FAIL,
     NULL_PTR,
     NO_SOLUTION,
-    OUT_OF_BOUND
+    OUT_OF_BOUND, 
+    CANNOT_CORRECT
 }RESULT;
 
 static char error_table_translation[][MAX_LEN_STRING] = {
@@ -33,8 +34,8 @@ static char error_table_translation[][MAX_LEN_STRING] = {
     "MAZE_INIT_FAIL",
     "NULL_PTR",
     "NO_SOLUTION",
-    "OUT_OF_BOUND"
-
+    "OUT_OF_BOUND", 
+    "CANNOT_CORRECT"
 };
 
 typedef struct {

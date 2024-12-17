@@ -6,9 +6,9 @@
 #include <Arduino.h>
 #include <math.h>
 
-#define POSITION_STOP_THRESHOLD 2 // mm
+#define POSITION_STOP_THRESHOLD 2  // mm
 
-#define MIN_RPS 0.01 // The minimum rps to consider the mouse stopped
+#define MIN_RPS 0.01  // The minimum rps to consider the mouse stopped
 
 // The maxdifference of distance made by the wheels
 #define MAX_DELTA_DISTANCE 1.2
@@ -16,47 +16,57 @@
 float mouse_absolute_angle = 0;
 
 // --------- Rotation ---------
-#define BASE_SPEED 0.06 // Vitesse de rotation de base changed from 0.06 to 0.08
-#define MIN_SPEED 0.02  // Vitesse minimale pour corriger vitesse
-#define STOP_THRESHOLD 1.0 / 120.0 // Angle threshold to stop the rotation
+#define BASE_SPEED 0.06             // Vitesse de rotation de base changed from 0.06 to 0.08
+#define MIN_SPEED 0.02              // Vitesse minimale pour corriger vitesse
+#define STOP_THRESHOLD 1.0 / 120.0  // Angle threshold to stop the rotation
 
 #define NB_BURST 5
 
 // --------- Correction speed forward---------
 #define CORRECTION_SPEED 0.03
-#define HALF_CELL 80 // mm
-#define NB_ITTERATION_WITHOUT_TOF 10
+#define HALF_CELL 80  // mm
+#define NB_ITTERATION_WITHOUT_TOF 0
 #define MAX_DIFF_BETWEEN_SIDE_TOF 6
-#define MIDDLE_TOF_DIST_TO_WALL 140
+#define MIDDLE_TOF_DIST_TO_WALL 120
 
 // ========== Private functions ===========
 // Convert a cardinal to an angle, return the angle in radian ]-1;1]
 float rotation_to_angle(ROTATION rotation) {
   switch (rotation) {
-  case LEFT_TURN:
-    return 0.5;
-  case RIGHT_TURN:
-    return -0.5;
-  case HALF_TURN:
-    return 1;
-  case NO_TURN:
-    return 0;
-  default:
-    return 0;
+    case LEFT_TURN:
+      return 0.5;
+    case RIGHT_TURN:
+      return -0.5;
+    case HALF_TURN:
+      return 1;
+    case NO_TURN:
+      return 0;
+    default:
+      return 0;
   }
 }
 
 RESULT compute_traveled_distance(int *tof_mode, int i, float *dist_left,
                                  float *abs_dist_left, float distance);
 
-// ========== Public functions ===========
+RESULT compute_encoder_distance(float *dist_left, float *abs_dist_left,
+                                float distance);
 
-RESULT turn(ROTATION rotation, MODE mode) {
+// ========== Public functions ===========
+RESULT turn_with_angle(float angle, MODE mode, int correction) {
   RESULT rslt = update_gyro();
   PROPAGATE_ERROR(rslt);
+  float target;
 
-  mouse_absolute_angle = mouse_absolute_angle + rotation_to_angle(rotation);
-  MODULO(mouse_absolute_angle);
+  if (!correction) {
+    //only apply if turn  is not in correction mode
+    mouse_absolute_angle = mouse_absolute_angle + angle;
+    MODULO(mouse_absolute_angle);
+    target = mouse_absolute_angle;
+  } else {
+    target = mouse_absolute_angle + angle;
+    MODULO(angle);
+  }
 
   DEBBUG_PRINT(Serial.print("Goal: ");
                Serial.println(mouse_absolute_angle, 5););
@@ -80,7 +90,7 @@ RESULT turn(ROTATION rotation, MODE mode) {
 
     float new_angle = get_angle();
 
-    error = mouse_absolute_angle - new_angle;
+    error = target - new_angle;
     MODULO(error);
     abs_error = fabs(error);
 
@@ -94,13 +104,13 @@ RESULT turn(ROTATION rotation, MODE mode) {
         turn_right(mode, speed);
       }
     } else {
-      break_wheels(); // Stop the robot
+      break_wheels();  // Stop the robot
       for (int j = 0; j < 10; j++) {
         update_gyro();
       }
       new_angle = get_angle();
-      error = mouse_absolute_angle - new_angle;
-      MODULO(error); // Gère les valeurs circulaires
+      error = target - new_angle;
+      MODULO(error);  // Gère les valeurs circulaires
       abs_error = fabs(error);
 
       if (abs_error < STOP_THRESHOLD) {
@@ -113,6 +123,10 @@ RESULT turn(ROTATION rotation, MODE mode) {
   return NO_ERROR;
 }
 
+RESULT turn(ROTATION rotation, MODE mode) {
+  return turn_with_angle(rotation_to_angle(rotation), mode, 0);
+}
+
 RESULT init_all_sensors() {
   RESULT rslt = init_motors();
   PROPAGATE_ERROR(rslt);
@@ -123,7 +137,7 @@ RESULT init_all_sensors() {
   return NO_ERROR;
 }
 
-RESULT navigation_forward(float distance, float max_speed) {
+RESULT navigation_forward(float distance, float max_speed, int only_encoder) {
 
   int correcting_mode = 0;
   int tof_mode = 0;
@@ -134,43 +148,75 @@ RESULT navigation_forward(float distance, float max_speed) {
   // TODO use physic bcs breaking dst arn't linear
   float slow_dist = 0.40 * distance;
   float very_slow_motor_dist = 0.30 * distance;
-  float breaking_dist = 0.20 * distance; // went from 10 percent to 15
+  float breaking_dist = 0.20 * distance;  // went from 10 percent to 15
 
   float dist_left;
   float abs_dist_left;
 
   int i = 0;
-  while (true) {
-    i++;
+  while (1) {
+    //i++;
     RESULT rslt = update_gyro();
     PROPAGATE_ERROR(rslt);
-    // --------- THRESHOLD GYRO CHECK ---------
-    // TODO implémenter plus tard
-    // if threashold dépassé, correction burst --> faudrait faire une fonction
-    // pour check ça if trop grand stopper la mouse et faire une rotation
-    // INPLACE
 
-    // --------- DISTANCE CHECK ---------------
-    // TODO faire plus tard
-    // if distance trop proche d'un mur, STOP, (return error ou justr s'arrêter)
-    // Si la place pour faire demi tour sauvegarder traveled dist, faire demi
-    // tour, aller au centre faire quart de tour, recommencer à compter la
-    // distance
-    // FRONT_DISTANCE_MID > (7 + 3)
+    // --------- COMPUTE DISTANCE LEFT ---------
+    if (only_encoder) {
+      // Correction mode --> we only use the encoders
+      rslt = compute_encoder_distance(&dist_left, &abs_dist_left, distance);
+      // We don't want to use the TOF
+      tof_mode = 0;
+      PROPAGATE_ERROR(rslt);
 
-    rslt = compute_traveled_distance(&tof_mode, i, &dist_left, &abs_dist_left,
-                                     distance);
-    PROPAGATE_ERROR(rslt);
+    } else {
+      // Classic forward
+      rslt = compute_traveled_distance(&tof_mode, i, &dist_left, &abs_dist_left,
+                                       distance);
+      PROPAGATE_ERROR(rslt);
+    }
 
+    if (abs_dist_left > 1.1 * breaking_dist){
+      correcting_mode = 0; 
+    }
+
+    // --------- CORRECTING MODE (little adjustments when arrived) ---------
     if (correcting_mode) {
       // When the mouse has breaked, we check if we are at the right place
       if (abs_dist_left < POSITION_STOP_THRESHOLD) {
+
+        if (tof_mode) {
+          // Recalibrate the gyro
+          POSITION_TO_FRONT tof_dist;
+          RESULT rslt = position_to_front(&tof_dist);
+          PROPAGATE_ERROR(rslt);
+
+          float diff =
+            tof_dist.front_distance_left - tof_dist.front_distance_right;
+
+          while (fabs(diff) >= MAX_DIFF_BETWEEN_SIDE_TOF - 2) {
+            // We are not centered
+            if (diff > 0) {
+              // We turn to the right
+              turn_right(INPLACE, MIN_SPEED);
+            } else {
+              // We turn to the left
+              turn_left(INPLACE, MIN_SPEED);
+            }
+            rslt = position_to_front(&tof_dist);
+            PROPAGATE_ERROR(rslt);
+
+            diff = tof_dist.front_distance_left - tof_dist.front_distance_right;
+          }
+          reset_angle(mouse_absolute_angle);
+          update_gyro();
+        }
         // We are at the right distance
         forward(0);
         break_wheels();
         update_gyro();
-        delay(5);
+        delay(3);
+        update_gyro();
         return NO_ERROR;
+
       } else {
         speed = dist_left >= 0 ? CORRECTION_SPEED : -CORRECTION_SPEED;
         forward(speed);
@@ -183,6 +229,7 @@ RESULT navigation_forward(float distance, float max_speed) {
       correcting_mode = 1;
     }
 
+    // --------- Change speed depending on the distance left ---------
     if (abs_dist_left <= breaking_dist) {
       // start_breaking
       speed = 0;
@@ -203,6 +250,8 @@ RESULT navigation_forward(float distance, float max_speed) {
     } else if (abs_dist_left <= slow_dist) {
       // start slowing down
       speed = max_speed / 2;
+    }else {
+      speed = max_speed; 
     }
 
     forward(speed);
@@ -218,37 +267,50 @@ RESULT compute_traveled_distance(int *tof_mode, int i, float *dist_left,
 
   if (*tof_mode && i > NB_ITTERATION_WITHOUT_TOF) {
     float side_tof_mean_dist =
-        (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
-    float diff =
-        fabs(tof_dist.front_distance_left - tof_dist.front_distance_right);
-    // TODO vérifier que la mouse est droite =============
-    if (diff <= MAX_DIFF_BETWEEN_SIDE_TOF && side_tof_mean_dist < HALF_CELL) {
-      // We use the two side sesors
+      (tof_dist.front_distance_left + tof_dist.front_distance_right) / 2;
 
+    float diff =
+      fabs(tof_dist.front_distance_left - tof_dist.front_distance_right);
+
+    if (diff <= MAX_DIFF_BETWEEN_SIDE_TOF && side_tof_mean_dist < HALF_CELL + 10) {
+      // We use the two side sesors
       *dist_left = side_tof_mean_dist - HALF_CELL;
       *abs_dist_left = fabs(*dist_left);
+
+    } else if (tof_dist.front_distance_mid > 1.1 * MIDDLE_TOF_DIST_TO_WALL) {
+      // Finally there is no wall in front of the mouse
+      *tof_mode = 0;
+      compute_encoder_distance(dist_left, abs_dist_left, distance);
     } else {
       // We use the front sensor
-      if (tof_dist.front_distance_mid > 1.1 * MIDDLE_TOF_DIST_TO_WALL) {
-        // Finally here is no wall in front of the mouse
-        *tof_mode = 0;
-      }
       *dist_left = tof_dist.front_distance_mid - HALF_CELL;
       *abs_dist_left = fabs(*dist_left);
     }
-  } else if (tof_dist.front_distance_mid < MIDDLE_TOF_DIST_TO_WALL &&
-             i > NB_ITTERATION_WITHOUT_TOF) {
-    // There is a front wall in the cell --> we trust the TOFs to cetner the
-    // mouse in the cell
-    *tof_mode = 1;
   } else {
+      //double check
+      update_gyro();
+      delay(2);
+      POSITION_TO_FRONT tof_dist_2;
+      RESULT rslt = position_to_front(&tof_dist_2);
+      PROPAGATE_ERROR(rslt);  
+    if (tof_dist.front_distance_mid < MIDDLE_TOF_DIST_TO_WALL && tof_dist_2.front_distance_mid < MIDDLE_TOF_DIST_TO_WALL && i > NB_ITTERATION_WITHOUT_TOF) {
+      // There is a front wall in the cell --> we trust the TOFs to center the
+      // mouse in the cell
+      *tof_mode = 1;
+    }
     // We trust encoders
-    WHEELS_DISTANCES dist = get_traveled_distance();
-    float mean_dist = (dist.left_distance + dist.right_distance) / 2;
-    float abs_mean_dist = fabs(mean_dist);
-
-    *dist_left = distance - abs_mean_dist;
-    *abs_dist_left = fabs(*dist_left);
+    compute_encoder_distance(dist_left, abs_dist_left, distance);
   }
+  return NO_ERROR;
+}
+
+RESULT compute_encoder_distance(float *dist_left, float *abs_dist_left,
+                                float distance) {
+  WHEELS_DISTANCES dist = get_traveled_distance();
+  float mean_dist = (dist.left_distance + dist.right_distance) / 2;
+  float abs_mean_dist = fabs(mean_dist);
+
+  *dist_left = distance - abs_mean_dist;
+  *abs_dist_left = fabs(*dist_left);
   return NO_ERROR;
 }
