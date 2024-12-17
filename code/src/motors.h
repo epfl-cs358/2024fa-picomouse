@@ -34,12 +34,6 @@ RESULT motors_init();
  */
 MOTOR_STEPS get_steps_count();
 
-/* @brief Calculate speed of motors
- * @param None
- * @return A double value corresponding to the speed
- */
-double get_speed(); //TODO je pense pas l'implementer
-
 /* SHOULD NEVER BE USED
  * @brief Resets the two counters
  * @param None

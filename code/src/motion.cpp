@@ -179,9 +179,9 @@ WHEELS_DISTANCES get_traveled_distance() {
     current_steps.right_count - steps_count_for_distance.right_count;
   WHEELS_DISTANCES distances;
   distances.left_distance =
-    static_cast<float>(deltaLeft) * WHEEL_PERMIMER / ENCODER_RESOLUTION;
+    static_cast<float>(deltaLeft) * WHEEL_PERIMETER / ENCODER_RESOLUTION;
   distances.right_distance =
-    static_cast<float>(deltaRight) * WHEEL_PERMIMER / ENCODER_RESOLUTION;
+    static_cast<float>(deltaRight) * WHEEL_PERIMETER / ENCODER_RESOLUTION;
   return distances;
 }
 

@@ -166,15 +166,3 @@ RESULT init_stack(PATH_STACK* stack){
 
     return NO_ERROR;
 }
-int between_walls(Maze* maze){
-  int walls = WALLS_AT(maze->walls, maze->mouse_pos); 
-  int check_1 = 0b1000 & walls;
-  int check_2 = 0b0010 & walls;
-  int check_3 = 0b0100 & walls;
-  int check_4 = 0b0001 & walls;
-
-  if ((check_1 && check_2)||(check_3 && check_4)){
-    return 1;
-  }
-  return 0;
-}

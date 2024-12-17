@@ -42,7 +42,7 @@
 
 // Wheels characteristics
 #define WHEEL_DIAMETER 30.0                    // mm
-#define WHEEL_PERMIMER WHEEL_DIAMETER * 3.1415 // mm
+#define WHEEL_PERIMETER WHEEL_DIAMETER * 3.1415 // mm
 #define ENCODER_RESOLUTION 408.0               // 408 pulse per revolution
 
 /*

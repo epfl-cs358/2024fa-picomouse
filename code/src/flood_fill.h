@@ -31,4 +31,4 @@ RESULT add_wall(Maze* maze, WALL_DIR wall);
 
 RESULT one_iteration_flood_fill(Maze* maze, PATH_STACK* path_stack, CARDINALS* next_direction);
 RESULT init_stack(PATH_STACK* stack);
-int between_walls(Maze* maze);
+
