@@ -1,3 +1,7 @@
+We had to copy some library in our repository to avoid issues with versions :
+1. gyroscope : code/src/DF_RobotBMI160.cpp, source : [DFRobot repository][https://github.com/DFRobot/DFRobot_BMI160]
+2. ToF : code/src/DF_RobotVL6180X.cpp, source : [DFRobot repository][https://github.com/DFRobot/DFRobot_VL6180X]
+
 MIT License
 
 Copyright (c) 2024 EPFL CS358 Making Intelligent Things - Picomouse
