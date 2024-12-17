@@ -81,7 +81,7 @@ void get_side_side_distances(uint16_t* dist){
         d5_squared *= d5_squared;\
         d5_squared /= (4 * d3_squared);\
         d6 = sqrt(d2_squared - d5_squared);\
-        }while(0)
+      }while(0)
 
         // float teta3 = acos(d2/d6);
         // orientation = teta2 - teta3;

@@ -2,10 +2,10 @@
 #include "navigation.h"
 
 
+////// Instructions structures //////
 
 // Maximum 2 instructions per cell
 #define INSTRUCTION_STACK_SIZE 2*MAZE_SIZE*MAZE_SIZE
-
 typedef enum {NAVIGATION_FORWARD, NAVIGATION_TURN}INSTRUCTION_TYPE;
 
 
@@ -35,7 +35,7 @@ typedef struct{
     RUN_INSTRUCTION instruction;
     RUN_ARGS args;
 }STEP;
-
+////// END Instructions structures //////
 
 
 static RESULT reverse_stack(PATH_STACK* stack){
@@ -106,8 +106,13 @@ static RESULT pop(INSTRUCTION_STACK* stack, STEP* out){
     stack->end--;
     return NO_ERROR;
 }
-//// end Instruction stack ////
+//// END Instruction stack ////
 
+/**
+ * @brief Execute the given instruction stack in down to top.
+ * @param instruction_stack 
+ * @return RESULT 
+ */
 static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
     CHECK_AND_THROW(!instruction_stack, NULL_PTR);
     RESULT err = NO_ERROR;
@@ -128,7 +133,6 @@ static RESULT follow_instructions(INSTRUCTION_STACK* instruction_stack){
         }
         PROPAGATE_ERROR(err);
     }
-    
     return NO_ERROR;
 }
 

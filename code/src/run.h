@@ -8,9 +8,8 @@
 
 
 /**
- * @brief Runs the mouse in the maze optimizing the path for the given RUN_POLICY.
+ * @brief Runs the mouse in the maze optimizing the path .
  * It optimize the path by removing unnecessary stops in the path (one forward  for mutiple cells).
- * @warning Only the shortest path is implemented for now.
  * @param path_1 The first path of the maze traversal (absolute start_cell to absolute exit_cell)
  * @param path_2 The second path of the maze traversal (absolute exit_cell to absolute start_cell)
  * @return RESULT 
