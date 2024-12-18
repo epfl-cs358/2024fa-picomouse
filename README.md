@@ -18,7 +18,9 @@ This project aims to create from scratch a micromouse and be able to run it on a
 8. [Sensors calibration](#sensors-calibration)
 9. [Distance calculation](#distance-calculation)
 10. [Computation distances with encoders](#computation-distances-with-encoders)
-11. [License](#license)
+11. [What does the mouse?](#what-does-the-mouse?)
+12. [Improvements](#improvements)
+13. [License](#license)
     
 
 
@@ -249,6 +251,9 @@ maze = [[0b0000, 0b0101, 0b0110, 0b1000, 0b0000, 0b0000, 0b0000, 0b0000],
 ```
 This represents the following maze :
 ![Example UI Maze](https://github.com/user-attachments/assets/cf55897d-5dbc-45f4-a3e9-48da468660a9)
+
+## What does the mouse?:
+### TODO list all correcton that are made 
 
 ## Improvements:
   1. Reduce the BLE (bluetooth) library so it can be compiled on the esp and used for the python script.
