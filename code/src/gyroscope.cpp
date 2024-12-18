@@ -14,7 +14,7 @@
 
 #define SCALE_FACTOR 1.0 / 0.0743
 
-#define OVER_THRESHOLD(angle, threshold)                                       \
+#define OVER_THRESHOLD(angle, threshold)\
   (angle < -threshold || angle > threshold)
 
 float angle = 0.0; // unit : radian

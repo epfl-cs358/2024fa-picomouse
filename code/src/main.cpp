@@ -173,6 +173,7 @@ void loop() {
       button_state = digitalRead(BUTTON_PIN);
       delay(100);
     }
+    init_gyro();
     ROTATION rotation = calculate_turn(current_direction, START_ORIENTATION);
     RESULT rslt = turn(rotation, INPLACE);
     BLOCK_ON_ERROR(rslt, Serial.println("turn failed !!"));
