@@ -31,7 +31,7 @@ This project aims to create from scratch a micromouse and be able to run it on a
 - ESP-32-vroom 32
 - 5 x DFROBOT SEN0427 TOF
 - DFRobot Gravity I2C BMI160 Gyroscope
-- Small Bead size=??????
+- Small Bead
 - M2 screws and bolts 
 
 ## Mouse Preparation:
@@ -53,7 +53,7 @@ This project aims to create from scratch a micromouse and be able to run it on a
   4.Print the weels: 
   The weels are composed of 2 parts: 
   - The inner wheel support printed in hard plastic (PETG/PLA). 
-  - The rubber is printed with ninjaflex TPU. 
+  - Our rubber is printed with ninjaflex TPU but elastic rubber can also be used.
 
   ![wheels](images/assembly/wheels_rubber.jpg)
   
@@ -82,7 +82,6 @@ This project aims to create from scratch a micromouse and be able to run it on a
 
  #### 4.Assemble the weels and fix them to the motor axis:
  
-   ![Motor holder](images/assembly/) // TODO
 
  #### 5.Place the battery: 
  
@@ -102,9 +101,8 @@ This project aims to create from scratch a micromouse and be able to run it on a
   ![ESP-32](images/assembly/esp32_on_holder_2.jpg)
 
   ### Wiring:
-   ![image](https://github.com/user-attachments/assets/c0026920-46d1-4338-90c0-385cb2a7d65f)
+  ![image](https://github.com/user-attachments/assets/c0026920-46d1-4338-90c0-385cb2a7d65f)
 
-  ![TOF](images/assembly/) 
 
 
 ## Maze
@@ -130,9 +128,6 @@ We get the following wall:
 
 ![wall1cm](images/maze/1cm_wall_above.jpg) 
     
-Using Scratch:
-
-[scratch](images/maze/wall_scratch) 
     
 
     
@@ -172,10 +167,6 @@ You can find a detailed scheme representing the relations of all components and 
    ```bash
    git clone https://github.com/epfl-cs358/2024fa-picomouse.git
    cd 2024fa-picomouse
-   ```
-2. Install python dependecies:
-   ```bash
-   pip install -r requirements.txt
    ```
 
 
@@ -260,14 +251,14 @@ This represents the following maze :
 ![Example UI Maze](https://github.com/user-attachments/assets/cf55897d-5dbc-45f4-a3e9-48da468660a9)
 
 ## Improvements:
-  1. Reduce the use of floating point calculations in the code using "scaled" fixed point values to improve calculation speed.
-  2. Reduce the BLE (bluetooth) library so it can be compiled on the esp and used for the python script.
-  3. Use a PCB as the mouse base plate to reduce the weight of the plastic plate and the cable.
-  4. Make smooth turns when running the maze (after the exploration phase).
-  5. Redesign of the mouse: bring closer the center of rotation to the sensors to make in place turns in less space.
-  6. Better error handling for imperfect maze.
-  7. Implementation of PID algorithm for sensors. The gyroscope has some limits in the precision of the turns and in straight lines, inclusion of the sensors in         the process would improve the general navigation.
-  8. Ligthen weight of the mouse with a LiPo and a smaller buck converter.
-  9. Usage of buck converter on motors to run at constant 6V.
-  10. Redesign the floor of the maze to be more consistent (especially for the walls).
+  1. Reduce the BLE (bluetooth) library so it can be compiled on the esp and used for the python script.
+  2. Use a PCB as the mouse base plate to reduce the weight of the plastic plate and the cable.
+  3. Make smooth turns when running the maze (after the exploration phase).
+  4. Redesign of the mouse: bring closer the center of rotation to the sensors to make in place turns in less space.
+  5. Better error handling for imperfect maze.
+  6. Implementation of PID algorithm for sensors. The gyroscope has some limits in the precision of the turns and in straight lines, inclusion of the sensors in         the process would improve the general navigation.
+  7. Ligthen weight of the mouse with a LiPo and a smaller buck converter.
+  8. Usage of buck converter on motors to run at constant 6V.
+  9. Redesign the floor of the maze to be more consistent (especially for the walls).
+  10. Reduce the use of floating point calculations in the code using "scaled" fixed point values to improve calculation speed.
     
