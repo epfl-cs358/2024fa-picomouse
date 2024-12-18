@@ -1,5 +1,5 @@
 /**
- * @file motors.h
+ * @file navigation.h
  * @author PEREGO Zacharie, KNABENHANS Felix, AUMONT Adrien, KACEM Sophia
  * @copyright Copyright (c) 2024
  */

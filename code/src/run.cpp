@@ -54,7 +54,7 @@ static RESULT reverse_stack(PATH_STACK* stack){
 
 
     // The following is not securely satisfying but it removes the loop check that would be done
-    //if we pushed each element one by one. WARNING: THIS higly depends on paths stack implementation.
+    //if we pushed each element one by one. WARNING: THIS highly depends on paths stack implementation.
     out_stack.end = stack_end;
     for (size_t i = 0; i < stack_end; i++){
         out_stack.stack[i] = stack->stack[(stack_end-1) - i];
@@ -65,22 +65,7 @@ static RESULT reverse_stack(PATH_STACK* stack){
 
 
 
-static RESULT choose_path(PATH_STACK* path_1, PATH_STACK* path_2, PATH_STACK* return_path){
-    CHECK_AND_THROW(!path_1, NULL_PTR);
-    CHECK_AND_THROW(!path_2, NULL_PTR);
-    CHECK_AND_THROW(!return_path, NULL_PTR);
 
-    // We make a safe copy of the choosen path
-
-    if(path_1->end < path_2->end){
-        *return_path = *path_1;
-    }else{
-        RESULT err = reverse_stack(path_2);
-        PROPAGATE_ERROR(err);
-        *return_path = *path_2;
-    }
-    return NO_ERROR;
-}
 //// Instruction stack ////
 
 typedef struct{
