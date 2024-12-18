@@ -20,7 +20,6 @@ This project aims to create from scratch a micromouse and be able to run it on a
 10. [Computation distances with encoders](#computation-distances-with-encoders)
 11. [What does the mouse?](#what-does-the-mouse?)
 12. [Improvements](#improvements)
-13. [License](#license)
     
 
 
@@ -253,7 +252,7 @@ This represents the following maze :
 ![Example UI Maze](https://github.com/user-attachments/assets/cf55897d-5dbc-45f4-a3e9-48da468660a9)
 
 ## What does the mouse?:
-### TODO list all correcton that are made 
+The mouse navigate through the maze with the support of the gyroscope and the sensors. She does 3 runs : one to search the target cell (corner of the maze in diagonal of the start cell) by stopping in each cell, one to search a second path that could be faster than the first one when returning to the start cell, and one to run through the maze with the best path and without stopping at each cell. We use the gyroscope to keep track of and correct the current angle of the mouse in the global space. The sensors were used to detect the walls at the sides and in front of the mouse, and to recalibrate her when facing a wall.
 
 ## Improvements:
   1. Reduce the BLE (bluetooth) library so it can be compiled on the esp and used for the python script.
