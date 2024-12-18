@@ -73,6 +73,7 @@ RESULT init_gyro() {
   CHECK_AND_THROW(bmi160.I2cInit(i2c_addr) != BMI160_OK, GYRO_INIT_FAIL);
 
   compute_offset();
+  reset_angle(0.0);
 
   return NO_ERROR;
 }
