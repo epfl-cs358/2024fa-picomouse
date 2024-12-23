@@ -1,7 +1,5 @@
 # Picomouse
 
-![Project Logo](path/to/logo.png) <!-- Optional: Add a project logo if needed -->
-
 ## Description
  
 This project aims to create from scratch a micromouse and be able to run it on a 10x10 maze. The design of the mouse, the choice of components, the implementation of the code and the construction of the maze are parts of the project. Our team was responsible of the walls and pillars and another team had to construct the floor. The purpose of this project is to discover how to combine hardware and software and to learn how to work in a team of 6 persons.
@@ -147,9 +145,6 @@ The bolt should be locked in place. \
 ![pillar_screw](images/maze/pillar_screw.jpg) 
 
 
-    
-Using Scratch:
-![pillar_scratch](images/assembly/)  // TODO get the image of pillar with scratch
     
     
 ## Software Overview
