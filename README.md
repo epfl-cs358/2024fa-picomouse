@@ -16,7 +16,7 @@ This project aims to create from scratch a micromouse and be able to run it on a
 8. [Sensors calibration](#sensors-calibration)
 9. [Distance calculation](#distance-calculation)
 10. [Computation distances with encoders](#computation-distances-with-encoders)
-11. [What does the mouse?](#what-does-the-mouse?)
+11. [What does the mouse?](#what-does-the-mouse)
 12. [Improvements](#improvements)
     
 
