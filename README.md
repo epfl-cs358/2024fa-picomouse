@@ -132,13 +132,13 @@ We get the following wall:
     
 ### Pillars:
 Option1. 3d print the 2cm x 2cm x 5cm pillars \
-![pillar_2](images/maze/) 
+![pillar_2](images/maze/pillar 2cm.jpg) 
 Option2. 3d print the 1cm x 1cm x 5cm pillars \
-![pillar_1](images/maze) 
+![pillar_1](images/maze/pillar 1cm.jpg) 
     
 Both of them have an option to add a M2 hexnut inside so the pillars can be screwed underneath.\
 The bolt can easily be placed using a screwdriver by pushing the bolt until you hear a pop. \
-The bolt should be locked in place. \
+The bolt should be locked in place. 
 
 ![pillar_hexnut](images/maze/pillar_hexnut.jpg) 
 
